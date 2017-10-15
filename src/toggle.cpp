@@ -1,21 +1,47 @@
 #include "toggle.hpp"
 
+void toggle::add_to_world(b2World * world)
+{
+    const settings& config = settings::get_instance();
 
-void toggle::step_on(map& m)
+    b2BodyDef bdef;
+    bdef.type = b2_staticBody;
+    bdef.position.Set(this->x, this->y);
+
+    body = world->CreateBody(&bdef);
+
+    b2CircleShape bshape;
+    bshape.m_p.Set(0.0f, 0.0f);
+    bshape.m_radius = config.TOGGLE_RADIUS;
+
+    b2FixtureDef fdef;
+    fdef.shape = &bshape;
+    fdef.isSensor = true;
+    body->CreateFixture(&fdef);
+    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::toggle)));
+}
+
+map* toggle::get_map(map* m)
+{
+    static map* m_ = m;
+    return m_;
+}
+
+void toggle::step_on()
 {
     std::cout << "toggle stepped on" << std::endl;
 
     for(auto & o : tags) {
-        o.step_on(m);
+        o.step_on(*get_map());
     }
 }
 
-void toggle::step_off(map& m)
+void toggle::step_off()
 {
     std::cout << "toggle stepped off" << std::endl;
 
     for(auto & o : tags) {
-        o.step_off(m);
+        o.step_off(*get_map());
     }
 }
 

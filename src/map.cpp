@@ -1,5 +1,12 @@
 #include "map.hpp"
 
+map::map()
+: is_loaded(false)
+{
+    // set toggle map pointer
+    toggle::get_map(this);
+}
+
 b2World * map::init_world()
 {
     b2World* world = new b2World(b2Vec2(0, 0));
@@ -21,6 +28,10 @@ b2World * map::init_world()
     }
 
     for(auto & m : bombs) {
+        m.add_to_world(world);
+    }
+
+    for(auto & m : toggles) {
         m.add_to_world(world);
     }
 

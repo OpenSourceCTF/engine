@@ -16,6 +16,7 @@ void bomb::add_to_world(b2World * world)
 
     b2FixtureDef fdef;
     fdef.shape = &bshape;
+    fdef.isSensor = true;
     body->CreateFixture(&fdef);
     body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::bomb)));
 }

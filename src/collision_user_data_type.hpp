@@ -7,7 +7,8 @@ enum class collision_user_data_type
     ball,
     wall,
     spike,
-    bomb
+    bomb,
+    toggle
 };
 
 #endif

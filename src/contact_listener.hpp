@@ -6,7 +6,9 @@
 #include "ball.hpp"
 #include "wall.hpp"
 #include "spike.hpp"
+#include "toggle.hpp"
 
+struct toggle;
 
 // this holds two collision user datas together
 // representing a contact between two things
@@ -73,9 +75,7 @@ class contact_listener : public b2ContactListener
             if(cdata.has(collision_user_data_type::spike)) {
                 std::cout << "has spike" << std::endl;
 
-                if(m) {
-                    m->pop();
-                }
+                if(m) m->pop();
             }
 
             if(cdata.has(collision_user_data_type::bomb)) {
@@ -85,9 +85,17 @@ class contact_listener : public b2ContactListener
                     cdata.get_ptr(collision_user_data_type::bomb)
                 );
 
-                if(o) {
-                    o->explode();
-                }
+                if(o) o->explode();
+            }
+
+            if(cdata.has(collision_user_data_type::toggle)) {
+                std::cout << "has toggle" << std::endl;
+
+                toggle * o = reinterpret_cast<toggle*>(
+                    cdata.get_ptr(collision_user_data_type::toggle)
+                );
+
+                if(o) o->step_on();
             }
         }
     }
@@ -105,6 +113,24 @@ class contact_listener : public b2ContactListener
             (user_data_a) ? *user_data_a : unknown_data,
             (user_data_b) ? *user_data_b : unknown_data
         });
+
+        if(cdata.has(collision_user_data_type::ball)) {
+            std::cout << "has ball" << std::endl;
+
+            ball * m = reinterpret_cast<ball*>(
+                cdata.get_ptr(collision_user_data_type::ball)
+            );
+
+            if(cdata.has(collision_user_data_type::toggle)) {
+                std::cout << "has toggle" << std::endl;
+
+                toggle * o = reinterpret_cast<toggle*>(
+                    cdata.get_ptr(collision_user_data_type::toggle)
+                );
+
+                if(o) o->step_off();
+            }
+        }
     }
 };
 

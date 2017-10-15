@@ -19,6 +19,8 @@ struct settings
 
     float BOMB_RADIUS;
 
+    float TOGGLE_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

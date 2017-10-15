@@ -24,6 +24,8 @@ settings& settings::get_instance()
 
         instance.BOMB_RADIUS         = reader.GetReal("bomb", "radius", 0);
 
+        instance.TOGGLE_RADIUS       = reader.GetReal("toggle", "radius", 0);
+
         instance.COLOR_TILE          = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL          = color(reader.Get("color", "wall", "000000"));
 

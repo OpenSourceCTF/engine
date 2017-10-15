@@ -63,9 +63,7 @@ struct map
     std::vector<flag>    flags;
     std::vector<ball>    balls;
 
-    map()
-    : is_loaded(false)
-    {}
+    map();
 
     b2World* init_world();
 };
