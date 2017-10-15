@@ -7,6 +7,7 @@
 #include "libs/json.hpp"
 #include "toggle_tag_type.hpp"
 #include "map.hpp"
+#include "ball.hpp"
 
 struct map;
 
@@ -28,8 +29,8 @@ struct toggle_tag
     , type(type)
     {}
 
-    void step_on(map& m);
-    void step_off(map& m);
+    void step_on(map& m, ball* o);
+    void step_off(map& m, ball* o);
 
 };
 

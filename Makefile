@@ -3,7 +3,7 @@ LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboo
 
 all: build/tagos
 
-build/tagos: build/tagos.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/lodepng.o
+build/tagos: build/tagos.o build/contact_listener.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/lodepng.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 build/tagos.o: src/tagos.cpp src/libs/json.hpp src/libs/INIReader.h 
@@ -13,6 +13,9 @@ build/tp_map_importer.o: src/tp_map_importer.cpp src/tp_map_importer.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/map_renderer.o: src/map_renderer.cpp src/map_renderer.hpp
+	$(CXX) $(CXXFLAGS) $< -c -o $@
+
+build/contact_listener.o: src/contact_listener.cpp src/contact_listener.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/gate.o: src/gate.cpp src/gate.hpp

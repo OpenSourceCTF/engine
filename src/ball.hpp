@@ -26,6 +26,7 @@ struct ball
     float get_angle() const;
     b2Vec2 get_linear_velocity() const;
     void pop();
+    void get_boosted();
 };
 
 #endif

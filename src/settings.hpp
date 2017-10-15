@@ -21,6 +21,10 @@ struct settings
 
     float TOGGLE_RADIUS;
 
+    float BOOSTER_RADIUS;
+
+    float POWERUP_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

@@ -26,6 +26,10 @@ settings& settings::get_instance()
 
         instance.TOGGLE_RADIUS       = reader.GetReal("toggle", "radius", 0);
 
+        instance.BOOSTER_RADIUS      = reader.GetReal("booster", "radius", 0);
+
+        instance.POWERUP_RADIUS      = reader.GetReal("powerup", "radius", 0);
+
         instance.COLOR_TILE          = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL          = color(reader.Get("color", "wall", "000000"));
 

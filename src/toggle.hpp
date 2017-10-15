@@ -9,6 +9,7 @@
 #include "toggle_tag_type.hpp"
 #include "toggle_tag.hpp"
 #include "collision_user_data.hpp"
+#include "ball.hpp"
 
 struct map;
 struct toggle_tag;
@@ -40,8 +41,8 @@ struct toggle
     static map* get_map(map* m=nullptr);
     void add_to_world(b2World * world);
 
-    void step_on();
-    void step_off();
+    void step_on(ball* m);
+    void step_off(ball* m);
 };
 
 void to_json(nlohmann::json& j, const toggle& p);

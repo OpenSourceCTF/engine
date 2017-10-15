@@ -35,6 +35,14 @@ b2World * map::init_world()
         m.add_to_world(world);
     }
 
+    for(auto & m : boosters) {
+        m.add_to_world(world);
+    }
+
+    for(auto & m : powerups) {
+        m.add_to_world(world);
+    }
+
     return world;
 }
 

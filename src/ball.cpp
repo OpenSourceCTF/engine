@@ -58,3 +58,8 @@ void ball::pop()
     std::cout << "popped" << std::endl;
 }
 
+void ball::get_boosted()
+{
+    std::cout << "boosted" << std::endl;
+}
+

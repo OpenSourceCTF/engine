@@ -1,12 +1,17 @@
 #ifndef ML_POWERUP_HPP
 #define ML_POWERUP_HPP
 
+#include <Box2D/Box2D.h>
 #include "libs/json.hpp"
+#include "collision_user_data.hpp"
+#include "settings.hpp"
+#include "ball.hpp"
 
 struct powerup
 {
     float x;
     float y;
+    b2Body * body;
 
     powerup(){}
     powerup(
@@ -16,6 +21,9 @@ struct powerup
     : x(x)
     , y(y)
     {}
+
+    void add_to_world(b2World * world);
+    void step_on(ball* m);
 };
 
 void to_json(nlohmann::json& j, const powerup& p);

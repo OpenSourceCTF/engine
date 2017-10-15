@@ -3,8 +3,12 @@
 
 #include <string>
 #include <iostream>
+#include <Box2D/Box2D.h>
 #include "libs/json.hpp"
+#include "settings.hpp"
+#include "collision_user_data.hpp"
 #include "booster_type.hpp"
+#include "ball.hpp"
 
 
 struct booster
@@ -12,6 +16,7 @@ struct booster
     float x;
     float y;
     booster_type type;
+    b2Body * body;
 
     booster(){}
     booster(
@@ -22,7 +27,11 @@ struct booster
     : x(x)
     , y(y)
     , type(type)
+    , body(nullptr)
     {}
+
+    void add_to_world(b2World* world);
+    void step_on(ball* m);
 };
 
 void to_json(nlohmann::json& j, const booster& p);

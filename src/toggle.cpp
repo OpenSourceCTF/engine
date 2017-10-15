@@ -27,17 +27,17 @@ map* toggle::get_map(map* m)
     return m_;
 }
 
-void toggle::step_on()
+void toggle::step_on(ball* m)
 {
     for(auto & o : tags) {
-        o.step_on(*get_map());
+        o.step_on(*get_map(), m);
     }
 }
 
-void toggle::step_off()
+void toggle::step_off(ball* m)
 {
     for(auto & o : tags) {
-        o.step_off(*get_map());
+        o.step_off(*get_map(), m);
     }
 }
 

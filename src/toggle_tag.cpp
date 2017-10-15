@@ -1,6 +1,6 @@
 #include "toggle_tag.hpp"
 
-void toggle_tag::step_on(map& m)
+void toggle_tag::step_on(map& m, ball* o)
 {
     switch(type) {
         case toggle_tag_type::bomb: m.bombs[id].explode();  break;
@@ -8,7 +8,7 @@ void toggle_tag::step_on(map& m)
     }
 }
 
-void toggle_tag::step_off(map& m)
+void toggle_tag::step_off(map& m, ball* o)
 {
     switch(type) {
         case toggle_tag_type::bomb: break;
