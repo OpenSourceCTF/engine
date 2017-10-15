@@ -1,11 +1,6 @@
 #ifndef ML_MAP_HPP
 #define ML_MAP_HPP
 
-#ifndef DISABLE_RENDER
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
-#endif
-
 #include <Box2D/Box2D.h>
 
 #include <iostream>
@@ -41,6 +36,7 @@
 #include "ball.hpp"
 #include "contact_listener.hpp"
 
+struct toggle;
 
 struct map
 {

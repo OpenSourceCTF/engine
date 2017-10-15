@@ -4,11 +4,13 @@
 #include <cstdlib>
 #include <fstream>
 
+#include <Box2D/Box2D.h>
 
 #include "libs/json.hpp"
 #include "settings.hpp"
-#include "tp_map_importer.hpp"
 #include "map.hpp"
+#include "tp_map_importer.hpp"
+#include "map_renderer.hpp"
 #include "websocket_server.hpp"
 
 int main(int argc, char ** argv)
@@ -59,10 +61,18 @@ int main(int argc, char ** argv)
         buf << t.rdbuf();
 
         map m = nlohmann::json::parse(buf.str());
+        map_renderer renderer(m);
 
-        if(m.render() != 0) {
+        if(renderer.open_window() != 0) {
             return EXIT_FAILURE;
         }
+
+        b2World * world = m.init_world();
+        while(renderer.render() && renderer.get_input()) {
+            world->Step(1/60.0, 8, 3);
+        }
+
+        renderer.close_window();
     } else if(mode == "server") {
         start_server(5000);
     } else {
