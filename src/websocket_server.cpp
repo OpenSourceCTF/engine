@@ -46,8 +46,12 @@ int start_server(const std::uint16_t port)
         srv.run();
     } catch (websocketpp::exception const & e) {
         std::cerr << "error: server exception: " << e.what() << std::endl;
+        return 1;
     } catch (...) {
         std::cerr << "error: unknown server exception" << std::endl;
+        return 1;
     }
+
+    return 0;
 }
 
