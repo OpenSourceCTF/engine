@@ -35,6 +35,6 @@ server notifies all clients of new ball
 
 in future we plan for move to webrtc
 
-## PHYSICS
+## MAP
 
-bug with walls coming out further than they should
+seems like everything is slightly.. offset?
