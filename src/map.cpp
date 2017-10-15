@@ -237,9 +237,9 @@ int map::tp_import_png(const std::string & src)
         {"373737", tp_tile_type::spike},
         {"00ff00", tp_tile_type::powerup},
         {"b97a57", tp_tile_type::button},
-        {"ffff00", tp_tile_type::boost_all},
-        {"ff7373", tp_tile_type::boost_red},
-        {"7373ff", tp_tile_type::boost_blue},
+        {"ffff00", tp_tile_type::booster_all},
+        {"ff7373", tp_tile_type::booster_red},
+        {"7373ff", tp_tile_type::booster_blue},
         {"007500", tp_tile_type::gate},
         {"cac000", tp_tile_type::portal},
         {"808000", tp_tile_type::flag_neutral},
@@ -334,21 +334,21 @@ int map::tp_import_png(const std::string & src)
             powerups.emplace_back(powerup(x, y));
         } else if(tiletype == tp_tile_type::button) {
             // this is handled by toggle
-        } else if(tiletype == tp_tile_type::boost_all) {
+        } else if(tiletype == tp_tile_type::booster_all) {
             for(auto p : make_square_poly(x, y)) {
                 tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            boosts.emplace_back(boost(x, y, boost_type::all));
-        } else if(tiletype == tp_tile_type::boost_red) {
+            boosters.emplace_back(booster(x, y, booster_type::all));
+        } else if(tiletype == tp_tile_type::booster_red) {
             for(auto p : make_square_poly(x, y)) {
                 tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            boosts.emplace_back(boost(x, y, boost_type::red));
-        } else if(tiletype == tp_tile_type::boost_blue) {
+            boosters.emplace_back(booster(x, y, booster_type::red));
+        } else if(tiletype == tp_tile_type::booster_blue) {
             for(auto p : make_square_poly(x, y)) {
                 tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            boosts.emplace_back(boost(x, y, boost_type::blue));
+            boosters.emplace_back(booster(x, y, booster_type::blue));
         } else if(tiletype == tp_tile_type::gate) {
             for(auto p : make_square_poly(x, y)) {
                 tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
@@ -597,16 +597,16 @@ int map::render()
             window.draw(s);
         }
 
-        for(auto m : boosts) {
+        for(auto m : boosters) {
             sf::CircleShape s;
             s.setPointCount(3);
             s.setRadius(scaler / 3);
             s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition((m.x + 0.17) * scaler, (m.y + 0.17)  * scaler);
             switch(m.type) {
-                case boost_type::all:  s.setFillColor(sf::Color(250, 250, 70)); break;
-                case boost_type::red:  s.setFillColor(sf::Color(255, 75, 25));  break;
-                case boost_type::blue: s.setFillColor(sf::Color(25, 75, 255));  break;
+                case booster_type::all:  s.setFillColor(sf::Color(250, 250, 70)); break;
+                case booster_type::red:  s.setFillColor(sf::Color(255, 75, 25));  break;
+                case booster_type::blue: s.setFillColor(sf::Color(25, 75, 255));  break;
             }
             window.draw(s);
         }
@@ -657,7 +657,7 @@ void to_json(nlohmann::json& j, const map& p)
         {"bombs",    p.bombs},
         {"spikes",   p.spikes},
         {"powerups", p.powerups},
-        {"boosts",   p.boosts},
+        {"boosters", p.boosters},
         {"gates",    p.gates},
         {"flags",    p.flags}
     };
@@ -687,7 +687,7 @@ void from_json(const nlohmann::json& j, map& p)
     p.spikes   = j.at("spikes").get<std::vector<spike>>();
     p.toggles  = j.at("toggles").get<std::vector<toggle>>();
     p.powerups = j.at("powerups").get<std::vector<powerup>>();
-    p.boosts   = j.at("boosts").get<std::vector<boost>>();
+    p.boosters = j.at("boosters").get<std::vector<booster>>();
     p.gates    = j.at("gates").get<std::vector<gate>>();
     p.flags    = j.at("flags").get<std::vector<flag>>();
 

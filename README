@@ -4,11 +4,15 @@ tagos
 ## install
 
 
-requires sfml 2.3
+requires:
+sfml 2.3
+boost 1.58
+box2d 2.3
+websocketpp 0.7
 make
-c++11
+c++11 compiler (i use g++)
 
-then run `make`
+then run `make -j`
 
 ## run
 

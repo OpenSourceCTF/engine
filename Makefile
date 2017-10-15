@@ -1,9 +1,9 @@
 CXXFLAGS=-std=c++11 -Wall -Wextra -D_DEBUG
-LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D
+LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
 
 all: build/tagos
 
-build/tagos: build/tagos.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/boost.o build/boost_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/lodepng.o
+build/tagos: build/tagos.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/lodepng.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 build/tagos.o: src/tagos.cpp src/libs/json.hpp src/libs/INIReader.h 
@@ -54,10 +54,10 @@ build/flag.o: src/flag.cpp src/flag.hpp
 build/flag_type.o: src/flag_type.cpp src/flag_type.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-build/boost.o: src/boost.cpp src/boost.hpp
+build/booster.o: src/booster.cpp src/booster.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-build/boost_type.o: src/boost_type.cpp src/boost_type.hpp
+build/booster_type.o: src/booster_type.cpp src/booster_type.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/powerup.o: src/powerup.cpp src/powerup.hpp
@@ -82,6 +82,9 @@ build/tile.o: src/tile.cpp src/tile.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/tile_type.o: src/tile_type.cpp src/tile_type.hpp
+	$(CXX) $(CXXFLAGS) $< -c -o $@
+
+build/websocket_server.o: src/websocket_server.cpp src/websocket_server.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/lodepng.o: src/libs/lodepng.cpp src/libs/lodepng.h

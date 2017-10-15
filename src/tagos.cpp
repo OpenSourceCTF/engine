@@ -8,6 +8,7 @@
 #include "libs/json.hpp"
 #include "settings.hpp"
 #include "map.hpp"
+#include "websocket_server.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -60,6 +61,8 @@ int main(int argc, char ** argv)
         if(m.render() != 0) {
             return EXIT_FAILURE;
         }
+    } else if(mode == "server") {
+        start_server(5000);
     } else {
         std::cerr << "error: invalid mode: " << mode << std::endl;
         return EXIT_FAILURE;

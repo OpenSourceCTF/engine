@@ -34,7 +34,7 @@
 #include "bomb.hpp"
 #include "spike.hpp"
 #include "powerup.hpp"
-#include "boost.hpp"
+#include "booster.hpp"
 #include "gate.hpp"
 #include "flag.hpp"
 #include "polygon.hpp"
@@ -60,9 +60,9 @@ enum class tp_tile_type
     spike,
     powerup,
     button,
-    boost_all,
-    boost_red,
-    boost_blue,
+    booster_all,
+    booster_red,
+    booster_blue,
     gate,
     portal,
     flag_neutral,
@@ -92,7 +92,7 @@ struct map
     std::vector<bomb>    bombs;
     std::vector<spike>   spikes;
     std::vector<powerup> powerups;
-    std::vector<boost>   boosts;
+    std::vector<booster> boosters;
     std::vector<gate>    gates;
     std::vector<flag>    flags;
     std::vector<ball>    balls;
