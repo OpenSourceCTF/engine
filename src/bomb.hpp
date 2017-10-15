@@ -2,12 +2,16 @@
 #define ML_BOMB_HPP
 
 #include <iostream>
+#include <Box2D/Box2D.h>
 #include "libs/json.hpp"
+#include "settings.hpp"
+#include "collision_user_data.hpp"
 
 struct bomb
 {
     float x;
     float y;
+    b2Body * body;
 
     bomb(){}
     bomb(
@@ -16,8 +20,10 @@ struct bomb
     )
     : x(x)
     , y(y)
+    , body(nullptr)
     {}
 
+    void add_to_world(b2World* world);
     void explode();
 };
 

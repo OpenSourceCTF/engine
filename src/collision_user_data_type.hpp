@@ -6,7 +6,8 @@ enum class collision_user_data_type
     unknown,
     ball,
     wall,
-    spike
+    spike,
+    bomb
 };
 
 #endif

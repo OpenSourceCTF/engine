@@ -62,6 +62,18 @@ class contact_listener : public b2ContactListener
                     m->pop();
                 }
             }
+
+            if(cdata.has(collision_user_data_type::bomb)) {
+                std::cout << "has bomb" << std::endl;
+
+                bomb * o = reinterpret_cast<bomb*>(
+                    cdata.get_ptr(collision_user_data_type::bomb)
+                );
+
+                if(o) {
+                    o->explode();
+                }
+            }
         }
     }
 

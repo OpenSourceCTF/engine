@@ -403,6 +403,10 @@ b2World * map::init_world()
         m.add_to_world(world);
     }
 
+    for(auto & m : bombs) {
+        m.add_to_world(world);
+    }
+
     return world;
 }
 

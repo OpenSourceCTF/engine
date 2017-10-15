@@ -22,6 +22,8 @@ settings& settings::get_instance()
 
         instance.SPIKE_RADIUS        = reader.GetReal("spike", "radius", 0);
 
+        instance.BOMB_RADIUS         = reader.GetReal("bomb", "radius", 0);
+
         instance.COLOR_TILE          = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL          = color(reader.Get("color", "wall", "000000"));
 

@@ -17,6 +17,8 @@ struct settings
 
     float SPIKE_RADIUS;
 
+    float BOMB_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 
