@@ -1,6 +1,6 @@
 #include "map_renderer.hpp"
 
-void map_renderer::display_help()
+void map_renderer::display_help() const
 {
     std::cout
         << "gui instructions: " << std::endl
@@ -97,7 +97,7 @@ int map_renderer::get_input()
     return 1;
 }
 
-int map_renderer::render()
+int map_renderer::render() const
 {
 #ifdef DISABLE_RENDER
     std::cerr

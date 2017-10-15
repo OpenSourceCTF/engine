@@ -38,18 +38,17 @@ void ball::move(int x, int y)
     );
 }
 
-b2Vec2 ball::get_position()
+b2Vec2 ball::get_position() const
 {
     return body->GetPosition();
 }
 
-float ball::get_angle()
+float ball::get_angle() const
 {
     return body->GetAngle();
 }
 
-
-b2Vec2 ball::get_linear_velocity()
+b2Vec2 ball::get_linear_velocity() const
 {
     return body->GetLinearVelocity();
 }

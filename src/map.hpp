@@ -68,7 +68,6 @@ struct map
     {}
 
     b2World* init_world();
-    int render();
 };
 
 void to_json(nlohmann::json& j, const map& p);

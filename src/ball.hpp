@@ -22,9 +22,9 @@ struct ball
 
     void add_to_world(b2World * world);
     void move(int x, int y);
-    b2Vec2 get_position();
-    float get_angle();
-    b2Vec2 get_linear_velocity();
+    b2Vec2 get_position() const;
+    float get_angle() const;
+    b2Vec2 get_linear_velocity() const;
     void pop();
 };
 

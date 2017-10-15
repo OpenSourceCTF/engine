@@ -25,11 +25,11 @@ struct map_renderer
     , wireframe(false)
     {}
 
-    void display_help();
+    void display_help() const;
     int get_input();
     int open_window();
     int close_window();
-    int render();
+    int render() const;
 };
 
 #endif
