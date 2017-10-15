@@ -14,9 +14,9 @@ int main(int argc, char ** argv)
     settings::get_instance(); // to load settings up front
 
     if(argc < 2) {
-        std::cerr << "usage: ./map_loader [export|render] [PARAMS]" << std::endl;
-        std::cerr << "./map_loader export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
-        std::cerr << "./map_loader render maps/head.json" << std::endl;
+        std::cerr << "usage: ./tagos [export|render] [PARAMS]" << std::endl;
+        std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
+        std::cerr << "./tagos render maps/head.json" << std::endl;
         return EXIT_FAILURE;
     }
 

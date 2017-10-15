@@ -249,8 +249,8 @@ int map::tp_import_png(const std::string & src)
     };
 
     for(std::size_t i=0; i<pixels.size() / 4; ++i) {
-        const std::uint32_t x = i % w;
-        const std::uint32_t y = i / w;
+        std::uint32_t x = i % w;
+        std::uint32_t y = i / w;
 
         // 4th value is alpha which we dont care about
         std::stringstream ss;
@@ -383,6 +383,26 @@ int map::tp_import_png(const std::string & src)
     return 0;
 }
 
+b2World * map::init_world()
+{
+    b2World* world = new b2World(b2Vec2(0, 0));
+    {
+        ball me(ball_type::red);
+        me.add_to_world(world);
+        balls.emplace_back(me);
+    }
+
+    for(auto & m : walls) {
+        m.add_to_world(world);
+    }
+
+    for(auto & m : spikes) {
+        m.add_to_world(world);
+    }
+
+    return world;
+}
+
 int map::render()
 {
 #ifdef DISABLE_RENDER
@@ -396,7 +416,7 @@ int map::render()
     sf::RenderWindow window(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
-    ), "map_loader");
+    ), "tagos");
 
     sf::View view(sf::FloatRect(
         0,
@@ -415,17 +435,7 @@ int map::render()
         << "wireframe toggle: p" << std::endl
         << "zoom: mousewheel" << std::endl;
 
-    // set up world
-    b2World* world = new b2World(b2Vec2(0, 0));
-    {
-        ball me(ball_type::red);
-        me.add_to_world(world);
-        balls.emplace_back(me);
-
-        for(auto & m : walls) {
-            m.add_to_world(world);
-        }
-    }
+    b2World * world = init_world();
 
 	while(window.isOpen()) {
 		sf::Event event;
@@ -535,6 +545,7 @@ int map::render()
         for(auto m : portals) {
             sf::CircleShape s;
             s.setRadius(scaler / 2);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition(m.x * scaler, m.y  * scaler);
             s.setFillColor(sf::Color(255, 0, 232));
             window.draw(s);
@@ -544,6 +555,7 @@ int map::render()
             sf::CircleShape s;
             s.setPointCount(8);
             s.setRadius(scaler / 3);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition((m.x + 0.17) * scaler, (m.y + 0.17)  * scaler);
             s.setFillColor(sf::Color(30, 30, 30));
             window.draw(s);
@@ -553,6 +565,7 @@ int map::render()
             sf::CircleShape s;
             s.setPointCount(3);
             s.setRadius(scaler / 2);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition(m.x * scaler, m.y  * scaler);
             s.setFillColor(sf::Color(70, 70, 70));
             window.draw(s);
@@ -562,6 +575,7 @@ int map::render()
             sf::CircleShape s;
             s.setPointCount(5);
             s.setRadius(scaler / 2);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition(m.x * scaler, m.y  * scaler);
             s.setFillColor(sf::Color(30, 255, 30));
             window.draw(s);
@@ -571,6 +585,7 @@ int map::render()
             sf::CircleShape s;
             s.setRadius(scaler / 4);
             s.setPosition((m.x + 0.25) * scaler, (m.y + 0.25)  * scaler);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setFillColor(sf::Color(230, 200, 100));
             window.draw(s);
         }
@@ -579,6 +594,7 @@ int map::render()
             sf::CircleShape s;
             s.setPointCount(3);
             s.setRadius(scaler / 3);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition((m.x + 0.17) * scaler, (m.y + 0.17)  * scaler);
             switch(m.type) {
                 case boost_type::all:  s.setFillColor(sf::Color(250, 250, 70)); break;

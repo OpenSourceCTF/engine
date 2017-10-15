@@ -3,11 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include "settings.hpp"
-
-enum class ball_type
-{
-    red, blue
-};
+#include "ball_type.hpp"
 
 struct ball
 {

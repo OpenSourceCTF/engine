@@ -13,6 +13,7 @@ struct settings
     float BALL_DENSITY;
     float BALL_RESTITUTION;
     float BALL_FRICTION;
+    float BALL_RADIUS;
 
     color COLOR_TILE;
     color COLOR_WALL;

@@ -117,6 +117,7 @@ struct map
     // todo: this should catch exceptions (esp w/ stoi)
     int tp_import_json(const std::string & src);
     int tp_import_png(const std::string & src);
+    b2World* init_world();
     int render();
 };
 
