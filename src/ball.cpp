@@ -13,7 +13,7 @@ void ball::add_to_world(b2World * world)
 
     b2CircleShape bshape;
     bshape.m_p.Set(0.0f, 0.0f);
-    bshape.m_radius = 1.0;
+    bshape.m_radius = 0.5;
 
     b2FixtureDef fdef;
     fdef.shape = &bshape;

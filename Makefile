@@ -1,13 +1,13 @@
 CXXFLAGS=-std=c++11 -Wall -Wextra -D_DEBUG
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D
 
-all: build/map_loader
+all: build/tagos
 
-build/map_loader: build/map_loader.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/boost.o build/boost_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/lodepng.o
+build/tagos: build/tagos.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/boost.o build/boost_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/lodepng.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
-build/map_loader.o: src/map_loader.cpp src/libs/json.hpp src/libs/INIReader.h 
-	$(CXX) $(CXXFLAGS) src/map_loader.cpp -c -o build/map_loader.o
+build/tagos.o: src/tagos.cpp src/libs/json.hpp src/libs/INIReader.h 
+	$(CXX) $(CXXFLAGS) src/tagos.cpp -c -o build/tagos.o
 
 build/gate.o: src/gate.cpp src/gate.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
@@ -90,5 +90,4 @@ build/lodepng.o: src/libs/lodepng.cpp src/libs/lodepng.h
 .PHONY: clean
 
 clean:
-	@rm build/*.o
-	@rm build/map_loader
+	@rm build/*

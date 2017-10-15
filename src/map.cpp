@@ -592,6 +592,7 @@ int map::render()
             b2Vec2 pos = m.get_position();
             sf::CircleShape s;
             s.setRadius(scaler / 2);
+            s.setOrigin(s.getRadius(), s.getRadius());
             s.setPosition(pos.x * scaler, pos.y  * scaler);
             switch(m.type) {
                 case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
