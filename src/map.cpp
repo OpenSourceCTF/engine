@@ -386,6 +386,9 @@ int map::tp_import_png(const std::string & src)
 b2World * map::init_world()
 {
     b2World* world = new b2World(b2Vec2(0, 0));
+    static contact_listener contact_listener_instance;
+    world->SetContactListener(&contact_listener_instance);
+
     {
         ball me(ball_type::red);
         me.add_to_world(world);

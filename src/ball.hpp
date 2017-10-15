@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include "settings.hpp"
+#include "collision_user_data.hpp"
 #include "ball_type.hpp"
 
 struct ball
@@ -24,6 +25,7 @@ struct ball
     b2Vec2 get_position();
     float get_angle();
     b2Vec2 get_linear_velocity();
+    void pop();
 };
 
 #endif

@@ -39,6 +39,7 @@
 #include "flag.hpp"
 #include "polygon.hpp"
 #include "ball.hpp"
+#include "contact_listener.hpp"
 
 
 // the types of tiles from tagpro .png map

@@ -17,6 +17,7 @@ void spike::add_to_world(b2World * world)
     b2FixtureDef fdef;
     fdef.shape = &bshape;
     body->CreateFixture(&fdef);
+    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::spike)));
 }
 
 void to_json(nlohmann::json& j, const spike& p)

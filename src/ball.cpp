@@ -23,6 +23,8 @@ void ball::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
+    // memory leak
+    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::ball)));
 }
 
 void ball::move(int x, int y)
@@ -50,5 +52,10 @@ float ball::get_angle()
 b2Vec2 ball::get_linear_velocity()
 {
     return body->GetLinearVelocity();
+}
+
+void ball::pop()
+{
+    std::cout << "popped" << std::endl;
 }
 

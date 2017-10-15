@@ -15,7 +15,7 @@ build/gate.o: src/gate.cpp src/gate.hpp
 build/gate_type.o: src/gate_type.cpp src/gate_type.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-build/map.o: src/map.cpp src/map.hpp
+build/map.o: src/map.cpp src/map.hpp src/contact_listener.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/map_type.o: src/map_type.cpp src/map_type.hpp
