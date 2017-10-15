@@ -27,6 +27,8 @@ struct settings
 
     float FLAG_RADIUS;
 
+    float PORTAL_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

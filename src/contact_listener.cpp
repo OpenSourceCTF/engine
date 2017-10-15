@@ -89,6 +89,16 @@ void contact_listener::BeginContact(b2Contact* contact)
 
             if(o) o->step_on(m);
         }
+
+        if(cdata.has(collision_user_data_type::portal)) {
+            std::cout << "has portal" << std::endl;
+
+            portal * o = reinterpret_cast<portal*>(
+                cdata.get_ptr(collision_user_data_type::portal)
+            );
+
+            if(o) o->step_on(m);
+        }
     }
 }
 

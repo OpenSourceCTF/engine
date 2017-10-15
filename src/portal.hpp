@@ -2,7 +2,12 @@
 #define ML_PORTAL_HPP
 
 #include <cstdint>
+#include <Box2D/Box2D.h>
 #include "libs/json.hpp"
+
+#include "collision_user_data.hpp"
+#include "settings.hpp"
+#include "ball.hpp"
 
 struct portal
 {
@@ -16,6 +21,8 @@ struct portal
     float dx;
     float dy;
 
+    b2Body * body;
+
     portal() {}
     portal(
         const float x,
@@ -25,10 +32,14 @@ struct portal
     , y(y)
     , has_cooldown(false)
     , has_destination(false)
+    , body(nullptr)
     {}
 
     void set_cooldown(const std::uint32_t x);
     void set_destination(const float x, const float y);
+
+    void add_to_world(b2World * world);
+    void step_on(ball* m);
 };
 
 void to_json(nlohmann::json& j, const portal& p);

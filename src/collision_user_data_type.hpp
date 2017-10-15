@@ -11,7 +11,8 @@ enum class collision_user_data_type
     toggle,
     booster,
     powerup,
-    flag
+    flag,
+    portal
 };
 
 #endif
