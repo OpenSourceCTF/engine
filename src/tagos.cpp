@@ -7,6 +7,7 @@
 
 #include "libs/json.hpp"
 #include "settings.hpp"
+#include "tp_map_importer.hpp"
 #include "map.hpp"
 #include "websocket_server.hpp"
 
@@ -36,8 +37,9 @@ int main(int argc, char ** argv)
         std::cout << "exporting " << json_src << "... " << std::flush;
 
         map m;
+        tp_map_importer importer(m);
 
-        if(m.tp_import(json_src, png_src) != 0) {
+        if(importer.tp_import(json_src, png_src) != 0) {
             return EXIT_FAILURE;
         }
 
