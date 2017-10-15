@@ -30,6 +30,8 @@ settings& settings::get_instance()
 
         instance.POWERUP_RADIUS      = reader.GetReal("powerup", "radius", 0);
 
+        instance.FLAG_RADIUS         = reader.GetReal("flag", "radius", 0);
+
         instance.COLOR_TILE          = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL          = color(reader.Get("color", "wall", "000000"));
 

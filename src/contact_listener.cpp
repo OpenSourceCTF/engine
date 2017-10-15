@@ -31,7 +31,7 @@ void contact_listener::BeginContact(b2Contact* contact)
 
             // todo
             // this is where we'd have powerups affect
-            // or deal with flags
+            // or deal with popping flag carrier
         }
 
         if(cdata.has(collision_user_data_type::spike)) {
@@ -75,6 +75,16 @@ void contact_listener::BeginContact(b2Contact* contact)
 
             powerup * o = reinterpret_cast<powerup*>(
                 cdata.get_ptr(collision_user_data_type::powerup)
+            );
+
+            if(o) o->step_on(m);
+        }
+
+        if(cdata.has(collision_user_data_type::flag)) {
+            std::cout << "has flag" << std::endl;
+
+            flag * o = reinterpret_cast<flag*>(
+                cdata.get_ptr(collision_user_data_type::flag)
             );
 
             if(o) o->step_on(m);

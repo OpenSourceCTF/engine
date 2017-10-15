@@ -25,6 +25,8 @@ struct settings
 
     float POWERUP_RADIUS;
 
+    float FLAG_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

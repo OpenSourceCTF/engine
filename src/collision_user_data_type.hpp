@@ -10,7 +10,8 @@ enum class collision_user_data_type
     bomb,
     toggle,
     booster,
-    powerup
+    powerup,
+    flag
 };
 
 #endif

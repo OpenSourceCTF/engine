@@ -4,14 +4,20 @@
 #include <string>
 #include <iostream>
 
+#include <Box2D/Box2D.h>
+
 #include "libs/json.hpp"
 #include "flag_type.hpp"
+#include "collision_user_data.hpp"
+#include "settings.hpp"
+#include "ball.hpp"
 
 struct flag
 {
     float x;
     float y;
     flag_type type;
+    b2Body * body;
 
     flag() {}
     flag(
@@ -22,7 +28,11 @@ struct flag
     : x(x)
     , y(y)
     , type(type)
+    , body(nullptr)
     {}
+
+    void add_to_world(b2World * world);
+    void step_on(ball* m);
 };
 
 void to_json(nlohmann::json& j, const flag& p);

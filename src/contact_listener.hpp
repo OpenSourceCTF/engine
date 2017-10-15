@@ -9,6 +9,8 @@
 #include "spike.hpp"
 #include "toggle.hpp"
 #include "booster.hpp"
+#include "flag.hpp"
+
 
 class contact_listener : public b2ContactListener
 {
