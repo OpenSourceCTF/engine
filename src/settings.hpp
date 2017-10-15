@@ -15,6 +15,8 @@ struct settings
     float BALL_FRICTION;
     float BALL_RADIUS;
 
+    float SPIKE_RADIUS;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

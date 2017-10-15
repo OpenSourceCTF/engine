@@ -20,6 +20,8 @@ settings& settings::get_instance()
         instance.BALL_RESTITUTION    = reader.GetReal("ball", "restitution", 0);
         instance.BALL_RADIUS         = reader.GetReal("ball", "radius", 0);
 
+        instance.SPIKE_RADIUS        = reader.GetReal("spike", "radius", 0);
+
         instance.COLOR_TILE          = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL          = color(reader.Get("color", "wall", "000000"));
 

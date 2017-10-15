@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include "libs/json.hpp"
+#include "settings.hpp"
 
 struct spike
 {
