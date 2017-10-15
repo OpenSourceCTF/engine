@@ -151,7 +151,7 @@ int map_renderer::render() const
     for(auto o : m.gates) {
         sf::ConvexShape s;
         add_points(s, o.poly);
-        switch(o.type) {
+        switch(o.current) {
             case gate_type::off:  s.setFillColor(sf::Color(0,   0,   0,   50)); break;
             case gate_type::on:   s.setFillColor(sf::Color(0,   255, 0,   50)); break;
             case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255, 50)); break;

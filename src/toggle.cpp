@@ -29,8 +29,6 @@ map* toggle::get_map(map* m)
 
 void toggle::step_on()
 {
-    std::cout << "toggle stepped on" << std::endl;
-
     for(auto & o : tags) {
         o.step_on(*get_map());
     }
@@ -38,8 +36,6 @@ void toggle::step_on()
 
 void toggle::step_off()
 {
-    std::cout << "toggle stepped off" << std::endl;
-
     for(auto & o : tags) {
         o.step_off(*get_map());
     }

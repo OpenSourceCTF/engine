@@ -2,7 +2,6 @@
 
 void toggle_tag::step_on(map& m)
 {
-    std::cout << "tag stepped on" << std::endl;
     switch(type) {
         case toggle_tag_type::bomb: m.bombs[id].explode();  break;
         case toggle_tag_type::gate: m.gates[id].mark_on(); break;
@@ -11,7 +10,6 @@ void toggle_tag::step_on(map& m)
 
 void toggle_tag::step_off(map& m)
 {
-    std::cout << "tag stepped off" << std::endl;
     switch(type) {
         case toggle_tag_type::bomb: break;
         case toggle_tag_type::gate: m.gates[id].mark_off(); break;
