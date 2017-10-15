@@ -1,0 +1,25 @@
+map_loader
+===
+
+## install
+
+
+requires sfml 2.3
+make
+c++11
+
+then run `make`
+
+## run
+
+to convert map format
+
+./build/map_loader export IN_JSON IN_PNG OUT_JSON
+
+to render map format
+
+./build/map_loader export MAP_FILE
+
+
+--- recommended you export to /maps dir and read from /tp_maps
+also - there is a `export_all_maps.sh` script which makes this more convenient for many maps

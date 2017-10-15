@@ -1,0 +1,40 @@
+## NETWORK
+
+(this is assuming 1 server per game, easier for testing for rn)
+(in future can just spawn multiple threads)
+
+start server---
+
+open port X for websocket
+
+load list of maps in maplist.txt
+
+ensure all exist in folder
+
+connect to database
+
+load first map
+
+websocket to start
+
+client connects
+client says hello with login_token (so server can get user_id, name, degrees)
+
+server replies with map id
+
+client downloads map from webserver over http
+    ensure maps are gzipped (if using nginx this is easy)
+
+client says "ready"
+
+server responds with current state of map (all positions, players, etc)
+server adds clients ball (respawn)
+server notifies all clients of new ball
+
+--
+
+in future we plan for move to webrtc
+
+## PHYSICS
+
+bug with walls coming out further than they should
