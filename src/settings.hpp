@@ -9,6 +9,7 @@ struct settings
     bool is_initialized = false;
 
     float BALL_MOVEMENT_SPEED;
+    float BALL_BOOSTER_FORCE;
     float BALL_DAMPING;
     float BALL_DENSITY;
     float BALL_RESTITUTION;

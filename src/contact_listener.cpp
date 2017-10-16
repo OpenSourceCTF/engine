@@ -2,14 +2,14 @@
 
 struct toggle;
 
-const collision_user_data unknown_data(nullptr, collision_user_data_type::unknown);
+const collision_user_data unknown_data;
 
 void contact_listener::BeginContact(b2Contact* contact)
 {
-    const collision_user_data* user_data_a = reinterpret_cast<collision_user_data*>(
+    const collision_user_data* user_data_a = static_cast<collision_user_data*>(
         contact->GetFixtureA()->GetBody()->GetUserData()
     );
-    const collision_user_data* user_data_b = reinterpret_cast<collision_user_data*>(
+    const collision_user_data* user_data_b = static_cast<collision_user_data*>(
         contact->GetFixtureB()->GetBody()->GetUserData()
     );
 
@@ -22,7 +22,7 @@ void contact_listener::BeginContact(b2Contact* contact)
     if(cdata.has(collision_user_data_type::ball)) {
         std::cout << "has ball" << std::endl;
 
-        ball * m = reinterpret_cast<ball*>(
+        ball * m = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
@@ -43,7 +43,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::bomb)) {
             std::cout << "has bomb" << std::endl;
 
-            bomb * o = reinterpret_cast<bomb*>(
+            bomb * o = static_cast<bomb*>(
                 cdata.get_ptr(collision_user_data_type::bomb)
             );
 
@@ -53,7 +53,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::toggle)) {
             std::cout << "has toggle" << std::endl;
 
-            toggle * o = reinterpret_cast<toggle*>(
+            toggle * o = static_cast<toggle*>(
                 cdata.get_ptr(collision_user_data_type::toggle)
             );
 
@@ -63,7 +63,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::booster)) {
             std::cout << "has booster" << std::endl;
 
-            booster * o = reinterpret_cast<booster*>(
+            booster * o = static_cast<booster*>(
                 cdata.get_ptr(collision_user_data_type::booster)
             );
 
@@ -73,7 +73,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::powerup)) {
             std::cout << "has powerup" << std::endl;
 
-            powerup * o = reinterpret_cast<powerup*>(
+            powerup * o = static_cast<powerup*>(
                 cdata.get_ptr(collision_user_data_type::powerup)
             );
 
@@ -83,7 +83,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::flag)) {
             std::cout << "has flag" << std::endl;
 
-            flag * o = reinterpret_cast<flag*>(
+            flag * o = static_cast<flag*>(
                 cdata.get_ptr(collision_user_data_type::flag)
             );
 
@@ -93,7 +93,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::portal)) {
             std::cout << "has portal" << std::endl;
 
-            portal * o = reinterpret_cast<portal*>(
+            portal * o = static_cast<portal*>(
                 cdata.get_ptr(collision_user_data_type::portal)
             );
 
@@ -104,10 +104,10 @@ void contact_listener::BeginContact(b2Contact* contact)
 
 void contact_listener::EndContact(b2Contact* contact)
 {
-    const collision_user_data * user_data_a = reinterpret_cast<collision_user_data*>(
+    const collision_user_data * user_data_a = static_cast<collision_user_data*>(
         contact->GetFixtureA()->GetBody()->GetUserData()
     );
-    const collision_user_data * user_data_b = reinterpret_cast<collision_user_data*>(
+    const collision_user_data * user_data_b = static_cast<collision_user_data*>(
         contact->GetFixtureB()->GetBody()->GetUserData()
     );
 
@@ -119,14 +119,14 @@ void contact_listener::EndContact(b2Contact* contact)
     if(cdata.has(collision_user_data_type::ball)) {
         std::cout << "has ball" << std::endl;
 
-        ball * m = reinterpret_cast<ball*>(
+        ball * m = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
         if(cdata.has(collision_user_data_type::toggle)) {
             std::cout << "has toggle" << std::endl;
 
-            toggle * o = reinterpret_cast<toggle*>(
+            toggle * o = static_cast<toggle*>(
                 cdata.get_ptr(collision_user_data_type::toggle)
             );
 

@@ -24,7 +24,7 @@ void ball::add_to_world(b2World * world)
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
     // memory leak
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::ball)));
+    body->SetUserData(static_cast<void*>(new collision_user_data(this)));
 }
 
 void ball::move(const int x, const int y)
@@ -32,6 +32,7 @@ void ball::move(const int x, const int y)
     const settings& config = settings::get_instance();
 
     const float a = angle_from_input(x, y);
+
     body->ApplyForce(
         b2Vec2(
             std::cos(a)*config.BALL_MOVEMENT_SPEED,
@@ -64,6 +65,19 @@ void ball::pop()
 
 void ball::get_boosted()
 {
+    const settings& config = settings::get_instance();
     std::cout << "boosted" << std::endl;
+
+    const b2Vec2 v = body->GetLinearVelocity();
+    const float a = std::atan2(v.y, v.x);
+
+    body->ApplyLinearImpulse(
+        b2Vec2(
+            std::cos(a) * config.BALL_BOOSTER_FORCE,
+            std::sin(a) * config.BALL_BOOSTER_FORCE
+        ),
+        body->GetWorldCenter(),
+        true
+    );
 }
 

@@ -12,14 +12,18 @@
 struct ball
 {
     ball_type type;
-    b2Body * body;
     std::string name;
     bool is_registered;
     std::string user_id;
     std::uint32_t degree;
+    b2Body * body;
 
     ball(const ball_type type)
     : type(type)
+    , name("someball")
+    , is_registered(false)
+    , user_id("000000-0000-0000-000000")
+    , degree(0)
     , body(nullptr)
     {}
 

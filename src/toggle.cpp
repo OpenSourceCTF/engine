@@ -18,7 +18,7 @@ void toggle::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::toggle)));
+    body->SetUserData(static_cast<void*>(new collision_user_data(this)));
 }
 
 map* toggle::get_map(map* m)

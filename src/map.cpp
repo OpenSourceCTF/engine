@@ -14,9 +14,9 @@ b2World * map::init_world()
     world->SetContactListener(&contact_listener_instance);
 
     {
-        ball me(ball_type::red);
-        me.add_to_world(world);
-        balls.emplace_back(me);
+        ball * me = new ball(ball_type::red);
+        me->add_to_world(world);
+        balls.emplace_back(*me);
     }
 
     for(auto & m : walls) {

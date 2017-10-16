@@ -15,7 +15,7 @@ build/tp_map_importer.o: src/tp_map_importer.cpp src/tp_map_importer.hpp
 build/map_renderer.o: src/map_renderer.cpp src/map_renderer.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-build/contact_listener.o: src/contact_listener.cpp src/contact_listener.hpp
+build/contact_listener.o: src/contact_listener.cpp src/contact_listener.hpp src/cslot.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/gate.o: src/gate.cpp src/gate.hpp
