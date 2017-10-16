@@ -36,6 +36,10 @@ struct settings
     float GUI_INITIAL_WINDOW_HEIGHT;
     float GUI_MOVEMENT_SPEED_DIV;
 
+    std::uint16_t SERVER_LOBBY_PORT;
+    int SERVER_GAMES;
+    int SERVER_GAME_PORT_START;
+
 
     // use this to initialize
     static settings& get_instance();

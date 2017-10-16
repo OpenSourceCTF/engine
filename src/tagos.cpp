@@ -3,16 +3,15 @@
 #include <sstream>
 #include <cstdlib>
 #include <fstream>
-#include <thread>
 
 #include <Box2D/Box2D.h>
 
 #include "libs/json.hpp"
-#include "settings.hpp"
 #include "map.hpp"
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
-#include "websocket_server.hpp"
+#include "settings.hpp"
+#include "server_lobby.hpp"
 
 int export_tp_map(
     const std::string & json_src,
@@ -60,10 +59,10 @@ int render(const std::string & map_src)
 
 int serve(const std::string & map_src)
 {
-    std::thread srv_thread(start_server, 5000);
-    srv_thread.detach();
+    server_lobby& lobby = server_lobby::get_instance();
+    lobby.start_server();
 
-    return render(map_src);
+    while(lobby.is_alive);
 }
 
 int main(int argc, char ** argv)

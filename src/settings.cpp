@@ -41,6 +41,10 @@ settings& settings::get_instance()
         instance.GUI_INITIAL_WINDOW_HEIGHT = reader.GetReal("gui", "initial_window_height", 0);
         instance.GUI_MOVEMENT_SPEED_DIV    = reader.GetReal("gui", "movement_speed_div", 0);
 
+        instance.SERVER_LOBBY_PORT         = reader.GetReal("server", "lobby_port", 0);
+        instance.SERVER_GAMES              = reader.GetReal("server", "games", 0);
+        instance.SERVER_GAME_PORT_START    = reader.GetReal("server", "game_port_start", 0);
+
         instance.is_initialized = true;
     }
 

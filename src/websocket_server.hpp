@@ -6,6 +6,11 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
+#include "server_lobby.hpp"
+#include "user.hpp"
+
+struct server_lobby;
+
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 using websocketpp::lib::placeholders::_1;
@@ -17,9 +22,11 @@ using websocketpp::lib::bind;
 typedef server::message_ptr message_ptr;
 
 // Define a callback to handle incoming messages
-void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg);
+void handle_game_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg);
+void handle_lobby_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg);
 
-int start_server(const std::uint16_t port);
+int start_game_server(const std::uint16_t port);
+int start_lobby_server(server_lobby& lobby, const std::uint16_t port);
 
 
 #endif
