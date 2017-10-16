@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++11 -Wall -Wextra -D_DEBUG
+CXXFLAGS=-std=c++11 -Wall -Wextra -DNDEBUG -g
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
 
 all: tagos

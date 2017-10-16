@@ -7,6 +7,10 @@
 #include <cstdint>
 #include "polygon.hpp"
 
+constexpr float PI     = 3.141592653589793;
+constexpr float TWO_PI = 6.283185307179586;
+
+float angle_from_input(const int x, const int y);
 
 std::vector<std::string> split_on(const std::string & str, const char n);
 

@@ -27,12 +27,16 @@ void ball::add_to_world(b2World * world)
     body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::ball)));
 }
 
-void ball::move(int x, int y)
+void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
+    const float a = angle_from_input(x, y);
     body->ApplyForce(
-        b2Vec2(x*config.BALL_MOVEMENT_SPEED, y*config.BALL_MOVEMENT_SPEED),
+        b2Vec2(
+            std::cos(a)*config.BALL_MOVEMENT_SPEED,
+            std::sin(a)*config.BALL_MOVEMENT_SPEED
+        ),
         body->GetWorldCenter(),
         true
     );

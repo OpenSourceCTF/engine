@@ -2,6 +2,7 @@
 
 server_lobby& server_lobby::get_instance()
 {
+    const settings& config = settings::get_instance();
     static server_lobby instance;
 
     if(instance.is_initialized) {
@@ -10,6 +11,7 @@ server_lobby& server_lobby::get_instance()
 
     instance.is_initialized = true;
     instance.is_alive = true;
+    instance.games.reserve(config.SERVER_GAMES);
 
     return instance;
 }

@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <chrono>
+#include <thread>
 #include "libs/json.hpp"
 #include "map.hpp"
 
@@ -12,17 +13,12 @@ struct game
     map* m;
     std::uint32_t max_points;
     std::uint32_t max_length;
+    b2World * world;
 
     game(){}
-    game(
-        const std::uint16_t port,
-        map* m
-    )
-    : port(port)
-    , m(m)
-    , max_points(3)
-    , max_length(15*60)
-    {}
+    game(const std::uint16_t port, map* m);
+
+    void run_physics();
 };
 
 void to_json(nlohmann::json& j, const game& p);

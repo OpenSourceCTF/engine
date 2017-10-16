@@ -1,10 +1,13 @@
 #ifndef ML_BALL_HPP
 #define ML_BALL_HPP
 
+#include <cmath>
+#include <iostream>
 #include <Box2D/Box2D.h>
 #include "settings.hpp"
 #include "collision_user_data.hpp"
 #include "ball_type.hpp"
+#include "util.hpp"
 
 struct ball
 {
@@ -21,7 +24,7 @@ struct ball
     {}
 
     void add_to_world(b2World * world);
-    void move(int x, int y);
+    void move(const int x, const int y);
     b2Vec2 get_position() const;
     float get_angle() const;
     b2Vec2 get_linear_velocity() const;
