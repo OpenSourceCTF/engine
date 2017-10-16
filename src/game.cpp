@@ -18,9 +18,10 @@ game::game(const std::uint16_t port, map* m)
 
 void game::run_physics()
 {
+    // todo
+    // this crashes if concurrent games is more than 1
     while(true) {
-        // std::cout << "." << std::flush;
-        // world->Step(1/60.0, 8, 3);
+        world->Step(1/60.0, 8, 3);
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
