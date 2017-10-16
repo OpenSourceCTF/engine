@@ -1,11 +1,12 @@
 #include "util.hpp"
 
+// converts [-1, 0, 1] to angle in radians
 float angle_from_input(const int x, const int y)
 {
     int m = 0;
 
-    if(x) m = 4 + ((x + 1) << 1); // 4, 0
-    if(y) m = 6 + ((y + 1) << 1); // 6, 2
+    if(x) m = 4 + ((x + 1) << 1);
+    if(y) m = 6 + ((y + 1) << 1);
     if(x && y) m += x == y ? -1 : 1;
 
     return TWO_PI / 8 * (m & 0x7);
