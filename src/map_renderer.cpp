@@ -229,7 +229,7 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto* o : m.balls) {
+    for(auto& o : m.balls) {
         b2Vec2 pos = o->get_position();
         sf::CircleShape s;
         s.setRadius(scaler / 2);

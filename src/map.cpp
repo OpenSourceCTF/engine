@@ -9,8 +9,8 @@ map::map()
 
 void map::update(b2World* world)
 {
-    for(auto o : balls) {
-        if(! o->is_alive) respawn_ball(o);
+    for(auto & o : balls) {
+        if(! o->is_alive) respawn_ball(o.get());
         o->is_alive = true;
     }
 }
@@ -69,12 +69,12 @@ void map::respawn_ball(ball* b)
 
 ball* map::add_ball(b2World* world, ball b)
 {
-    ball* o = new ball(b);
-    o->add_to_world(world);
-    balls.emplace_back(o);
-    respawn_ball(o);
+    std::unique_ptr<ball> o(new ball(b));
+    balls.emplace_back(std::unique_ptr<ball>(new ball(b)));
+    balls.back()->add_to_world(world);
+    respawn_ball(balls.back().get());
 
-    return o;
+    return balls.back().get();
 }
 
 

@@ -14,6 +14,7 @@
 #include <map>
 #include <random>
 #include <cmath>
+#include <memory>
 
 #include "libs/lodepng.h"
 #include "libs/json.hpp"
@@ -65,7 +66,7 @@ struct map
     std::vector<booster> boosters;
     std::vector<gate>    gates;
     std::vector<flag>    flags;
-    std::vector<ball*>   balls;
+    std::vector<std::unique_ptr<ball>> balls;
 
     map();
 
