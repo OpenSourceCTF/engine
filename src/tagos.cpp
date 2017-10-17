@@ -51,6 +51,7 @@ int render(const std::string & map_src)
 
     b2World * world = m.init_world();
     while(renderer.render() && renderer.get_input()) {
+        m.update(world);
         world->Step(1/60.0, 8, 3);
     }
 

@@ -12,6 +12,7 @@
 struct ball
 {
     ball_type type;
+    bool is_alive;
     std::string name;
     bool is_registered;
     std::string user_id;
@@ -20,6 +21,7 @@ struct ball
 
     ball(const ball_type type)
     : type(type)
+    , is_alive(true)
     , name("someball")
     , is_registered(false)
     , user_id("000000-0000-0000-000000")

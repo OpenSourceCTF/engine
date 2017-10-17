@@ -7,8 +7,17 @@ map::map()
     toggle::get_map(this);
 }
 
+void map::update(b2World* world)
+{
+    for(auto o : balls) {
+        if(! o->is_alive) respawn_ball(o);
+        o->is_alive = true;
+    }
+}
+
 void map::respawn_ball(ball* b)
 {
+    std::cout << "respawning" << std::endl;
     random_util& rng = random_util::get_instance();
 
     std::vector<spawn> potential_spawns;
@@ -62,7 +71,7 @@ ball* map::add_ball(b2World* world, ball b)
 {
     ball* o = new ball(b);
     o->add_to_world(world);
-    balls.emplace_back(*o);
+    balls.emplace_back(o);
     respawn_ball(o);
 
     return o;

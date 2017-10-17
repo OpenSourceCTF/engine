@@ -85,7 +85,7 @@ int map_renderer::get_input()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[0].move(move_x, move_y);
+        if(move_x || move_y) m.balls[0]->move(move_x, move_y);
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -229,13 +229,13 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto o : m.balls) {
-        b2Vec2 pos = o.get_position();
+    for(auto* o : m.balls) {
+        b2Vec2 pos = o->get_position();
         sf::CircleShape s;
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setPosition(pos.x * scaler, pos.y  * scaler);
-        switch(o.type) {
+        switch(o->type) {
             case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
             case ball_type::blue: s.setFillColor(sf::Color(50, 50, 200)); break;
         }

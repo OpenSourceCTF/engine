@@ -67,6 +67,7 @@ b2Vec2 ball::get_linear_velocity() const
 void ball::pop()
 {
     std::cout << "popped" << std::endl;
+    is_alive = false;
 }
 
 void ball::get_boosted()

@@ -65,10 +65,11 @@ struct map
     std::vector<booster> boosters;
     std::vector<gate>    gates;
     std::vector<flag>    flags;
-    std::vector<ball>    balls;
+    std::vector<ball*>   balls;
 
     map();
 
+    void update(b2World* world);
     b2World* init_world();
     ball* add_ball(b2World* world, ball b);
     void respawn_ball(ball* b);
