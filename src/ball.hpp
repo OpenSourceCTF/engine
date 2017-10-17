@@ -28,6 +28,7 @@ struct ball
     {}
 
     void add_to_world(b2World * world);
+    void set_position(const b2Vec2 pos);
     void move(const int x, const int y);
     b2Vec2 get_position() const;
     float get_angle() const;

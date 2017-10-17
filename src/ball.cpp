@@ -24,7 +24,13 @@ void ball::add_to_world(b2World * world)
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
     // memory leak
+    // todo: fix these everywhere (all new collision_user_data)
     body->SetUserData(static_cast<void*>(new collision_user_data(this)));
+}
+
+void ball::set_position(const b2Vec2 pos)
+{
+    body->SetTransform(pos, get_angle());
 }
 
 void ball::move(const int x, const int y)

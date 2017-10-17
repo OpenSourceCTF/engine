@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <map>
+#include <random>
+#include <cmath>
 
 #include "libs/lodepng.h"
 #include "libs/json.hpp"
@@ -35,8 +37,10 @@
 #include "polygon.hpp"
 #include "ball.hpp"
 #include "contact_listener.hpp"
+#include "random_util.hpp"
 
 struct toggle;
+struct ball;
 
 struct map
 {
@@ -66,6 +70,8 @@ struct map
     map();
 
     b2World* init_world();
+    ball* add_ball(b2World* world, ball b);
+    void respawn_ball(ball* b);
 };
 
 void to_json(nlohmann::json& j, const map& p);

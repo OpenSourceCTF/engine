@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include <random>
 #include "polygon.hpp"
 
 constexpr float PI     = 3.141592653589793;

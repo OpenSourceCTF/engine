@@ -7,16 +7,76 @@ map::map()
     toggle::get_map(this);
 }
 
+void map::respawn_ball(ball* b)
+{
+    random_util& rng = random_util::get_instance();
+
+    std::vector<spawn> potential_spawns;
+
+    for(auto s : spawns) {
+        if((s.type == spawn_type::red  && b->type == ball_type::red)
+        || (s.type == spawn_type::blue && b->type == ball_type::blue)
+        ) {
+            for(std::size_t i=0; i<(s.weight > 0) ? s.weight : 1; ++i) {
+                potential_spawns.emplace_back(s);
+            }
+        }
+    }
+
+    if(potential_spawns.empty()) {
+        const spawn_type matching_spawn_type = b->type == ball_type::red
+            ? spawn_type::red
+            : spawn_type::blue;
+
+        // maps dont require spawn points...
+        // but thats stupid
+        // maybe this should be fixed in map export
+        const flag_type matching_flag_type = b->type == ball_type::red
+            ? flag_type::red
+            : flag_type::blue;
+
+        for(auto f : flags) {
+            if(f.type == matching_flag_type) {
+                potential_spawns.emplace_back(spawn(f.x, f.y, 1, 1, matching_spawn_type));
+            }
+        }
+
+        // if theres no flags or spawns...
+        if(potential_spawns.empty()) {
+            std::cerr << "error: no spawns found, placing at 0,0, fix your map" << std::endl;
+            potential_spawns.emplace_back(spawn(0, 0, 1, 1, matching_spawn_type));
+        }
+    }
+
+    const spawn & s = potential_spawns[
+        std::uniform_int_distribution<int>(0, potential_spawns.size()-1)(rng.eng)
+    ];
+    const float a = std::uniform_real_distribution<>(0.0f, TWO_PI)(rng.eng);
+    b->set_position(b2Vec2(
+        s.x + (std::cos(a) * s.radius),
+        s.y + (std::sin(a) + s.radius))
+    );
+}
+
+ball* map::add_ball(b2World* world, ball b)
+{
+    ball* o = new ball(b);
+    o->add_to_world(world);
+    balls.emplace_back(*o);
+    respawn_ball(o);
+
+    return o;
+}
+
+
 b2World * map::init_world()
 {
     b2World* world = new b2World(b2Vec2(0, 0));
     static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
 
-    {
-        ball * me = new ball(ball_type::red);
-        me->add_to_world(world);
-        balls.emplace_back(*me);
+    for(std::size_t i=0; i<8; ++i) {
+        add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
     }
 
     for(auto & m : walls) {
