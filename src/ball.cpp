@@ -66,14 +66,12 @@ b2Vec2 ball::get_linear_velocity() const
 
 void ball::pop()
 {
-    std::cout << "popped" << std::endl;
     is_alive = false;
 }
 
 void ball::get_boosted()
 {
     const settings& config = settings::get_instance();
-    std::cout << "boosted" << std::endl;
 
     const b2Vec2 v = body->GetLinearVelocity();
     const float a = std::atan2(v.y, v.x);
