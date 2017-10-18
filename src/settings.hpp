@@ -19,6 +19,8 @@ struct settings
     float SPIKE_RADIUS;
 
     float BOMB_RADIUS;
+    float BOMB_EXPLOSION_RADIUS;
+    float BOMB_EXPLOSION_FORCE;
 
     float TOGGLE_RADIUS;
 

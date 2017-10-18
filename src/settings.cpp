@@ -24,6 +24,8 @@ settings& settings::get_instance()
         instance.SPIKE_RADIUS        = reader.GetReal("spike", "radius", 0);
 
         instance.BOMB_RADIUS         = reader.GetReal("bomb", "radius", 0);
+        instance.BOMB_EXPLOSION_RADIUS = reader.GetReal("bomb", "explosion_radius", 0);
+        instance.BOMB_EXPLOSION_FORCE  = reader.GetReal("bomb", "explosion_force", 0);
 
         instance.TOGGLE_RADIUS       = reader.GetReal("toggle", "radius", 0);
 

@@ -22,6 +22,7 @@ struct portal
     float dy;
 
     b2Body * body;
+    collision_user_data* col_data;
 
     portal() {}
     portal(
@@ -33,6 +34,7 @@ struct portal
     , has_cooldown(false)
     , has_destination(false)
     , body(nullptr)
+    , col_data(new collision_user_data(this))
     {}
 
     void set_cooldown(const std::uint32_t x);

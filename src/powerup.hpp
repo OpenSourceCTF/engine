@@ -12,6 +12,7 @@ struct powerup
     float x;
     float y;
     b2Body * body;
+    collision_user_data* col_data;
 
     powerup(){}
     powerup(
@@ -20,6 +21,7 @@ struct powerup
     )
     : x(x)
     , y(y)
+    , col_data(new collision_user_data(this))
     {}
 
     void add_to_world(b2World * world);

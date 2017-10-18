@@ -58,7 +58,7 @@ void portal::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(this)));
+    body->SetUserData(static_cast<void*>(col_data));
 }
 
 void portal::step_on(ball* m)

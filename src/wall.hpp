@@ -13,6 +13,7 @@ struct wall
     polygon poly;
     color col;
     b2Body * body;
+    collision_user_data* col_data;
 
     wall(){}
     wall(
@@ -22,6 +23,7 @@ struct wall
     : poly(poly)
     , col(col)
     , body(nullptr)
+    , col_data(new collision_user_data(this))
     {}
 
     void add_to_world(b2World * world);

@@ -17,6 +17,7 @@ struct booster
     float y;
     booster_type type;
     b2Body * body;
+    collision_user_data* col_data;
 
     booster(){}
     booster(
@@ -28,6 +29,7 @@ struct booster
     , y(y)
     , type(type)
     , body(nullptr)
+    , col_data(new collision_user_data(this))
     {}
 
     void add_to_world(b2World* world);

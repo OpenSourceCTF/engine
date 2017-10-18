@@ -22,6 +22,7 @@ struct toggle
     std::uint32_t timer;
     std::vector<toggle_tag> tags;
     b2Body * body;
+    collision_user_data* col_data;
 
     toggle(){}
 
@@ -36,6 +37,7 @@ struct toggle
     , timer(timer)
     , tags(tags)
     , body(nullptr)
+    , col_data(new collision_user_data(this))
     {}
 
     static map* get_map(map* m=nullptr);

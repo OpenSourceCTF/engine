@@ -1,5 +1,24 @@
 #include "util.hpp"
 
+float map_val(
+    const float v,
+    const float ax,
+    const float ay,
+    const float bx,
+    const float by
+) {
+      return bx + (by - bx) * ((v - ax) / (ay - ax));
+}
+
+float dist(
+    const float x1,
+    const float y1,
+    const float x2,
+    const float y2
+) {
+    return std::sqrt(std::pow(x1 - x2, 2) + std::pow(y1 - y2, 2));
+}
+
 // converts [-1, 0, 1] to angle in radians
 float angle_from_input(const int x, const int y)
 {
