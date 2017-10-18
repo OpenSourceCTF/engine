@@ -58,8 +58,8 @@ static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_portal_positions;
 
 // little helper for turning tiles into 2 polys
 std::vector<polygon> make_square_poly(
-    const std::uint32_t x,
-    const std::uint32_t y
+    const float x,
+    const float y
 ) {
     return {
         polygon(x, y, x+1, y, x+1, y+1),
