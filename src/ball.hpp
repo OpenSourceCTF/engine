@@ -20,6 +20,8 @@ struct ball
     std::uint32_t degree;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
+    bool should_transport;
+    std::size_t portal_transport_id;
 
     ball(const ball_type type)
     : type(type)
@@ -30,8 +32,10 @@ struct ball
     , degree(0)
     , body(nullptr)
     , col_data(nullptr)
+    , should_transport(false)
     {}
 
+    void set_portal_transport(const std::size_t portal_id);
     void add_to_world(b2World * world);
     void set_position(const b2Vec2 pos);
     void move(const int x, const int y);

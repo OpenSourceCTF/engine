@@ -27,6 +27,12 @@ void ball::add_to_world(b2World * world)
     body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
+void ball::set_portal_transport(const std::size_t portal_id)
+{
+    portal_transport_id = portal_id;
+    should_transport = true;
+}
+
 void ball::set_position(const b2Vec2 pos)
 {
     body->SetTransform(pos, get_angle());

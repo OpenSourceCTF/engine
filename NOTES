@@ -1,6 +1,8 @@
 ## TODO
 
 add timers (respawn, boosters, bombs, powerups)
+make portals linked by id rather than pos
+make portals disable each other when transporting
 make boosters turn off after boosting
 make bombs turn off after blowing up
 make bombs push players

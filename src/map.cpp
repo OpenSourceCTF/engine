@@ -12,6 +12,11 @@ void map::update(b2World* world)
     for(auto & o : balls) {
         if(! o->is_alive) respawn_ball(o.get());
         o->is_alive = true;
+
+        if(o->should_transport) {
+            const portal& p = portals[o->portal_transport_id];
+            o->set_position(b2Vec2(p.x, p.y));
+        }
     }
 }
 

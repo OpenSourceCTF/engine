@@ -19,8 +19,7 @@ struct portal
     std::uint32_t cooldown;
 
     bool has_destination;
-    float dx;
-    float dy;
+    std::size_t destination_id;
 
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
@@ -34,13 +33,12 @@ struct portal
     , y(y)
     , has_cooldown(false)
     , has_destination(false)
+    , destination_id(0)
     , body(nullptr)
     , col_data(nullptr)
     {}
 
     void set_cooldown(const std::uint32_t x);
-    void set_destination(const float x, const float y);
-
     void add_to_world(b2World * world);
     void step_on(ball* m);
 };

@@ -7,19 +7,12 @@ void portal::set_cooldown(const std::uint32_t x)
     cooldown = x;
 }
 
-void portal::set_destination(const float x, const float y)
-{
-    has_destination = true;
-    dx = x;
-    dy = y;
-}
-
 void to_json(nlohmann::json& j, const portal& p)
 {
     j = nlohmann::json{
         {"x", p.x}, {"y", p.y},
         {"has_cooldown", p.has_cooldown}, {"cooldown", p.cooldown},
-        {"has_destination", p.has_destination}, {"dx", p.dx}, {"dy", p.dy}
+        {"has_destination", p.has_destination}, {"destination_id", p.destination_id}
     };
 }
 
@@ -35,8 +28,7 @@ void from_json(const nlohmann::json& j, portal& p)
 
     p.has_destination = j.at("has_destination").get<bool>();
     if(p.has_destination) {
-        p.dx = j.at("dx").get<float>();
-        p.dy = j.at("dy").get<float>();
+        p.destination_id  = j.at("destination_id").get<int>();
     }
 }
 
@@ -65,5 +57,10 @@ void portal::add_to_world(b2World * world)
 void portal::step_on(ball* m)
 {
     std::cout << "portal stepped on" << std::endl;
+
+    if(has_destination) {
+        std::cout << "move to: " << destination_id << std::endl;
+        m->set_portal_transport(destination_id);
+    }
 }
 
