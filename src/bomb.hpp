@@ -8,6 +8,7 @@
 #include "libs/json.hpp"
 #include "settings.hpp"
 #include "collision_user_data.hpp"
+#include "ball.hpp"
 #include "util.hpp"
 
 struct bomb
@@ -29,7 +30,7 @@ struct bomb
     {}
 
     void add_to_world(b2World* world);
-    void explode();
+    void explode(ball* b);
 };
 
 void to_json(nlohmann::json& j, const bomb& p);

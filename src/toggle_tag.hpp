@@ -8,6 +8,7 @@
 #include "toggle_tag_type.hpp"
 #include "map.hpp"
 #include "ball.hpp"
+#include "util.hpp"
 
 struct map;
 

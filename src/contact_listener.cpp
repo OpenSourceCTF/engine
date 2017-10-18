@@ -47,7 +47,7 @@ void contact_listener::BeginContact(b2Contact* contact)
                 cdata.get_ptr(collision_user_data_type::bomb)
             );
 
-            if(o) o->explode();
+            if(o) o->explode(m);
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
@@ -128,6 +128,16 @@ void contact_listener::EndContact(b2Contact* contact)
 
             toggle * o = static_cast<toggle*>(
                 cdata.get_ptr(collision_user_data_type::toggle)
+            );
+
+            if(o) o->step_off(m);
+        }
+
+        if(cdata.has(collision_user_data_type::portal)) {
+            std::cout << "contact: portal" << std::endl;
+
+            portal * o = static_cast<portal*>(
+                cdata.get_ptr(collision_user_data_type::portal)
             );
 
             if(o) o->step_off(m);

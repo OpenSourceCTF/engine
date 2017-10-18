@@ -34,7 +34,7 @@ struct ExplodeAABBCallback : public b2QueryCallback
     }
 };
 
-void bomb::explode()
+void bomb::explode(ball* b)
 {
     const settings& config = settings::get_instance();
     std::cout << "boom: " << x << "," << y << std::endl;

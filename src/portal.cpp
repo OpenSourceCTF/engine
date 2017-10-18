@@ -64,3 +64,8 @@ void portal::step_on(ball* m)
     }
 }
 
+void portal::step_off(ball* m)
+{
+    std::cout << "portal stepped off" << std::endl;
+}
+

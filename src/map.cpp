@@ -15,6 +15,7 @@ void map::update(b2World* world)
         if(o->should_transport) {
             const portal& p = portals[o->portal_transport_id];
             o->set_position(b2Vec2(p.x, p.y));
+            o->should_transport = false;
         }
     }
 }

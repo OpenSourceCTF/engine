@@ -3,8 +3,8 @@
 void toggle_tag::step_on(map& m, ball* o)
 {
     switch(type) {
-        case toggle_tag_type::bomb: m.bombs[id].explode();  break;
-        case toggle_tag_type::gate: m.gates[id].mark_on(); break;
+        case toggle_tag_type::bomb: m.bombs[id].explode(o);  break;
+        case toggle_tag_type::gate: m.gates[id].mark_on(o); break;
     }
 }
 
@@ -12,7 +12,7 @@ void toggle_tag::step_off(map& m, ball* o)
 {
     switch(type) {
         case toggle_tag_type::bomb: break;
-        case toggle_tag_type::gate: m.gates[id].mark_off(); break;
+        case toggle_tag_type::gate: m.gates[id].mark_off(o); break;
     }
 }
 

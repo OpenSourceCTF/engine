@@ -8,6 +8,7 @@
 #include "polygon.hpp"
 
 #include "gate_type.hpp"
+#include "ball.hpp"
 
 
 struct gate
@@ -27,8 +28,8 @@ struct gate
     , current(type)
     {}
 
-    void mark_on();
-    void mark_off();
+    void mark_on(ball* b);
+    void mark_off(ball* b);
 };
 
 void to_json(nlohmann::json& j, const gate& p);
