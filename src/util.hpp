@@ -34,11 +34,6 @@ float dist(
 
 std::vector<std::string> split_on(const std::string & str, const char n);
 
-std::vector<polygon> make_square_poly(
-    const std::uint32_t x,
-    const std::uint32_t y
-);
-
 // check if two enum classes have same color
 template <typename T, typename U>
 constexpr bool same_color(const T a, const U b)

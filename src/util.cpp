@@ -22,7 +22,7 @@ float dist(
 // converts [-1, 0, 1] to angle in radians
 float angle_from_input(const int x, const int y)
 {
-    int m = 0;
+    std::uint32_t m = 0;
 
     if(x) m = 4 + ((x + 1) << 1);
     if(y) m = 6 + ((y + 1) << 1);
@@ -43,14 +43,4 @@ std::vector<std::string> split_on(const std::string & str, const char n)
 
     return pieces;
 }
-
-std::vector<polygon> make_square_poly(
-    const std::uint32_t x,
-    const std::uint32_t y
-) {
-    return {
-        polygon(x, y, x+1, y, x+1, y+1),
-        polygon(x, y, x, y+1, x+1, y+1)
-    };
-};
 

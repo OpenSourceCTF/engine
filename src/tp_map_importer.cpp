@@ -1,5 +1,35 @@
 #include "tp_map_importer.hpp"
 
+
+// the types of tiles from tagpro .png map
+enum class tp_tile_type
+{
+    background,
+    tile,
+    speed_red,
+    speed_blue,
+    endzone_red,
+    endzone_blue,
+    wall,
+    wall_tl,
+    wall_tr,
+    wall_bl,
+    wall_br,
+    bomb,
+    spike,
+    powerup,
+    button,
+    booster_all,
+    booster_red,
+    booster_blue,
+    gate,
+    portal,
+    flag_neutral,
+    flag_red,
+    flag_blue
+};
+
+
 // todo clean this up
 // this is just used for tp imports
 struct tp_pos
@@ -23,8 +53,20 @@ struct tp_pos_cmp
 // we have to do this first so we can store the positions
 // so we can link this using our toggle_tags system
 // second param is id of toggle in toggles
-std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_toggle_positions;
-std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_portal_positions;
+static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_toggle_positions;
+static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_portal_positions;
+
+// little helper for turning tiles into 2 polys
+std::vector<polygon> make_square_poly(
+    const std::uint32_t x,
+    const std::uint32_t y
+) {
+    return {
+        polygon(x, y, x+1, y, x+1, y+1),
+        polygon(x, y, x, y+1, x+1, y+1)
+    };
+};
+
 
 int tp_map_importer::tp_import(
     const std::string & json_src,
