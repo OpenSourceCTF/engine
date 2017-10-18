@@ -27,8 +27,10 @@ void booster::step_on(ball* m)
     std::cout << "booster stepped on" << std::endl;
     switch(type) {
         case booster_type::all:  m->get_boosted(); break;
-        case booster_type::red:  if(m->type == ball_type::red)  m->get_boosted(); break;
-        case booster_type::blue: if(m->type == ball_type::blue) m->get_boosted(); break;
+        case booster_type::red:  
+        case booster_type::blue:
+           if(same_color(type, m->type)) m->get_boosted();
+           break;
     }
 }
 

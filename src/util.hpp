@@ -6,6 +6,9 @@
 #include <sstream>
 #include <cstdint>
 #include <random>
+#include <type_traits>
+#include <exception>
+#include <iostream>
 #include "polygon.hpp"
 
 constexpr float PI     = 3.141592653589793;
@@ -35,6 +38,34 @@ std::vector<polygon> make_square_poly(
     const std::uint32_t x,
     const std::uint32_t y
 );
+
+// check if two enum classes have same color
+template <typename T, typename U>
+constexpr bool same_color(const T a, const U b)
+{
+    static_assert(std::is_enum<T>::value, "T must be enum");
+    static_assert(std::is_enum<U>::value, "U must be enum");
+
+    return (a == T::red  && b == U::red)
+        || (a == T::blue && b == U::blue);
+}
+
+// return the corresponding color from U a to T type
+template <typename T, typename U>
+T corresponding_color(const U a)
+{
+    static_assert(std::is_enum<T>::value, "T must be enum");
+    static_assert(std::is_enum<U>::value, "U must be enum");
+
+    switch(a) {
+        case U::red:  return T::red;
+        case U::blue: return T::blue;
+        default:
+            std::cerr << "error: corresponding_color doesn't exist" << std::endl;
+            std::terminate();
+            return T::red; // error suppressor
+    }
+}
 
 #endif
 

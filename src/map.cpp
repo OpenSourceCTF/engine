@@ -27,9 +27,7 @@ void map::respawn_ball(ball* b)
     std::vector<spawn> potential_spawns;
 
     for(auto s : spawns) {
-        if((s.type == spawn_type::red  && b->type == ball_type::red)
-        || (s.type == spawn_type::blue && b->type == ball_type::blue)
-        ) {
+        if(same_color(s.type, b->type)) {
             for(std::size_t i=0; i<(s.weight > 0) ? s.weight : 1; ++i) {
                 potential_spawns.emplace_back(s);
             }
@@ -37,16 +35,12 @@ void map::respawn_ball(ball* b)
     }
 
     if(potential_spawns.empty()) {
-        const spawn_type matching_spawn_type = b->type == ball_type::red
-            ? spawn_type::red
-            : spawn_type::blue;
+        const spawn_type matching_spawn_type = corresponding_color<spawn_type>(b->type);
 
         // maps dont require spawn points...
         // but thats stupid
         // maybe this should be fixed in map export
-        const flag_type matching_flag_type = b->type == ball_type::red
-            ? flag_type::red
-            : flag_type::blue;
+        const flag_type matching_flag_type = corresponding_color<flag_type>(b->type);
 
         for(auto f : flags) {
             if(f.type == matching_flag_type) {
