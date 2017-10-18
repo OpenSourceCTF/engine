@@ -25,6 +25,8 @@ void ball::add_to_world(b2World * world)
     body->ResetMassData();
     col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
     body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 void ball::set_portal_transport(const std::size_t portal_id)
@@ -71,7 +73,10 @@ b2Vec2 ball::get_linear_velocity() const
 
 void ball::pop()
 {
+    const settings& config = settings::get_instance();
+
     is_alive = false;
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
 }
 
 void ball::get_boosted()

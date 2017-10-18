@@ -7,7 +7,7 @@ map::map()
 void map::update(b2World* world)
 {
     for(auto & o : balls) {
-        if(! o->is_alive) {
+        if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
             o->is_alive = true;
         }
@@ -17,6 +17,18 @@ void map::update(b2World* world)
             o->set_position(b2Vec2(p.x, p.y));
             o->should_transport = false;
         }
+    }
+
+    for(auto & o : bombs) {
+        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
+    }
+
+    for(auto & o : powerups) {
+        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
+    }
+
+    for(auto & o : boosters) {
+        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
     }
 }
 

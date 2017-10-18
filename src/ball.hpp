@@ -13,7 +13,6 @@
 struct ball
 {
     ball_type type;
-    bool is_alive;
     std::string name;
     bool is_registered;
     std::string user_id;
@@ -22,10 +21,12 @@ struct ball
     std::shared_ptr<collision_user_data> col_data;
     bool should_transport;
     std::size_t portal_transport_id;
+    bool is_alive;
+    int respawn_counter;
+
 
     ball(const ball_type type)
     : type(type)
-    , is_alive(true)
     , name("someball")
     , is_registered(false)
     , user_id("000000-0000-0000-000000")
@@ -33,6 +34,7 @@ struct ball
     , body(nullptr)
     , col_data(nullptr)
     , should_transport(false)
+    , is_alive(true)
     {}
 
     void set_portal_transport(const std::size_t portal_id);
