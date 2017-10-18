@@ -1,12 +1,9 @@
 ## TODO
 
-add timers (respawn, boosters, bombs, powerups)
 make toggles toggle again
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever
 fix portal bug where you get teleported in circle
-make boosters turn off after boosting
-make bombs turn off after blowing up
 make powerups
 make powerups have effects
 track flag ownership and scoring
