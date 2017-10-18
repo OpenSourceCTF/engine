@@ -1,11 +1,12 @@
 ## TODO
 
 add timers (respawn, boosters, bombs, powerups)
-make toggles not dependent on static map
-make portals disable each other when transporting
+make toggles toggle again
+track stepping on toggles by players
+    so we can tell when it is 2blue+1red or whatever
+fix portal bug where you get teleported in circle
 make boosters turn off after boosting
 make bombs turn off after blowing up
-make bombs push players
 make powerups
 make powerups have effects
 track flag ownership and scoring
@@ -16,6 +17,7 @@ handle websocket movement input
     (will require an action queue)
 send map deltas for server
     (will require a queue for updates)
+handle chat
 
 
 ## NETWORK
@@ -51,10 +53,6 @@ client says ready with login_token (so server can get user_id, name, degrees)
 
 in future we plan for move to webrtc
 
-## MAP
-
-seems like everything is slightly.. offset?
-
 ## ENGINE
 
 objects need to use unique_ptr or shared_ptr rather than raw ptrs
@@ -69,3 +67,9 @@ maybe with subrepositories?
 make it easy to switch between debug and release mode in makefile
 
 improve dependencies in makefile + general cleanup
+
+## BUGS
+
+* `serve` crashes when [server] games > 1 in config.ini
+
+* `serve` "render" crashes when trying to open sfml window
