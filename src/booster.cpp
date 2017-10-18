@@ -25,7 +25,11 @@ void booster::add_to_world(b2World * world)
 void booster::step_on(ball* m)
 {
     std::cout << "booster stepped on" << std::endl;
-    m->get_boosted();
+    switch(type) {
+        case booster_type::all:  m->get_boosted(); break;
+        case booster_type::red:  if(m->type == ball_type::red)  m->get_boosted(); break;
+        case booster_type::blue: if(m->type == ball_type::blue) m->get_boosted(); break;
+    }
 }
 
 void to_json(nlohmann::json& j, const booster& p)
