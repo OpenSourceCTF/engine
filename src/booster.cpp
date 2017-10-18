@@ -20,11 +20,18 @@ void booster::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
     body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 void booster::step_on(ball* m)
 {
     std::cout << "booster stepped on" << std::endl;
+
+    if(! is_alive) {
+        return;
+    }
+
     switch(type) {
         case booster_type::all:  m->get_boosted(); break;
         case booster_type::red:  
@@ -32,6 +39,8 @@ void booster::step_on(ball* m)
            if(same_color(type, m->type)) m->get_boosted();
            break;
     }
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const booster& p)

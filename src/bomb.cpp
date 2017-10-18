@@ -1,5 +1,17 @@
 #include "bomb.hpp"
 
+bomb::bomb(
+    const float x,
+    const float y
+)
+: x(x)
+, y(y)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+, respawn_counter(0)
+{}
+
 void bomb::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -20,6 +32,8 @@ void bomb::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
     body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 //subclass b2QueryCallback
@@ -36,6 +50,10 @@ struct ExplodeAABBCallback : public b2QueryCallback
 
 void bomb::explode(ball* b)
 {
+    if(! is_alive) {
+        return;
+    }
+
     const settings& config = settings::get_instance();
     std::cout << "boom: " << x << "," << y << std::endl;
 
@@ -70,6 +88,8 @@ void bomb::explode(ball* b)
             true
         );
     }
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const bomb& p)

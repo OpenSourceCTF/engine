@@ -17,17 +17,14 @@ struct bomb
     float y;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
+    bool is_alive;
+    int respawn_counter;
 
     bomb(){}
     bomb(
         const float x,
         const float y
-    )
-    : x(x)
-    , y(y)
-    , body(nullptr)
-    , col_data(nullptr)
-    {}
+    );
 
     void add_to_world(b2World* world);
     void explode(ball* b);

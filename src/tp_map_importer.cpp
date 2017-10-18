@@ -414,12 +414,10 @@ int tp_map_importer::tp_import_png(const std::string & src)
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            // todo -- this has something to do with json crap
         } else if(tiletype == tp_tile_type::portal) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            // todo -- this has something to do with json crap
         } else if(tiletype == tp_tile_type::flag_neutral) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, col, tile_type::normal));

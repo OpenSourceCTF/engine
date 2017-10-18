@@ -14,6 +14,8 @@ struct powerup
     float y;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
+    bool is_alive;
+    int respawn_counter;
 
     powerup(){}
     powerup(
@@ -24,6 +26,8 @@ struct powerup
     , y(y)
     , body(nullptr)
     , col_data(nullptr)
+    , is_alive(true)
+    , respawn_counter(0)
     {}
 
     void add_to_world(b2World * world);

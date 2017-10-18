@@ -20,11 +20,19 @@ void powerup::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
     body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 void powerup::step_on(ball* m)
 {
     std::cout << "powerup stepped on" << std::endl;
+
+    if(! is_alive) {
+        return;
+    }
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const powerup& p)

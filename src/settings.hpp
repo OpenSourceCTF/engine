@@ -15,18 +15,22 @@ struct settings
     float BALL_RESTITUTION;
     float BALL_FRICTION;
     float BALL_RADIUS;
+    int   BALL_RESPAWN_TIME;
 
     float SPIKE_RADIUS;
 
     float BOMB_RADIUS;
+    int   BOMB_RESPAWN_TIME;
     float BOMB_EXPLOSION_RADIUS;
     float BOMB_EXPLOSION_FORCE;
 
     float TOGGLE_RADIUS;
 
     float BOOSTER_RADIUS;
+    int   BOOSTER_RESPAWN_TIME;
 
     float POWERUP_RADIUS;
+    int   POWERUP_RESPAWN_TIME;
 
     float FLAG_RADIUS;
 
