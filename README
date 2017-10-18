@@ -22,7 +22,7 @@ to convert map format
 
 to render map format
 
-./tagos export MAP_FILE
+./tagos render MAP_FILE
 
 
 --- recommended you export to /maps dir and read from /tp_maps
