@@ -1,6 +1,7 @@
 #ifndef ML_BOMB_HPP
 #define ML_BOMB_HPP
 
+#include <memory>
 #include <iostream>
 #include <cmath>
 #include <Box2D/Box2D.h>
@@ -14,7 +15,7 @@ struct bomb
     float x;
     float y;
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     bomb(){}
     bomb(
@@ -24,7 +25,7 @@ struct bomb
     : x(x)
     , y(y)
     , body(nullptr)
-    , col_data(new collision_user_data(this))
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World* world);

@@ -23,9 +23,8 @@ void ball::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
-    // memory leak
-    // todo: fix these everywhere (all new collision_user_data)
-    body->SetUserData(static_cast<void*>(new collision_user_data(this)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
 void ball::set_position(const b2Vec2 pos)

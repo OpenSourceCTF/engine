@@ -20,7 +20,8 @@ void wall::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.density = 1;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(col_data));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
 void to_json(nlohmann::json& j, const wall& p)

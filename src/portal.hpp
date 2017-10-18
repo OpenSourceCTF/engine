@@ -1,6 +1,7 @@
 #ifndef ML_PORTAL_HPP
 #define ML_PORTAL_HPP
 
+#include <memory>
 #include <cstdint>
 #include <Box2D/Box2D.h>
 #include "libs/json.hpp"
@@ -22,7 +23,7 @@ struct portal
     float dy;
 
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     portal() {}
     portal(
@@ -34,7 +35,7 @@ struct portal
     , has_cooldown(false)
     , has_destination(false)
     , body(nullptr)
-    , col_data(new collision_user_data(this))
+    , col_data(nullptr)
     {}
 
     void set_cooldown(const std::uint32_t x);

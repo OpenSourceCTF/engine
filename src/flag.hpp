@@ -1,6 +1,7 @@
 #ifndef ML_FLAG_HPP
 #define ML_FLAG_HPP
 
+#include <memory>
 #include <string>
 #include <iostream>
 
@@ -18,7 +19,7 @@ struct flag
     float y;
     flag_type type;
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     flag() {}
     flag(
@@ -30,7 +31,7 @@ struct flag
     , y(y)
     , type(type)
     , body(nullptr)
-    , col_data(new collision_user_data(this))
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World * world);

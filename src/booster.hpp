@@ -1,6 +1,7 @@
 #ifndef ML_BOOSTER_HPP
 #define ML_BOOSTER_HPP
 
+#include <memory>
 #include <string>
 #include <iostream>
 #include <Box2D/Box2D.h>
@@ -17,7 +18,7 @@ struct booster
     float y;
     booster_type type;
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     booster(){}
     booster(
@@ -29,7 +30,7 @@ struct booster
     , y(y)
     , type(type)
     , body(nullptr)
-    , col_data(new collision_user_data(this))
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World* world);

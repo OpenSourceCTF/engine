@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <Box2D/Box2D.h>
+#include <memory>
 #include "settings.hpp"
 #include "collision_user_data.hpp"
 #include "ball_type.hpp"
@@ -18,6 +19,7 @@ struct ball
     std::string user_id;
     std::uint32_t degree;
     b2Body * body;
+    std::shared_ptr<collision_user_data> col_data;
 
     ball(const ball_type type)
     : type(type)
@@ -27,6 +29,7 @@ struct ball
     , user_id("000000-0000-0000-000000")
     , degree(0)
     , body(nullptr)
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World * world);

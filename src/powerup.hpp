@@ -1,6 +1,7 @@
 #ifndef ML_POWERUP_HPP
 #define ML_POWERUP_HPP
 
+#include <memory>
 #include <Box2D/Box2D.h>
 #include "libs/json.hpp"
 #include "collision_user_data.hpp"
@@ -12,7 +13,7 @@ struct powerup
     float x;
     float y;
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     powerup(){}
     powerup(
@@ -21,7 +22,8 @@ struct powerup
     )
     : x(x)
     , y(y)
-    , col_data(new collision_user_data(this))
+    , body(nullptr)
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World * world);

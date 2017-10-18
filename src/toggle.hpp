@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <memory>
 #include "libs/json.hpp"
 #include "map.hpp"
 #include "toggle_tag_type.hpp"
@@ -22,7 +23,7 @@ struct toggle
     std::uint32_t timer;
     std::vector<toggle_tag> tags;
     b2Body * body;
-    collision_user_data* col_data;
+    std::shared_ptr<collision_user_data> col_data;
 
     toggle(){}
 
@@ -37,7 +38,7 @@ struct toggle
     , timer(timer)
     , tags(tags)
     , body(nullptr)
-    , col_data(new collision_user_data(this))
+    , col_data(nullptr)
     {}
 
     static map* get_map(map* m=nullptr);
