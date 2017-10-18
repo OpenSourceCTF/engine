@@ -88,8 +88,8 @@ void ball::get_boosted()
 
     body->ApplyLinearImpulse(
         b2Vec2(
-            std::cos(a) * config.BALL_BOOSTER_FORCE,
-            std::sin(a) * config.BALL_BOOSTER_FORCE
+            std::cos(a) * config.BOOSTER_FORCE,
+            std::sin(a) * config.BOOSTER_FORCE
         ),
         body->GetWorldCenter(),
         true

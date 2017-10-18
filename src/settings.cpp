@@ -14,7 +14,6 @@ settings& settings::get_instance()
         return instance;
     } else {
         instance.BALL_MOVEMENT_SPEED = reader.GetReal("ball", "movement_speed", 0);
-        instance.BALL_BOOSTER_FORCE  = reader.GetReal("ball", "booster_force", 0);
         instance.BALL_DAMPING        = reader.GetReal("ball", "damping", 0);
         instance.BALL_DENSITY        = reader.GetReal("ball", "density", 0);
         instance.BALL_FRICTION       = reader.GetReal("ball", "friction", 0);
@@ -33,6 +32,7 @@ settings& settings::get_instance()
 
         instance.BOOSTER_RADIUS       = reader.GetReal("booster", "radius", 0);
         instance.BOOSTER_RESPAWN_TIME = reader.GetInteger("booster", "respawn_time", 0);
+        instance.BOOSTER_FORCE        = reader.GetReal("booster", "force", 0);
 
         instance.POWERUP_RADIUS       = reader.GetReal("powerup", "radius", 0);
         instance.POWERUP_RESPAWN_TIME = reader.GetInteger("powerup", "respawn_time", 0);
