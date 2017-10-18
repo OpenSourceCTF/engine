@@ -179,9 +179,9 @@ int map_renderer::render() const
     for(auto o : m.bombs) {
         sf::CircleShape s;
         s.setPointCount(8);
-        s.setRadius(scaler / 3);
+        s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition((o.x + 0.17) * scaler, (o.y + 0.17)  * scaler);
+        s.setPosition(o.x * scaler, o.y * scaler);
         s.setFillColor(sf::Color(30, 30, 30));
         window->draw(s);
     }
