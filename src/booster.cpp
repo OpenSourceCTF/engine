@@ -26,17 +26,20 @@ void booster::add_to_world(b2World * world)
 
 void booster::step_on(ball* m)
 {
-    std::cout << "booster stepped on" << std::endl;
-
     if(! is_alive) {
         return;
     }
+    std::cout << "booster stepped on" << std::endl;
+
+    const settings& config = settings::get_instance();
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
     switch(type) {
         case booster_type::all:  m->get_boosted(); break;
         case booster_type::red:  
         case booster_type::blue:
            if(same_color(type, m->type)) m->get_boosted();
+           else return; // prevents is_alive from being switched
            break;
     }
 

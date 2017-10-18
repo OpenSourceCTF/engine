@@ -55,6 +55,7 @@ void bomb::explode(ball* b)
     }
 
     const settings& config = settings::get_instance();
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
     std::cout << "boom: " << x << "," << y << std::endl;
 
     ExplodeAABBCallback callback;

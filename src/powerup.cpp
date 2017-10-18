@@ -26,11 +26,12 @@ void powerup::add_to_world(b2World * world)
 
 void powerup::step_on(ball* m)
 {
-    std::cout << "powerup stepped on" << std::endl;
-
     if(! is_alive) {
         return;
     }
+    std::cout << "powerup stepped on" << std::endl;
+    const settings& config = settings::get_instance();
+    respawn_counter = config.POWERUP_RESPAWN_TIME;
 
     is_alive = false;
 }

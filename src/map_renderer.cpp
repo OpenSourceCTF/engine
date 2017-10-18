@@ -177,6 +177,7 @@ int map_renderer::render() const
     }
 
     for(auto o : m.bombs) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(8);
         s.setRadius(scaler / 2);
@@ -197,6 +198,7 @@ int map_renderer::render() const
     }
     
     for(auto o : m.powerups) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(5);
         s.setRadius(scaler / 2);
@@ -216,6 +218,7 @@ int map_renderer::render() const
     }
 
     for(auto o : m.boosters) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(3);
         s.setRadius(scaler / 3);
