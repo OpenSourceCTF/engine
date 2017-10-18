@@ -22,23 +22,17 @@ void toggle::add_to_world(b2World * world)
     body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
-map* toggle::get_map(map* m)
-{
-    static map* m_ = m;
-    return m_;
-}
-
-void toggle::step_on(ball* m)
+void toggle::step_on(ball* b)
 {
     for(auto & o : tags) {
-        o.step_on(*get_map(), m);
+        // o.step_on(m, b);
     }
 }
 
-void toggle::step_off(ball* m)
+void toggle::step_off(ball* b)
 {
     for(auto & o : tags) {
-        o.step_off(*get_map(), m);
+        // o.step_off(m, b);
     }
 }
 

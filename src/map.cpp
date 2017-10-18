@@ -2,16 +2,15 @@
 
 map::map()
 : is_loaded(false)
-{
-    // set toggle map pointer
-    toggle::get_map(this);
-}
+{}
 
 void map::update(b2World* world)
 {
     for(auto & o : balls) {
-        if(! o->is_alive) respawn_ball(o.get());
-        o->is_alive = true;
+        if(! o->is_alive) {
+            respawn_ball(o.get());
+            o->is_alive = true;
+        }
 
         if(o->should_transport) {
             const portal& p = portals[o->portal_transport_id];

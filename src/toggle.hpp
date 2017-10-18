@@ -17,7 +17,6 @@ struct toggle_tag;
 
 struct toggle
 {
-    static map* m;
     float x;
     float y;
     std::uint32_t timer;
@@ -41,7 +40,6 @@ struct toggle
     , col_data(nullptr)
     {}
 
-    static map* get_map(map* m=nullptr);
     void add_to_world(b2World * world);
 
     void step_on(ball* m);
