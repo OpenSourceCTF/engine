@@ -1,5 +1,4 @@
 #include "util.hpp"
-#include "coord.hpp"
 
 float map_val(
     const float v,
