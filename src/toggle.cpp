@@ -18,26 +18,21 @@ void toggle::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::toggle)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
-map* toggle::get_map(map* m)
-{
-    static map* m_ = m;
-    return m_;
-}
-
-void toggle::step_on(ball* m)
+void toggle::step_on(ball* b)
 {
     for(auto & o : tags) {
-        o.step_on(*get_map(), m);
+        // o.step_on(m, b);
     }
 }
 
-void toggle::step_off(ball* m)
+void toggle::step_off(ball* b)
 {
     for(auto & o : tags) {
-        o.step_off(*get_map(), m);
+        // o.step_off(m, b);
     }
 }
 

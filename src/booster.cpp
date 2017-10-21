@@ -18,13 +18,32 @@ void booster::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::booster)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 void booster::step_on(ball* m)
 {
+    if(! is_alive) {
+        return;
+    }
     std::cout << "booster stepped on" << std::endl;
-    m->get_boosted();
+
+    const settings& config = settings::get_instance();
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
+
+    switch(type) {
+        case booster_type::all:  m->get_boosted(); break;
+        case booster_type::red:  
+        case booster_type::blue:
+           if(same_color(type, m->type)) m->get_boosted();
+           else return; // prevents is_alive from being switched
+           break;
+    }
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const booster& p)

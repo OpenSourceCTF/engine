@@ -1,6 +1,7 @@
 #ifndef ML_WALL_HPP
 #define ML_WALL_HPP
 
+#include <memory>
 #include <array>
 #include <Box2D/Box2D.h>
 #include "libs/json.hpp"
@@ -13,6 +14,7 @@ struct wall
     polygon poly;
     color col;
     b2Body * body;
+    std::shared_ptr<collision_user_data> col_data;
 
     wall(){}
     wall(
@@ -22,6 +24,7 @@ struct wall
     : poly(poly)
     , col(col)
     , body(nullptr)
+    , col_data(nullptr)
     {}
 
     void add_to_world(b2World * world);

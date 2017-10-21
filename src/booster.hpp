@@ -1,6 +1,7 @@
 #ifndef ML_BOOSTER_HPP
 #define ML_BOOSTER_HPP
 
+#include <memory>
 #include <string>
 #include <iostream>
 #include <Box2D/Box2D.h>
@@ -17,6 +18,9 @@ struct booster
     float y;
     booster_type type;
     b2Body * body;
+    std::shared_ptr<collision_user_data> col_data;
+    bool is_alive;
+    int respawn_counter;
 
     booster(){}
     booster(
@@ -28,6 +32,9 @@ struct booster
     , y(y)
     , type(type)
     , body(nullptr)
+    , col_data(nullptr)
+    , is_alive(true)
+    , respawn_counter(0)
     {}
 
     void add_to_world(b2World* world);

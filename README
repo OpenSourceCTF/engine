@@ -18,11 +18,11 @@ then run `make -j`
 
 to convert map format
 
-./build/tagos export IN_JSON IN_PNG OUT_JSON
+./tagos export IN_JSON IN_PNG OUT_JSON
 
 to render map format
 
-./build/tagos export MAP_FILE
+./tagos render MAP_FILE
 
 
 --- recommended you export to /maps dir and read from /tp_maps

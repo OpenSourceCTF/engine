@@ -23,16 +23,34 @@ void ball::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
-    // memory leak
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::ball)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
-void ball::move(int x, int y)
+void ball::set_portal_transport(const std::size_t portal_id)
+{
+    portal_transport_id = portal_id;
+    should_transport = true;
+}
+
+void ball::set_position(const b2Vec2 pos)
+{
+    body->SetTransform(pos, get_angle());
+}
+
+void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
+    const float a = angle_from_input(x, y);
+
     body->ApplyForce(
-        b2Vec2(x*config.BALL_MOVEMENT_SPEED, y*config.BALL_MOVEMENT_SPEED),
+        b2Vec2(
+            std::cos(a)*config.BALL_MOVEMENT_SPEED,
+            std::sin(a)*config.BALL_MOVEMENT_SPEED
+        ),
         body->GetWorldCenter(),
         true
     );
@@ -55,11 +73,26 @@ b2Vec2 ball::get_linear_velocity() const
 
 void ball::pop()
 {
-    std::cout << "popped" << std::endl;
+    const settings& config = settings::get_instance();
+
+    is_alive = false;
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
 }
 
 void ball::get_boosted()
 {
-    std::cout << "boosted" << std::endl;
+    const settings& config = settings::get_instance();
+
+    const b2Vec2 v = body->GetLinearVelocity();
+    const float a = std::atan2(v.y, v.x);
+
+    body->ApplyLinearImpulse(
+        b2Vec2(
+            std::cos(a) * config.BALL_BOOSTER_FORCE,
+            std::sin(a) * config.BALL_BOOSTER_FORCE
+        ),
+        body->GetWorldCenter(),
+        true
+    );
 }
 

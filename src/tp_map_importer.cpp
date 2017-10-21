@@ -1,18 +1,48 @@
 #include "tp_map_importer.hpp"
 
+
+// the types of tiles from tagpro .png map
+enum class tp_tile_type
+{
+    background,
+    tile,
+    speed_red,
+    speed_blue,
+    endzone_red,
+    endzone_blue,
+    wall,
+    wall_tl,
+    wall_tr,
+    wall_bl,
+    wall_br,
+    bomb,
+    spike,
+    powerup,
+    button,
+    booster_all,
+    booster_red,
+    booster_blue,
+    gate,
+    portal,
+    flag_neutral,
+    flag_red,
+    flag_blue
+};
+
+
 // todo clean this up
 // this is just used for tp imports
-struct tp_toggle_pos
+struct tp_pos
 {
     std::uint32_t x;
     std::uint32_t y;
-    tp_toggle_pos(const std::uint32_t x, const std::uint32_t y): x(x), y(y){}
+    tp_pos(const std::uint32_t x, const std::uint32_t y): x(x), y(y){}
 
 };
 
-struct tp_toggle_pos_cmp
+struct tp_pos_cmp
 {
-    bool operator()(const tp_toggle_pos& lhs, const tp_toggle_pos&rhs) const
+    bool operator()(const tp_pos& lhs, const tp_pos&rhs) const
     {
         // todo this will fail for maps over 100000 in size
         // hopefully that never happens lol
@@ -23,7 +53,20 @@ struct tp_toggle_pos_cmp
 // we have to do this first so we can store the positions
 // so we can link this using our toggle_tags system
 // second param is id of toggle in toggles
-std::map<tp_toggle_pos, std::size_t, tp_toggle_pos_cmp> tp_import_toggle_positions;
+static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_toggle_positions;
+static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_portal_positions;
+
+// little helper for turning tiles into 2 polys
+std::vector<polygon> make_square_poly(
+    const float x,
+    const float y
+) {
+    return {
+        polygon(x, y, x+1, y, x+1, y+1),
+        polygon(x, y, x, y+1, x+1, y+1)
+    };
+};
+
 
 int tp_map_importer::tp_import(
     const std::string & json_src,
@@ -51,12 +94,11 @@ void tp_map_importer::tp_toggle_ref(
     const toggle_tag_type type
 ) {
     // see if this is referenced by a toggle
-    const tp_toggle_pos toggle_check(x, y);
+    const tp_pos toggle_check(x, y);
     if(tp_import_toggle_positions.find(toggle_check)
     != tp_import_toggle_positions.end()) {
         auto & tags = m.toggles[tp_import_toggle_positions[toggle_check]].tags;
         tags.emplace_back(toggle_tag(id, type));
-        std::cout << "added toggle: " << to_string(type) << " x: " << x << " y: " << y << std::endl;
     }
 }
 
@@ -114,7 +156,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
                 const auto j_pos = p.at("pos");
 
                 tp_import_toggle_positions[
-                    tp_toggle_pos(j_pos.at("x"), j_pos.at("y"))
+                    tp_pos(j_pos.at("x"), j_pos.at("y"))
                 ] = m.toggles.size() - 1;
             }
 
@@ -124,28 +166,47 @@ int tp_map_importer::tp_import_json(const std::string & src)
         }
     }
 
-
     if(j.find("portals") != j.end()) {
         auto j_portals = j.at("portals");
         for (json::iterator it = j_portals.begin(); it != j_portals.end(); ++it) {
+            const auto j_port = it.value();
+
             std::vector<std::string> pieces = split_on(it.key(), ',');
             const std::uint32_t x = std::stoi(pieces.at(0));
             const std::uint32_t y = std::stoi(pieces.at(1));
 
             portal p(x, y);
 
-            if(it.value().find("cooldown") != it.value().end()) {
-                p.set_cooldown(it.value().at("cooldown"));
+            if(j_port.find("cooldown") != j_port.end()) {
+                p.set_cooldown(j_port.at("cooldown"));
             }
 
-            if(it.value().find("destination") != it.value().end()) {
-                p.set_destination(
-                    it.value().at("destination").at("x"),
-                    it.value().at("destination").at("y")
-                );
+            if(j_port.find("destination") != j_port.end()) {
+
+                p.has_destination = true;
             }
 
             m.portals.emplace_back(p);
+
+            // save position into map
+            // so we can reference this same map to find destination id
+            // from x,y coords
+            tp_import_portal_positions[tp_pos(x, y)] = m.portals.size() - 1;
+        }
+
+        // we loop through again to finish adding the destinations as ids
+        std::size_t id = 0;
+        for (json::iterator it = j_portals.begin(); it != j_portals.end(); ++it, ++id) {
+            const auto j_port = it.value();
+            portal& p = m.portals.at(id);
+
+            if(p.has_destination) {
+                auto j_dest = j_port.at("destination");
+                const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
+                const std::size_t destination_id = tp_import_portal_positions.at(dpos);
+
+                p.destination_id = destination_id;
+            }
         }
     }
 
@@ -276,6 +337,7 @@ int tp_map_importer::tp_import_png(const std::string & src)
         const tp_tile_type tiletype = tp_tiletype_map[tile_color];
 
         const color col(tile_color); // we use this for walls, tiles for now for ease
+
         if(tiletype == tp_tile_type::background) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, col, tile_type::background));
@@ -353,12 +415,10 @@ int tp_map_importer::tp_import_png(const std::string & src)
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            // todo -- this has something to do with json crap
         } else if(tiletype == tp_tile_type::portal) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            // todo -- this has something to do with json crap
         } else if(tiletype == tp_tile_type::flag_neutral) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(tile(p, col, tile_type::normal));
@@ -379,6 +439,18 @@ int tp_map_importer::tp_import_png(const std::string & src)
             return 1;
         }
     }
+
+    /* could do this as polys are added but keeping
+     * it isolated for now
+     */
+    std::vector<polygon> poly_set;
+    for(const auto& w : m.walls) {
+        poly_set.push_back(w.poly);
+    }
+    for(const auto& g : m.gates) {
+        poly_set.push_back(g.poly);
+    }
+    m.chains = poly2chain(poly_set);
 
     return 0;
 }

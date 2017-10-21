@@ -18,12 +18,22 @@ void powerup::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::powerup)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
 void powerup::step_on(ball* m)
 {
+    if(! is_alive) {
+        return;
+    }
     std::cout << "powerup stepped on" << std::endl;
+    const settings& config = settings::get_instance();
+    respawn_counter = config.POWERUP_RESPAWN_TIME;
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const powerup& p)

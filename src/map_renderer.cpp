@@ -16,6 +16,9 @@ int map_renderer::close_window()
     return 0;
 }
 
+// todo: fixme
+// the verbose output is due to crash during server launch of rendering
+// where create window fails
 int map_renderer::open_window()
 {
 #ifdef DISABLE_RENDER
@@ -26,17 +29,21 @@ int map_renderer::open_window()
 #else
     const settings& config = settings::get_instance();
 
+    std::cout << "map_renderer: attempting to create window" << std::endl;
     window = new sf::RenderWindow(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
+    std::cout << "map_renderer: window success" << std::endl;
 
+    std::cout << "map_renderer: attempting to create view" << std::endl;
     view = sf::View(sf::FloatRect(
         0,
         0,
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
+    std::cout << "map_renderer: view success" << std::endl;
 #endif
     return 0;
 }
@@ -78,7 +85,7 @@ int map_renderer::get_input()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[0].move(move_x, move_y);
+        if(move_x || move_y) m.balls[0]->move(move_x, move_y);
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -170,11 +177,12 @@ int map_renderer::render() const
     }
 
     for(auto o : m.bombs) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(8);
-        s.setRadius(scaler / 3);
+        s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition((o.x + 0.17) * scaler, (o.y + 0.17)  * scaler);
+        s.setPosition(o.x * scaler, o.y * scaler);
         s.setFillColor(sf::Color(30, 30, 30));
         window->draw(s);
     }
@@ -190,6 +198,7 @@ int map_renderer::render() const
     }
     
     for(auto o : m.powerups) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(5);
         s.setRadius(scaler / 2);
@@ -209,6 +218,7 @@ int map_renderer::render() const
     }
 
     for(auto o : m.boosters) {
+        if(! o.is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(3);
         s.setRadius(scaler / 3);
@@ -222,18 +232,34 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto o : m.balls) {
-        b2Vec2 pos = o.get_position();
+    for(auto& o : m.balls) {
+        if(! o->is_alive) continue;
+        b2Vec2 pos = o->get_position();
         sf::CircleShape s;
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setPosition(pos.x * scaler, pos.y  * scaler);
-        switch(o.type) {
+        switch(o->type) {
             case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
             case ball_type::blue: s.setFillColor(sf::Color(50, 50, 200)); break;
         }
         window->draw(s);
     }
+
+    for(const auto& ch : m.chains) {
+        int N = ch.vertices.size();
+        sf::VertexArray lines(sf::Lines, N);
+        int i = 0;
+        for(auto it = ch.vertices.begin(); it != ch.vertices.end(); ++it, ++i) {
+            lines[i].position = sf::Vector2f((*it).x * scaler,(*it).y * scaler);
+            lines[i].color = sf::Color(DISTINCT_COLORS[i%64][0],
+                                       DISTINCT_COLORS[i%64][1],
+                                       DISTINCT_COLORS[i%64][2]);
+        }
+        window->draw(lines);
+    }
+
+    
     
     window->display();
     return 1;

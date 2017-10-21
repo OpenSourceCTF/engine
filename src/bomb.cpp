@@ -1,5 +1,17 @@
 #include "bomb.hpp"
 
+bomb::bomb(
+    const float x,
+    const float y
+)
+: x(x)
+, y(y)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+, respawn_counter(0)
+{}
+
 void bomb::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -18,12 +30,67 @@ void bomb::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    body->SetUserData(static_cast<void*>(new collision_user_data(static_cast<void*>(this), collision_user_data_type::bomb)));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
 }
 
-void bomb::explode()
+//subclass b2QueryCallback
+struct ExplodeAABBCallback : public b2QueryCallback
 {
+    std::vector<b2Body*> bodies;
+  
+    bool ReportFixture(b2Fixture* fixture)
+	{
+        bodies.push_back(fixture->GetBody()); 
+        return true; // continue
+    }
+};
+
+void bomb::explode(ball* b)
+{
+    if(! is_alive) {
+        return;
+    }
+
+    const settings& config = settings::get_instance();
+    respawn_counter = config.BOOSTER_RESPAWN_TIME;
     std::cout << "boom: " << x << "," << y << std::endl;
+
+    ExplodeAABBCallback callback;
+    b2AABB aabb;
+    aabb.lowerBound = b2Vec2(x - config.BOMB_EXPLOSION_RADIUS, y - config.BOMB_EXPLOSION_RADIUS);
+    aabb.upperBound = b2Vec2(x + config.BOMB_EXPLOSION_RADIUS, y + config.BOMB_EXPLOSION_RADIUS);
+
+    body->GetWorld()->QueryAABB(&callback, aabb);
+
+    for(auto & m : callback.bodies) {
+        const float d = dist(x, y, m->GetPosition().x, m->GetPosition().y);
+
+        if(d >= config.BOMB_EXPLOSION_RADIUS) {
+            continue;
+        }
+
+        const float f = map_val(
+            d,
+            0, config.BOMB_EXPLOSION_RADIUS,
+            config.BOMB_EXPLOSION_FORCE, 0
+        );
+
+        const b2Vec2 apos = body->GetPosition();
+        const b2Vec2 bpos = m->GetPosition();
+
+        const float a = std::atan2(bpos.y - apos.y, bpos.x - apos.x);
+
+        m->ApplyForce(
+            b2Vec2(f * std::cos(a), f * std::sin(a)),
+            m->GetWorldCenter(),
+            true
+        );
+    }
+
+    is_alive = false;
 }
 
 void to_json(nlohmann::json& j, const bomb& p)

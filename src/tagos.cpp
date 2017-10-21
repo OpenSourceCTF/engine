@@ -3,16 +3,15 @@
 #include <sstream>
 #include <cstdlib>
 #include <fstream>
-#include <thread>
 
 #include <Box2D/Box2D.h>
 
 #include "libs/json.hpp"
-#include "settings.hpp"
 #include "map.hpp"
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
-#include "websocket_server.hpp"
+#include "settings.hpp"
+#include "server_lobby.hpp"
 
 int export_tp_map(
     const std::string & json_src,
@@ -46,11 +45,13 @@ int render(const std::string & map_src)
     map_renderer renderer(m);
 
     if(renderer.open_window() != 0) {
+        std::cerr << "error: open window failed" << std::endl;
         return EXIT_FAILURE;
     }
 
     b2World * world = m.init_world();
     while(renderer.render() && renderer.get_input()) {
+        m.update(world);
         world->Step(1/60.0, 8, 3);
     }
 
@@ -58,12 +59,43 @@ int render(const std::string & map_src)
     return EXIT_SUCCESS;
 }
 
-int serve(const std::string & map_src)
+int serve()
 {
-    std::thread srv_thread(start_server, 5000);
-    srv_thread.detach();
+    server_lobby& lobby = server_lobby::get_instance();
+    lobby.start_server();
 
-    return render(map_src);
+    while(lobby.is_alive) {
+        std::cout << std::endl << "$ " << std::flush;
+        std::string line;
+        std::getline(std::cin, line);
+
+        if(line == "quit") {
+            lobby.is_alive = false;
+        }
+
+        // todo: fixme
+        // idea is for this to allow us to see a game in action
+        // however it currently crashes while creating sfml window
+        if(line == "render") {
+            const server_lobby& lobby = server_lobby::get_instance();
+
+            if(lobby.games.size() == 0) {
+                std::cerr << "error: no games currently running" << std::endl;
+            }
+
+            map_renderer renderer(*(lobby.games[0].m));
+
+            if(renderer.open_window() != 0) {
+                std::cerr << "error: open window failed" << std::endl;
+                continue;
+            }
+
+            while(renderer.render() && renderer.get_input());
+            renderer.close_window();
+        }
+    }
+
+    return 0;
 }
 
 int main(int argc, char ** argv)
@@ -74,15 +106,16 @@ int main(int argc, char ** argv)
         std::cerr << "usage: ./tagos [export|render|serve] [PARAMS]" << std::endl;
         std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
         std::cerr << "./tagos render maps/head.json" << std::endl;
-        std::cerr << "./tagos serve maps/head.json" << std::endl;
+        std::cerr << "./tagos serve" << std::endl;
         return EXIT_FAILURE;
     }
 
     std::string mode(argv[1]);
     if(mode == "export") {
         if(argc != 5) {
-            std::cerr << "error: export needs 3 args" << std::endl;
-            std::cerr << "export IN_JSON IN_PNG OUT_JSON" << std::endl;
+            std::cerr
+                << "error: export needs 3 args" << std::endl
+                << "ex: export IN_JSON IN_PNG OUT_JSON" << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -93,8 +126,9 @@ int main(int argc, char ** argv)
         return export_tp_map(json_src, png_src, out_src);
     } else if(mode == "render") {
         if(argc != 3) {
-            std::cerr << "error: render needs 1 arg" << std::endl;
-            std::cerr << "render MAP" << std::endl;
+            std::cerr
+                << "error: render needs 1 arg" << std::endl
+                << "ex: render MAP" << std::endl;
             return EXIT_FAILURE;
         }
         
@@ -102,15 +136,14 @@ int main(int argc, char ** argv)
 
         return render(map_src);
     } else if(mode == "serve") {
-        if(argc != 3) {
-            std::cerr << "error: serve needs 1 arg" << std::endl;
-            std::cerr << "render serve" << std::endl;
+        if(argc != 2) {
+            std::cerr
+                << "error: serve does not take arguments" << std::endl
+                << "ex: serve" << std::endl;
             return EXIT_FAILURE;
         }
 
-        const std::string map_src(argv[2]);
-
-        return serve(map_src);
+        return serve();
     } else {
         std::cerr << "error: invalid mode: " << mode << std::endl;
         return EXIT_FAILURE;

@@ -1,40 +1,72 @@
+## TODO
+
+make toggles toggle again
+track stepping on toggles by players
+    so we can tell when it is 2blue+1red or whatever
+fix portal bug where you get teleported in circle
+make powerups
+make powerups have effects
+track flag ownership and scoring
+add game end conditions (time, score)
+make gates kill players
+serialize map data for server sync
+handle websocket movement input
+    (will require an action queue)
+send map deltas for server
+    (will require a queue for updates)
+handle chat
+
+
 ## NETWORK
 
-(this is assuming 1 server per game, easier for testing for rn)
-(in future can just spawn multiple threads)
+(idea of how network will work)
+(current code very "exploratory" (read shitty))
 
-start server---
-
-open port X for websocket
+start server-->
 
 load list of maps in maplist.txt
-
-ensure all exist in folder
+    ensure all exist in folder
 
 connect to database
 
-load first map
+lobby server starts
+    starts X games
+        2 threads - 1 for network, 1 for gameloop
 
-websocket to start
+(bootup is now complete)
 
-client connects
-client says hello with login_token (so server can get user_id, name, degrees)
+client connects to lobby
+    selects game it wants to join
+        loads map from webserver over http
+            (ensure maps are gzipped (if using nginx this is easy))
 
-server replies with map id
-
-client downloads map from webserver over http
-    ensure maps are gzipped (if using nginx this is easy)
-
-client says "ready"
-
-server responds with current state of map (all positions, players, etc)
-server adds clients ball (respawn)
-server notifies all clients of new ball
+client says ready with login_token (so server can get user_id, name, degrees)
+    server checks user and gets name, degrees, etc
+    server responds with current state of map (all positions, players, etc)
+    server adds clients ball (respawn)
+    server notifies all clients of new ball
 
 --
 
 in future we plan for move to webrtc
 
-## PHYSICS
+## ENGINE
 
-bug with walls coming out further than they should
+objects need to use unique_ptr or shared_ptr rather than raw ptrs
+for now im just using raw since its faster to dev
+but its unsafe and will be best to switch over at least when game basically works..
+
+## BUILD
+
+itd be nice if the libraries were just in a folder and built correctly as part of makefile
+maybe with subrepositories?
+
+make it easy to switch between debug and release mode in makefile
+
+improve dependencies in makefile + general cleanup
+
+## BUGS
+
+* `serve` crashes when [server] games > 1 in config.ini
+
+* `serve` "render" crashes when trying to open sfml window

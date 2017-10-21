@@ -5,34 +5,6 @@
 #include <string>
 #include "map.hpp"
 
-// the types of tiles from tagpro .png map
-enum class tp_tile_type
-{
-    background,
-    tile,
-    speed_red,
-    speed_blue,
-    endzone_red,
-    endzone_blue,
-    wall,
-    wall_tl,
-    wall_tr,
-    wall_bl,
-    wall_br,
-    bomb,
-    spike,
-    powerup,
-    button,
-    booster_all,
-    booster_red,
-    booster_blue,
-    gate,
-    portal,
-    flag_neutral,
-    flag_red,
-    flag_blue
-};
-
 struct tp_map_importer
 {
     map& m;
