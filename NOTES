@@ -67,6 +67,7 @@ improve dependencies in makefile + general cleanup
 
 ## BUGS
 
-* `serve` crashes when [server] games > 1 in config.ini
+run these to look :p
 
-* `serve` "render" crashes when trying to open sfml window
+grep -r "todo" src
+grep -r "fixme" src

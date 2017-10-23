@@ -16,9 +16,6 @@ int map_renderer::close_window()
     return 0;
 }
 
-// todo: fixme
-// the verbose output is due to crash during server launch of rendering
-// where create window fails
 int map_renderer::open_window()
 {
 #ifdef DISABLE_RENDER
@@ -29,21 +26,17 @@ int map_renderer::open_window()
 #else
     const settings& config = settings::get_instance();
 
-    std::cout << "map_renderer: attempting to create window" << std::endl;
     window = new sf::RenderWindow(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
-    std::cout << "map_renderer: window success" << std::endl;
 
-    std::cout << "map_renderer: attempting to create view" << std::endl;
     view = sf::View(sf::FloatRect(
         0,
         0,
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
-    std::cout << "map_renderer: view success" << std::endl;
 #endif
     return 0;
 }

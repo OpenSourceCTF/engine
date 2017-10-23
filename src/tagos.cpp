@@ -73,9 +73,7 @@ int serve()
             lobby.is_alive = false;
         }
 
-        // todo: fixme
-        // idea is for this to allow us to see a game in action
-        // however it currently crashes while creating sfml window
+        // todo this should take game id as param
         if(line == "render") {
             const server_lobby& lobby = server_lobby::get_instance();
 

@@ -6,18 +6,12 @@ game::game(const std::uint16_t port, map* m)
 , max_points(3)
 , max_length(15*60)
 , world(nullptr)
-{
-    world = m->init_world();
-
-    std::thread phys_thread(
-        &game::run_physics,
-        this
-    );
-    phys_thread.detach();
-}
+{}
 
 void game::run_physics()
 {
+    world = m->init_world();
+
     // todo
     // this crashes if concurrent games is more than 1
     while(true) {

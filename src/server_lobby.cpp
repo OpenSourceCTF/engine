@@ -38,6 +38,13 @@ void server_lobby::start_server()
 
         std::thread srv_game_thread(start_game_server, port);
         srv_game_thread.detach();
+
+
+        std::thread phys_game_thread(
+            &game::run_physics,
+            games.back()
+        );
+        phys_game_thread.detach();
     }
 }
 
