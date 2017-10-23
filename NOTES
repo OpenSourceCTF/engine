@@ -1,5 +1,7 @@
 ## TODO
 
+make powerups have list of possible powerups to choose from
+    in map exporter too
 make toggles toggle again
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever
