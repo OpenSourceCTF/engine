@@ -4,6 +4,7 @@
 #include "game_event_type.hpp"
 #include "game_event_ball_respawn.hpp"
 #include "game_event_ball_popped.hpp"
+#include "game_event_ball_boosted.hpp"
 #include "game_event_powerup_respawn.hpp"
 #include "game_event_bomb_explosion.hpp"
 #include "game_event_flag_grabbed.hpp"
