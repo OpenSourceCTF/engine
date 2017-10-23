@@ -1,3 +1,4 @@
+#include <stack>
 #include "util.hpp"
 
 float map_val(
@@ -105,6 +106,12 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
         return ((!edge_lt(A,B)) && (!edge_lt(B,A)));
     };
 
+    auto point_hash = [](const std::pair<float,float>& A) {
+        std::string s = std::to_string(A.first)
+                      + std::to_string(A.second);
+        return std::hash<std::string>()(s);
+    };
+
     // ======= actual algorithm begins here =======
 
     std::unordered_set<polygon,
@@ -152,16 +159,22 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
 
     if(outside_edges.begin() == outside_edges.end()) {
         //shouldn't happen unless the polygons live on a torus
-        std::cerr << "something is really wrong" << std::endl; exit(EXIT_FAILURE);
+        std::cerr << "something is really wrong" << std::endl;
+        exit(EXIT_FAILURE);
     } 
 
     std::unordered_set<edge,
                        decltype(edge_hash)> visited_e(outside_edges.size() * 2,
                                                       edge_hash);
+    std::unordered_set<std::pair<float,float>,
+                       decltype(point_hash)> sing_points(outside_edges.size()
+                                                         * 4,
+                                                         point_hash);
     std::vector<chain> result;
 
     //collect the good edges into cycles
     //it'd be more efficient to erase edges as we go along
+    std::stack<std::pair<float,float>> leftovers;
     for(auto i = outside_edges.begin();
              i != outside_edges.end()
                && visited_e.size() != outside_edges.size();
@@ -171,7 +184,6 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
             chain CC;
             auto first_e = *i;
 
-            visited_e.insert(first_e);
             auto current_p = first_e.first;
             CC.add_vertex(coord(current_p.first,
                                 current_p.second));
@@ -183,21 +195,33 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
             while(!CC_end && iter < maxit) {
                 auto explore1 = e_firsts.find(current_p);
                 auto explore2 = e_seconds.find(current_p);
-                std::pair<float,float> new_p;
+                std::pair<float,float> new_p(std::make_pair(-1,-1));
                 bool found = false;
+                //stop when touching corners ><
+                bool sing = (  (explore1 != e_firsts.end()
+                               ? explore1->second.size()
+                               : 0) 
+                             + (explore2 != e_seconds.end()
+                               ? explore2->second.size()
+                               : 0)
+                             >= 4);
+                if(sing) sing_points.insert(current_p);
                 if(explore1 != e_firsts.end()) {
                     for(auto it=explore1->second.begin();
                              it!=explore1->second.end() && !found;
                              ++it)
                     {
-                        if(visited_e.find(*it) == visited_e.end()) {
+                        if(   visited_e.find(*it) == visited_e.end()
+                           && *it != first_e)
+                        {
                             new_p = it->second;
-                            visited_e.insert(*it);
-                            found = true;
+                            if(new_p != current_p) {
+                                visited_e.insert(*it);
+                                found = true;
+                            }
                         }
                     }
                 }
-                //doesn't handle degenerate edges
                 if(explore2 != e_seconds.end()) {
                     for(auto it=explore2->second.begin();
                              it!=explore2->second.end() && !found;
@@ -205,16 +229,21 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
                     {
                         if(visited_e.find(*it) == visited_e.end()) {
                             new_p = it->first;
-                            visited_e.insert(*it);
-                            found = true;
+                            if(new_p != current_p) {
+                                visited_e.insert(*it);
+                                found = true;
+                            }
                         }
                     }
                 }
-                if(new_p != current_p) CC.add_vertex(coord(new_p.first,
-                                                           new_p.second));
-                if(new_p == first_e.first
+                /*
+                if(new_p != std::make_pair<float,float>(-1,-1)) {
+                    CC.add_vertex(coord(new_p.first,new_p.second));
+                }
+                if(   new_p == first_e.first
                    || new_p == first_e.second
-                   || visited_e.size() == outside_edges.size())
+                   || visited_e.size() == outside_edges.size()
+                   || stop)
                 {
                     CC_end = true;
                 }
@@ -222,8 +251,56 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
                     current_p = new_p;
                 }
                 ++iter;
+                */
+                if(   new_p == std::make_pair<float,float>(-1,-1)) {
+                    CC_end = true;
+                }
+                else if (sing_points.find(new_p) != sing_points.end()){
+                    CC_end = true;
+                    CC.add_vertex(coord(new_p.first,new_p.second));
+                    leftovers.push(first_e.second);
+                }
+                else {
+                    current_p = new_p;
+                    CC.add_vertex(coord(new_p.first,new_p.second));
+                }
+                ++iter;
             }
             result.push_back(CC);
+        }
+    }
+    while(!leftovers.empty()) {
+        auto current_p = leftovers.top(); leftovers.pop();
+        auto explore2 = e_seconds.find(current_p);
+        auto explore1 = e_firsts.find(current_p);
+        std::pair<float,float> new_p;
+        if(explore1 != e_firsts.end()) {
+            for(auto it=explore1->second.begin();
+                     it!=explore1->second.end();
+                     ++it)
+            {
+                new_p = it->second;
+                if(new_p != current_p) {
+                    chain CC;
+                    CC.add_vertex(coord(current_p.first,current_p.second));
+                    CC.add_vertex(coord(new_p.first,new_p.second));
+                    result.push_back(CC);
+                }
+            }
+        }
+        if(explore2 != e_seconds.end()) {
+            for(auto it=explore2->second.begin();
+                     it!=explore2->second.end();
+                     ++it)
+            {
+                new_p = it->first;
+                if(new_p != current_p) {
+                    chain CC;
+                    CC.add_vertex(coord(current_p.first,current_p.second));
+                    CC.add_vertex(coord(new_p.first,new_p.second));
+                    result.push_back(CC);
+                }
+            }
         }
     }
     return result;

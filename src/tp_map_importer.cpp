@@ -447,9 +447,6 @@ int tp_map_importer::tp_import_png(const std::string & src)
     for(const auto& w : m.walls) {
         poly_set.push_back(w.poly);
     }
-    for(const auto& g : m.gates) {
-        poly_set.push_back(g.poly);
-    }
     m.chains = poly2chain(poly_set);
 
     return 0;

@@ -69,9 +69,8 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set);
 
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html
-constexpr int DISTINCT_COLORS[64][3] =
+constexpr int DISTINCT_COLORS[63][3] =
 {
-    {0, 0, 0},
     {1, 0, 103},
     {213, 255, 0},
     {255, 0, 86},
