@@ -69,19 +69,66 @@ int serve()
         std::string line;
         std::getline(std::cin, line);
 
-        if(line == "quit") {
-            lobby.is_alive = false;
+        std::vector<std::string> iparts;
+        {
+            std::istringstream iss(line);
+            for(std::string s; iss >> s;) {
+                iparts.push_back(s);
+            }
         }
 
-        // todo this should take game id as param
-        if(line == "render") {
+        if(iparts.empty()) {
+            continue;
+        }
+
+        const std::string cmd = iparts[0];
+
+
+        if(cmd == "quit") {
+            lobby.is_alive = false;
+            std::cout << "quitting..." << std::endl;
+        } else if(cmd == "help") {
+            std::cout
+                << "available commands: \n\n"
+                << "\thelp           (show this help)\n" 
+                << "\tquit           (quits server)\n" 
+                << "\trender GAME_ID (opens sfml debug window for game)\n"
+                << "\tstats          (shows game/player stats)\n"
+                << std::endl;
+        } else if(cmd == "render") {
+            if(iparts.size() != 2) {
+                std::cout
+                    << "render requires two arguments"
+                    << std::endl;
+                continue;
+            }
+
             const server_lobby& lobby = server_lobby::get_instance();
 
             if(lobby.games.size() == 0) {
                 std::cerr << "error: no games currently running" << std::endl;
             }
 
-            map_renderer renderer(*(lobby.games[0].m));
+            int game_id = 0;
+            try {
+                game_id = std::stoi(iparts[1]);
+            } catch(std::invalid_argument& e) {
+                std::cout
+                    << "render requires an integer argument"
+                    << std::endl;
+                continue;
+            }
+
+            if(game_id < 0
+            || static_cast<std::size_t>(game_id) >= lobby.games.size())
+            {
+                std::cout
+                    << "game_id invalid"
+                    << std::endl;
+                continue;
+            }
+
+            map_renderer renderer(*(lobby.games[game_id].m));
 
             if(renderer.open_window() != 0) {
                 std::cerr << "error: open window failed" << std::endl;
@@ -90,6 +137,29 @@ int serve()
 
             while(renderer.render() && renderer.get_input());
             renderer.close_window();
+        } else if(cmd == "stats") {
+            const server_lobby& lobby = server_lobby::get_instance();
+
+            std::size_t total_players = 0;
+            for(std::size_t i=0; i<lobby.games.size(); ++i) {
+                const game& g = lobby.games[i];
+                const std::size_t g_players = g.m->balls.size();
+                std::cout
+                    << "game: " << i << "\t"
+                    << "players: " << g_players
+                    << "\n";
+                total_players += g_players;
+            }
+
+            std::cout
+                << "\n"
+                << "total games:\t" << lobby.games.size() << "\n"
+                << "total players:\t" << total_players
+                << std::endl;
+        } else {
+            std::cout
+                << "unrecognized command (try help)"
+                << std::endl;
         }
     }
 
