@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <exception>
 #include <iostream>
+#include <memory>
 #include "polygon.hpp"
 
 constexpr float PI     = 3.141592653589793;
@@ -60,6 +61,20 @@ T corresponding_color(const U a)
             std::terminate();
             return T::red; // error suppressor
     }
+}
+
+template <typename T>
+std::vector<std::unique_ptr<T>> vec_to_uniq_ptr_vec(
+    const std::vector<T> & v
+) {
+    std::vector<std::unique_ptr<T>> ret;
+    ret.reserve(v.size());
+
+    for(auto & o : v) {
+        ret.emplace_back(new T(o));
+    }
+
+    return ret;
 }
 
 #endif

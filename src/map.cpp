@@ -211,10 +211,7 @@ void from_json(const nlohmann::json& j, map& p)
     p.bombs    = j.at("bombs").get<std::vector<bomb>>();
     p.spikes   = j.at("spikes").get<std::vector<spike>>();
     p.toggles  = j.at("toggles").get<std::vector<toggle>>();
-    std::vector<powerup> j_powerups = j.at("powerups").get<std::vector<powerup>>();
-    for(auto o : j_powerups) {
-        p.powerups.emplace_back(new powerup(o));
-    }
+    p.powerups = vec_to_uniq_ptr_vec(j.at("powerups").get<std::vector<powerup>>());
     p.boosters = j.at("boosters").get<std::vector<booster>>();
     p.gates    = j.at("gates").get<std::vector<gate>>();
     p.flags    = j.at("flags").get<std::vector<flag>>();
