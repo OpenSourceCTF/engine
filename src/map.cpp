@@ -160,11 +160,6 @@ void to_json(nlohmann::json& j, const map& p)
         return;
     }
 
-    std::vector<powerup> j_powerups;
-    for(auto & o : p.powerups) {
-        j_powerups.emplace_back(*o);
-    }
-
     j = nlohmann::json{
         {"meta", {
             {"type",    to_string(p.type)},
@@ -181,11 +176,19 @@ void to_json(nlohmann::json& j, const map& p)
         {"spawns",   p.spawns},
         {"bombs",    p.bombs},
         {"spikes",   p.spikes},
-        {"powerups", j_powerups},
+        {"powerups", uniq_ptr_vec_to_vec(p.powerups)},
         {"boosters", p.boosters},
         {"gates",    p.gates},
         {"flags",    p.flags}
     };
+}
+
+template <typename T> 
+std::vector<std::unique_ptr<T>> from_json_helper(
+    const nlohmann::json& j,
+    const std::string term
+) {
+    return vec_to_uniq_ptr_vec(j.at(term).get<std::vector<T>>());
 }
 
 void from_json(const nlohmann::json& j, map& p)
@@ -194,6 +197,7 @@ void from_json(const nlohmann::json& j, map& p)
         std::cerr << "error: map already loaded" << std::endl;
         return;
     }
+
 
     auto meta = j.at("meta");
     p.type    = map_type_from_string(meta.at("type").get<std::string>());
@@ -211,7 +215,7 @@ void from_json(const nlohmann::json& j, map& p)
     p.bombs    = j.at("bombs").get<std::vector<bomb>>();
     p.spikes   = j.at("spikes").get<std::vector<spike>>();
     p.toggles  = j.at("toggles").get<std::vector<toggle>>();
-    p.powerups = vec_to_uniq_ptr_vec(j.at("powerups").get<std::vector<powerup>>());
+    p.powerups = from_json_helper<powerup>(j, "powerups");
     p.boosters = j.at("boosters").get<std::vector<booster>>();
     p.gates    = j.at("gates").get<std::vector<gate>>();
     p.flags    = j.at("flags").get<std::vector<flag>>();
