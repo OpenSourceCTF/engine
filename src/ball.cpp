@@ -126,3 +126,24 @@ bool ball::has_powerup(const powerup_type type)
     return false;
 }
 
+void ball::remove_powerup(const powerup_type type)
+{
+    powerups.erase(
+        std::remove_if(
+            powerups.begin(),
+            powerups.end(),
+            [&type](ball_powerup bp) {
+                return bp.type == type;
+            }
+        ),
+        powerups.end()
+    );
+}
+
+void ball::explode()
+{
+    // todo explosion here
+    std::cout << "rollingboom" << std::endl;
+    remove_powerup(powerup_type::rollingbomb);
+}
+

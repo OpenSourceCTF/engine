@@ -71,11 +71,11 @@ powerup_type powerup::get_random_type()
         return powerup_type::tagpro;
     }
 
-    return possible_types.at(
-        std::uniform_int_distribution<int>(
+    return possible_types[
+        std::uniform_int_distribution<std::size_t>(
             0, possible_types.size() - 1
         )(random_util::get_instance().eng)
-    );
+    ];
 }
 
 void to_json(nlohmann::json& j, const powerup& p)

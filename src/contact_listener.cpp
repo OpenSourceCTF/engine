@@ -36,20 +36,21 @@ void contact_listener::BeginContact(b2Contact* contact)
             );
 
             if(! m->powerups.empty() || ! b->powerups.empty()) {
-                std::cout << "POWERTIME" << std::endl;
-                if(m->has_powerup(powerup_type::rollingbomb)) {
-                    std::cout << "rollingboom" << std::endl;
-                }
+                if(! same_color(m->type, b->type)) {
+                    if(m->has_powerup(powerup_type::rollingbomb)) {
+                        m->explode();
+                    }
 
-                if(b->has_powerup(powerup_type::rollingbomb)) {
-                    std::cout << "rollingboom" << std::endl;
-                }
+                    if(b->has_powerup(powerup_type::rollingbomb)) {
+                        b->explode();
+                    }
 
-                if(m->has_powerup(powerup_type::tagpro)) {
-                    b->pop();
-                }
-                if(b->has_powerup(powerup_type::tagpro)) {
-                    m->pop();
+                    if(m->has_powerup(powerup_type::tagpro)) {
+                        b->pop();
+                    }
+                    if(b->has_powerup(powerup_type::tagpro)) {
+                        m->pop();
+                    }
                 }
             }
         }

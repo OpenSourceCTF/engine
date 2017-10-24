@@ -51,6 +51,8 @@ struct ball
     void get_boosted();
     void add_powerup(const powerup_type type);
     bool has_powerup(const powerup_type type);
+    void remove_powerup(const powerup_type type);
+    void explode();
 };
 
 #endif
