@@ -29,9 +29,27 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has_both(collision_user_data_type::ball)) {
             std::cout << "contact: begin ball" << std::endl;
 
-            // todo
-            // this is where we'd have powerups affect
-            // or deal with popping flag carrier
+            ball * b = static_cast<ball*>(
+                cdata.get_ptr_alt(collision_user_data_type::ball)
+            );
+
+            if(! m->powerups.empty() || ! b->powerups.empty()) {
+                std::cout << "POWERTIME" << std::endl;
+                if(m->has_powerup(powerup_type::rollingbomb)) {
+                    std::cout << "rollingboom" << std::endl;
+                }
+
+                if(b->has_powerup(powerup_type::rollingbomb)) {
+                    std::cout << "rollingboom" << std::endl;
+                }
+
+                if(m->has_powerup(powerup_type::tagpro)) {
+                    b->pop();
+                }
+                if(b->has_powerup(powerup_type::tagpro)) {
+                    m->pop();
+                }
+            }
         }
 
         if(cdata.has(collision_user_data_type::spike)) {
