@@ -6,7 +6,7 @@ map::map()
 
 void map::update(b2World* world)
 {
-    for(auto & o : balls) {
+    for(auto && o : balls) {
         if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
             o->is_alive = true;
@@ -28,25 +28,29 @@ void map::update(b2World* world)
         );
 
         if(o->should_transport) {
-            const portal& p = portals[o->portal_transport_id];
-            o->set_position(b2Vec2(p.x, p.y));
+            const portal* p = portals[o->portal_transport_id].get();
+            o->set_position(b2Vec2(p->x, p->y));
             o->should_transport = false;
         }
     }
 
-    for(auto & o : bombs) {
-        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
+    for(auto && o : bombs) {
+        if(! o->is_alive && ! --o->respawn_counter) {
+            o->is_alive = true;
+        }
     }
 
-    for(auto & o : powerups) {
+    for(auto && o : powerups) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->type = o->get_random_type();
             o->is_alive = true;
         }
     }
 
-    for(auto & o : boosters) {
-        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
+    for(auto && o : boosters) {
+        if(! o->is_alive && ! --o->respawn_counter) {
+            o->is_alive = true;
+        }
     }
 }
 
@@ -57,10 +61,10 @@ void map::respawn_ball(ball* b)
 
     std::vector<spawn> potential_spawns;
 
-    for(auto s : spawns) {
-        if(same_color(s.type, b->type)) {
-            for(std::size_t i=0; i<(s.weight > 0) ? s.weight : 1; ++i) {
-                potential_spawns.emplace_back(s);
+    for(auto && s : spawns) {
+        if(same_color(s->type, b->type)) {
+            for(std::size_t i=0; i<(s->weight > 0) ? s->weight : 1; ++i) {
+                potential_spawns.emplace_back(*s);
             }
         }
     }
@@ -73,9 +77,9 @@ void map::respawn_ball(ball* b)
         // maybe this should be fixed in map export
         const flag_type matching_flag_type = corresponding_color<flag_type>(b->type);
 
-        for(auto f : flags) {
-            if(f.type == matching_flag_type) {
-                potential_spawns.emplace_back(spawn(f.x, f.y, 1, 1, matching_spawn_type));
+        for(auto && f : flags) {
+            if(f->type == matching_flag_type) {
+                potential_spawns.emplace_back(spawn(f->x, f->y, 1, 1, matching_spawn_type));
             }
         }
 
@@ -117,36 +121,36 @@ b2World * map::init_world()
         add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
     }
 
-    for(auto & m : walls) {
-        m.add_to_world(world);
-    }
-
-    for(auto & m : spikes) {
-        m.add_to_world(world);
-    }
-
-    for(auto & m : bombs) {
-        m.add_to_world(world);
-    }
-
-    for(auto & m : toggles) {
-        m.add_to_world(world);
-    }
-
-    for(auto & m : boosters) {
-        m.add_to_world(world);
-    }
-
-    for(auto & m : powerups) {
+    for(auto && m : walls) {
         m->add_to_world(world);
     }
 
-    for(auto & m : flags) {
-        m.add_to_world(world);
+    for(auto && m : spikes) {
+        m->add_to_world(world);
     }
 
-    for(auto & m : portals) {
-        m.add_to_world(world);
+    for(auto && m : bombs) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : toggles) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : boosters) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : powerups) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : flags) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : portals) {
+        m->add_to_world(world);
     }
 
     return world;
@@ -169,17 +173,17 @@ void to_json(nlohmann::json& j, const map& p)
             {"width",   p.width},
             {"height",  p.height}
         }},
-        {"walls",   p.walls},
-        {"tiles",   p.tiles},
-        {"portals", p.portals},
-        {"toggles", p.toggles},
-        {"spawns",   p.spawns},
-        {"bombs",    p.bombs},
-        {"spikes",   p.spikes},
+        {"walls",    uniq_ptr_vec_to_vec(p.walls)},
+        {"tiles",    uniq_ptr_vec_to_vec(p.tiles)},
+        {"portals",  uniq_ptr_vec_to_vec(p.portals)},
+        {"toggles",  uniq_ptr_vec_to_vec(p.toggles)},
+        {"spawns",   uniq_ptr_vec_to_vec(p.spawns)},
+        {"bombs",    uniq_ptr_vec_to_vec(p.bombs)},
+        {"spikes",   uniq_ptr_vec_to_vec(p.spikes)},
         {"powerups", uniq_ptr_vec_to_vec(p.powerups)},
-        {"boosters", p.boosters},
-        {"gates",    p.gates},
-        {"flags",    p.flags}
+        {"boosters", uniq_ptr_vec_to_vec(p.boosters)},
+        {"gates",    uniq_ptr_vec_to_vec(p.gates)},
+        {"flags",    uniq_ptr_vec_to_vec(p.flags)}
     };
 }
 
@@ -207,18 +211,18 @@ void from_json(const nlohmann::json& j, map& p)
     p.width   = meta.at("width").get<int>();
     p.height  = meta.at("height").get<int>();
 
-    p.walls   = j.at("walls").get<std::vector<wall>>();
-    p.tiles   = j.at("tiles").get<std::vector<tile>>();
-    p.portals = j.at("portals").get<std::vector<portal>>();
+    p.walls    = from_json_helper<wall>(j, "walls");
+    p.tiles    = from_json_helper<tile>(j, "tiles");
+    p.portals  = from_json_helper<portal>(j, "portals");
 
-    p.spawns   = j.at("spawns").get<std::vector<spawn>>();
-    p.bombs    = j.at("bombs").get<std::vector<bomb>>();
-    p.spikes   = j.at("spikes").get<std::vector<spike>>();
-    p.toggles  = j.at("toggles").get<std::vector<toggle>>();
+    p.spawns   = from_json_helper<spawn>(j, "spawns");
+    p.bombs    = from_json_helper<bomb>(j, "bombs");
+    p.spikes   = from_json_helper<spike>(j, "spikes");
+    p.toggles  = from_json_helper<toggle>(j, "toggles");
     p.powerups = from_json_helper<powerup>(j, "powerups");
-    p.boosters = j.at("boosters").get<std::vector<booster>>();
-    p.gates    = j.at("gates").get<std::vector<gate>>();
-    p.flags    = j.at("flags").get<std::vector<flag>>();
+    p.boosters = from_json_helper<booster>(j, "boosters");
+    p.gates    = from_json_helper<gate>(j, "gates");
+    p.flags    = from_json_helper<flag>(j, "flags");
 
     p.is_loaded = true;
 }

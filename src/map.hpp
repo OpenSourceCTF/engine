@@ -56,19 +56,19 @@ struct map
     std::uint32_t width;
     std::uint32_t height;
 
-    std::vector<wall>    walls;
-    std::vector<tile>    tiles;
+    std::vector<std::unique_ptr<wall>>    walls;
+    std::vector<std::unique_ptr<tile>>    tiles;
     
-    std::vector<portal>  portals;
-    std::vector<toggle>  toggles;
-    std::vector<spawn>   spawns;
-    std::vector<bomb>    bombs;
-    std::vector<spike>   spikes;
-    std::vector<booster> boosters;
-    std::vector<gate>    gates;
-    std::vector<flag>    flags;
+    std::vector<std::unique_ptr<portal>>  portals;
+    std::vector<std::unique_ptr<toggle>>  toggles;
+    std::vector<std::unique_ptr<spawn>>   spawns;
+    std::vector<std::unique_ptr<bomb>>    bombs;
+    std::vector<std::unique_ptr<spike>>   spikes;
+    std::vector<std::unique_ptr<booster>> boosters;
+    std::vector<std::unique_ptr<gate>>    gates;
+    std::vector<std::unique_ptr<flag>>    flags;
     std::vector<std::unique_ptr<powerup>> powerups;
-    std::vector<std::unique_ptr<ball>> balls;
+    std::vector<std::unique_ptr<ball>>    balls;
 
     map();
 
