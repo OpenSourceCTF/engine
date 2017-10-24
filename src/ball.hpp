@@ -6,9 +6,11 @@
 #include <Box2D/Box2D.h>
 #include <memory>
 #include "settings.hpp"
+#include "util.hpp"
 #include "collision_user_data.hpp"
 #include "ball_type.hpp"
-#include "util.hpp"
+#include "ball_powerup.hpp"
+#include "powerup_type.hpp"
 
 struct ball
 {
@@ -23,6 +25,7 @@ struct ball
     std::size_t portal_transport_id;
     bool is_alive;
     int respawn_counter;
+    std::vector<ball_powerup> powerups;
 
 
     ball(const ball_type type)
@@ -46,6 +49,8 @@ struct ball
     b2Vec2 get_linear_velocity() const;
     void pop();
     void get_boosted();
+    void add_powerup(const powerup_type type);
+    bool has_powerup(const powerup_type type);
 };
 
 #endif

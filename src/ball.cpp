@@ -96,3 +96,30 @@ void ball::get_boosted()
     );
 }
 
+void ball::add_powerup(const powerup_type type)
+{
+    std::cout << "powerup received" << std::endl;
+    std::cout << get_position().x << std::endl;
+    const settings& config = settings::get_instance();
+
+    for(auto & o : powerups) {
+        if(o.type == type) {
+            o.counter = config.POWERUP_LASTING_TIME;
+            return;
+        }
+    }
+
+    powerups.emplace_back(ball_powerup(type, config.POWERUP_LASTING_TIME));
+}
+
+bool ball::has_powerup(const powerup_type type)
+{
+    for(auto & o : powerups) {
+        if(o.type == type) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
