@@ -31,6 +31,7 @@ struct settings
 
     float POWERUP_RADIUS;
     int   POWERUP_RESPAWN_TIME;
+    int   POWERUP_LASTING_TIME;
 
     float FLAG_RADIUS;
 

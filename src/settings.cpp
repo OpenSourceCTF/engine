@@ -36,6 +36,7 @@ settings& settings::get_instance()
 
         instance.POWERUP_RADIUS       = reader.GetReal("powerup", "radius", 0);
         instance.POWERUP_RESPAWN_TIME = reader.GetInteger("powerup", "respawn_time", 0);
+        instance.POWERUP_LASTING_TIME = reader.GetInteger("powerup", "lasting_time", 0);
 
         instance.FLAG_RADIUS = reader.GetReal("flag", "radius", 0);
 
