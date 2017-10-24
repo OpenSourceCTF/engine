@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++14 -Wall -Wextra -g
+CXXFLAGS=-std=c++11 -Wall -Wextra -g
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
 
 all: tagos

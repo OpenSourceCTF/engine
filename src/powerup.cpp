@@ -73,7 +73,7 @@ powerup_type powerup::get_random_type()
 
     return possible_types.at(
         std::uniform_int_distribution<int>(
-            0, possible_types.size()-1
+            0, possible_types.size() - 1
         )(random_util::get_instance().eng)
     );
 }

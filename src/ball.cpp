@@ -44,13 +44,14 @@ void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
+    const float f = (has_powerup(powerup_type::jukejuice))
+        ? config.BALL_JUKEJUICE_SPEED
+        : config.BALL_MOVEMENT_SPEED;
+
     const float a = angle_from_input(x, y);
 
     body->ApplyForce(
-        b2Vec2(
-            std::cos(a)*config.BALL_MOVEMENT_SPEED,
-            std::sin(a)*config.BALL_MOVEMENT_SPEED
-        ),
+        b2Vec2(std::cos(a) * f, std::sin(a) * f),
         body->GetWorldCenter(),
         true
     );
@@ -104,11 +105,13 @@ void ball::add_powerup(const powerup_type type)
 
     for(auto & o : powerups) {
         if(o.type == type) {
+            std::cout << "increase time" << std::endl;
             o.counter = config.POWERUP_LASTING_TIME;
             return;
         }
     }
 
+    std::cout << "add new powerup for:" << config.POWERUP_LASTING_TIME << std::endl;
     powerups.emplace_back(ball_powerup(type, config.POWERUP_LASTING_TIME));
 }
 

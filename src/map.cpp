@@ -21,7 +21,7 @@ void map::update(b2World* world)
                 o->powerups.begin(),
                 o->powerups.end(),
                 [](ball_powerup bp) {
-                    return bp.counter != 0;
+                    return bp.counter == 0;
                 }
             ),
             o->powerups.end()

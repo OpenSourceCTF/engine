@@ -26,19 +26,24 @@ int map_renderer::open_window()
 #else
     const settings& config = settings::get_instance();
 
+    std::cout << "map_renderer: attempting to create window" << std::endl;
     window = new sf::RenderWindow(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
+	std::cout << "map_renderer: window success" << std::endl;
 
+    std::cout << "map_renderer: attempting to create view" << std::endl;
     view = sf::View(sf::FloatRect(
         0,
         0,
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
-#endif
+    std::cout << "map_renderer: view success" << std::endl;
+
     return 0;
+#endif
 }
 
 int map_renderer::get_input()
@@ -190,7 +195,7 @@ int map_renderer::render() const
         window->draw(s);
     }
     
-    for(auto & o : m.powerups) {
+    for(auto && o : m.powerups) {
         if(! o->is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(5);
@@ -199,11 +204,11 @@ int map_renderer::render() const
         s.setPosition(o->x * scaler, o->y  * scaler);
         s.setFillColor(sf::Color(30, 255, 30));
 
-        s.setOutlineThickness(-2);
+        s.setOutlineThickness(2);
         switch(o->type) {
-            case powerup_type::tagpro:      s.setOutlineColor(sf::Color(255, 0, 0)); break;
-            case powerup_type::jukejuice:   s.setOutlineColor(sf::Color(0, 255, 0)); break;
-            case powerup_type::rollingbomb: s.setOutlineColor(sf::Color(0, 0, 255)); break;
+            case powerup_type::tagpro:      s.setOutlineColor(sf::Color(255, 0, 0, 255)); break;
+            case powerup_type::jukejuice:   s.setOutlineColor(sf::Color(0, 255, 0, 255)); break;
+            case powerup_type::rollingbomb: s.setOutlineColor(sf::Color(0, 0, 255, 255)); break;
         }
 
         window->draw(s);
@@ -233,7 +238,7 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto& o : m.balls) {
+    for(auto && o : m.balls) {
         if(! o->is_alive) continue;
         b2Vec2 pos = o->get_position();
         sf::CircleShape s;
@@ -246,11 +251,12 @@ int map_renderer::render() const
         }
 
         if(! o->powerups.empty()) {
-            s.setOutlineThickness(-2);
+            s.setOutlineThickness(2);
             s.setOutlineColor(sf::Color(
                 (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
                 (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
-                (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0)
+                (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
+                255
             ));
         }
 
