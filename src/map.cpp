@@ -12,6 +12,21 @@ void map::update(b2World* world)
             o->is_alive = true;
         }
 
+        for(auto & p : o->powerups) {
+            --p.counter;
+        }
+
+        o->powerups.erase(
+            std::remove_if(
+                o->powerups.begin(),
+                o->powerups.end(),
+                [](ball_powerup bp) {
+                    return bp.counter != 0;
+                }
+            ),
+            o->powerups.end()
+        );
+
         if(o->should_transport) {
             const portal& p = portals[o->portal_transport_id];
             o->set_position(b2Vec2(p.x, p.y));
@@ -24,7 +39,10 @@ void map::update(b2World* world)
     }
 
     for(auto & o : powerups) {
-        if(! o.is_alive && ! --o.respawn_counter) o.is_alive = true;
+        if(! o->is_alive && ! --o->respawn_counter) {
+            o->type = o->get_random_type();
+            o->is_alive = true;
+        }
     }
 
     for(auto & o : boosters) {
@@ -120,7 +138,7 @@ b2World * map::init_world()
     }
 
     for(auto & m : powerups) {
-        m.add_to_world(world);
+        m->add_to_world(world);
     }
 
     for(auto & m : flags) {
@@ -142,6 +160,11 @@ void to_json(nlohmann::json& j, const map& p)
         return;
     }
 
+    std::vector<powerup> j_powerups;
+    for(auto & o : p.powerups) {
+        j_powerups.emplace_back(*o);
+    }
+
     j = nlohmann::json{
         {"meta", {
             {"type",    to_string(p.type)},
@@ -158,7 +181,7 @@ void to_json(nlohmann::json& j, const map& p)
         {"spawns",   p.spawns},
         {"bombs",    p.bombs},
         {"spikes",   p.spikes},
-        {"powerups", p.powerups},
+        {"powerups", j_powerups},
         {"boosters", p.boosters},
         {"gates",    p.gates},
         {"flags",    p.flags}
@@ -188,7 +211,10 @@ void from_json(const nlohmann::json& j, map& p)
     p.bombs    = j.at("bombs").get<std::vector<bomb>>();
     p.spikes   = j.at("spikes").get<std::vector<spike>>();
     p.toggles  = j.at("toggles").get<std::vector<toggle>>();
-    p.powerups = j.at("powerups").get<std::vector<powerup>>();
+    std::vector<powerup> j_powerups = j.at("powerups").get<std::vector<powerup>>();
+    for(auto o : j_powerups) {
+        p.powerups.emplace_back(new powerup(o));
+    }
     p.boosters = j.at("boosters").get<std::vector<booster>>();
     p.gates    = j.at("gates").get<std::vector<gate>>();
     p.flags    = j.at("flags").get<std::vector<flag>>();

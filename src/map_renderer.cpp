@@ -190,14 +190,22 @@ int map_renderer::render() const
         window->draw(s);
     }
     
-    for(auto o : m.powerups) {
-        if(! o.is_alive) continue;
+    for(auto & o : m.powerups) {
+        if(! o->is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(5);
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o.x * scaler, o.y  * scaler);
+        s.setPosition(o->x * scaler, o->y  * scaler);
         s.setFillColor(sf::Color(30, 255, 30));
+
+        s.setOutlineThickness(-2);
+        switch(o->type) {
+            case powerup_type::tagpro:      s.setOutlineColor(sf::Color(255, 0, 0)); break;
+            case powerup_type::jukejuice:   s.setOutlineColor(sf::Color(0, 255, 0)); break;
+            case powerup_type::rollingbomb: s.setOutlineColor(sf::Color(0, 0, 255)); break;
+        }
+
         window->draw(s);
     }
     
@@ -236,6 +244,16 @@ int map_renderer::render() const
             case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
             case ball_type::blue: s.setFillColor(sf::Color(50, 50, 200)); break;
         }
+
+        if(! o->powerups.empty()) {
+            s.setOutlineThickness(-2);
+            s.setOutlineColor(sf::Color(
+                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
+                (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
+                (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0)
+            ));
+        }
+
         window->draw(s);
     }
     

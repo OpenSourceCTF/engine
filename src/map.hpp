@@ -15,6 +15,7 @@
 #include <random>
 #include <cmath>
 #include <memory>
+#include <algorithm>
 
 #include "libs/lodepng.h"
 #include "libs/json.hpp"
@@ -37,6 +38,7 @@
 #include "flag.hpp"
 #include "polygon.hpp"
 #include "ball.hpp"
+#include "ball_powerup.hpp"
 #include "contact_listener.hpp"
 #include "random_util.hpp"
 
@@ -62,10 +64,10 @@ struct map
     std::vector<spawn>   spawns;
     std::vector<bomb>    bombs;
     std::vector<spike>   spikes;
-    std::vector<powerup> powerups;
     std::vector<booster> boosters;
     std::vector<gate>    gates;
     std::vector<flag>    flags;
+    std::vector<std::unique_ptr<powerup>> powerups;
     std::vector<std::unique_ptr<ball>> balls;
 
     map();
