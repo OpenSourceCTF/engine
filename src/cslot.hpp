@@ -30,6 +30,12 @@ struct cslot
     {
         return held[0].type == type ? held[0].ptr : held[1].ptr;
     }
+
+    // use this in conjunction with above for 2 of same type
+    void* get_ptr_alt(const collision_user_data_type type) const
+    {
+        return held[1].type == type ? held[1].ptr : held[0].ptr;
+    }
 };
 
 #endif
