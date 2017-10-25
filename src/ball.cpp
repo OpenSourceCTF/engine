@@ -29,10 +29,9 @@ void ball::add_to_world(b2World * world)
     is_alive = true;
 }
 
-void ball::set_portal_transport(const std::size_t portal_id)
+void ball::set_portal_transport(portal* p)
 {
-    portal_transport_id = portal_id;
-    should_transport = true;
+    portal_transport_ptr = p;
 }
 
 void ball::set_position(const b2Vec2 pos)

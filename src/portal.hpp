@@ -25,9 +25,11 @@ struct portal
 
     bool has_destination;
     std::size_t destination_id;
+    portal* destination_ptr;
 
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
+    bool is_alive;
 
 
     portal() {}
@@ -42,8 +44,10 @@ struct portal
     , cooldown_counter(0)
     , has_destination(false)
     , destination_id(0)
+    , destination_ptr(nullptr)
     , body(nullptr)
     , col_data(nullptr)
+    , is_alive(true)
     {}
 
     void set_cooldown(const std::uint32_t x);

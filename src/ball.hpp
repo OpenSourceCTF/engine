@@ -13,9 +13,11 @@
 #include "powerup_type.hpp"
 #include "flag.hpp"
 #include "ball_flag.hpp"
+#include "portal.hpp"
 
 struct collision_user_data;
 struct flag;
+struct portal;
 
 struct ball
 {
@@ -26,8 +28,7 @@ struct ball
     std::uint32_t degree;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
-    bool should_transport;
-    std::size_t portal_transport_id;
+    portal* portal_transport_ptr;
     bool is_alive;
     int respawn_counter;
     std::vector<ball_powerup> powerups;
@@ -41,11 +42,11 @@ struct ball
     , degree(0)
     , body(nullptr)
     , col_data(nullptr)
-    , should_transport(false)
+    , portal_transport_ptr(nullptr)
     , is_alive(true)
     {}
 
-    void set_portal_transport(const std::size_t portal_id);
+    void set_portal_transport(portal* p);
     void add_to_world(b2World * world);
     void set_position(const b2Vec2 pos);
     void move(const int x, const int y);

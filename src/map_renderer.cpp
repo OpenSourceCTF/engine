@@ -170,7 +170,8 @@ int map_renderer::render() const
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setFillColor(sf::Color(255, 0, 232));
+        const int alpha = o->is_alive ? 255 : 100;
+        s.setFillColor(sf::Color(255, 0, 232, alpha));
         window->draw(s);
     }
 

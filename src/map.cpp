@@ -27,10 +27,10 @@ void map::update(b2World* world)
             o->powerups.end()
         );
 
-        if(o->should_transport) {
-            const portal* p = portals[o->portal_transport_id].get();
+        if(o->portal_transport_ptr) {
+            const portal* p = o->portal_transport_ptr;
             o->set_position(b2Vec2(p->x, p->y));
-            o->should_transport = false;
+            o->portal_transport_ptr = nullptr;
         }
     }
 
@@ -50,6 +50,20 @@ void map::update(b2World* world)
     for(auto && o : boosters) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->is_alive = true;
+        }
+    }
+
+    for(auto && o : portals) {
+        if(! o->is_alive) {
+            if(o->has_cooldown) {
+                std::cout << o->cooldown_counter << std::endl;
+                if(o->is_cooling_down && --(o->cooldown_counter) == 0) {
+                    o->is_alive = true;
+                    o->is_cooling_down = false;
+                }
+            } else {
+                o->is_alive = true;
+            }
         }
     }
 }
@@ -236,6 +250,10 @@ void from_json(const nlohmann::json& j, map& p)
     p.boosters = from_json_helper<booster>(j, "boosters");
     p.gates    = from_json_helper<gate>(j, "gates");
     p.flags    = from_json_helper<flag>(j, "flags");
+
+    for(auto && o : p.portals) {
+        o->destination_ptr = p.portals[o->destination_id].get();
+    }
 
     for(auto && o : p.toggles) {
         for(auto & m : o->tags) {

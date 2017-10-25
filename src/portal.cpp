@@ -7,6 +7,54 @@ void portal::set_cooldown(const std::uint32_t x)
     cooldown = x;
 }
 
+void portal::add_to_world(b2World * world)
+{
+    const settings& config = settings::get_instance();
+
+    b2BodyDef bdef;
+    bdef.type = b2_staticBody;
+    bdef.position.Set(this->x, this->y);
+
+    body = world->CreateBody(&bdef);
+
+    b2CircleShape bshape;
+    bshape.m_p.Set(0.0f, 0.0f);
+    bshape.m_radius = config.PORTAL_RADIUS;
+
+    b2FixtureDef fdef;
+    fdef.shape = &bshape;
+    fdef.isSensor = true;
+    body->CreateFixture(&fdef);
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
+
+    is_alive = true;
+}
+
+void portal::step_on(ball* m)
+{
+    if(! is_alive) return;
+
+    std::cout << "portal stepped on" << std::endl;
+
+    if(has_destination) {
+        std::cout << "move to: " << destination_id << std::endl;
+
+        m->set_portal_transport(destination_ptr);
+        is_alive = false;
+
+        if(has_cooldown) {
+            is_cooling_down = true;
+            cooldown_counter = cooldown;
+        }
+    }
+}
+
+void portal::step_off(ball* m)
+{
+    std::cout << "portal stepped off" << std::endl;
+}
+
 void to_json(nlohmann::json& j, const portal& p)
 {
     j = nlohmann::json{
@@ -30,42 +78,5 @@ void from_json(const nlohmann::json& j, portal& p)
     if(p.has_destination) {
         p.destination_id  = j.at("destination_id").get<int>();
     }
-}
-
-void portal::add_to_world(b2World * world)
-{
-    const settings& config = settings::get_instance();
-
-    b2BodyDef bdef;
-    bdef.type = b2_staticBody;
-    bdef.position.Set(this->x, this->y);
-
-    body = world->CreateBody(&bdef);
-
-    b2CircleShape bshape;
-    bshape.m_p.Set(0.0f, 0.0f);
-    bshape.m_radius = config.PORTAL_RADIUS;
-
-    b2FixtureDef fdef;
-    fdef.shape = &bshape;
-    fdef.isSensor = true;
-    body->CreateFixture(&fdef);
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
-    body->SetUserData(static_cast<void*>(col_data.get()));
-}
-
-void portal::step_on(ball* m)
-{
-    std::cout << "portal stepped on" << std::endl;
-
-    if(has_destination) {
-        std::cout << "move to: " << destination_id << std::endl;
-        m->set_portal_transport(destination_id);
-    }
-}
-
-void portal::step_off(ball* m)
-{
-    std::cout << "portal stepped off" << std::endl;
 }
 
