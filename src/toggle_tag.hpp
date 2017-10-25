@@ -11,10 +11,8 @@
 #include "gate.hpp"
 #include "bomb.hpp"
 
-// id is just the offset in the list of things
-// so id=5 would be map.bombs[4]
-// should we add action?
-// then we could have stuff like spawn bombs or other weird crap
+// id is loaded first
+// then ptr is set after map load
 struct toggle_tag
 {
     std::uint32_t id;
@@ -27,14 +25,7 @@ struct toggle_tag
         const toggle_tag_type type
     )
     : id(id)
-    , type(type)
-    {}
-
-    toggle_tag(
-        void* ptr,
-        const toggle_tag_type type
-    )
-    : ptr(ptr)
+    , ptr(nullptr)
     , type(type)
     {}
 
