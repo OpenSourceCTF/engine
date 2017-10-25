@@ -1,8 +1,8 @@
 #include "contact_listener.hpp"
 
-struct toggle;
-
 const collision_user_data unknown_data;
+
+static constexpr bool VERBOSE_CONTACT = false;
 
 void contact_listener::BeginContact(b2Contact* contact)
 {
@@ -20,28 +20,47 @@ void contact_listener::BeginContact(b2Contact* contact)
     });
 
     if(cdata.has(collision_user_data_type::ball)) {
-        std::cout << "contact: ball" << std::endl;
+        if(VERBOSE_CONTACT) std::cout << "contact: ball" << std::endl;
 
         ball * m = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
         if(cdata.has_both(collision_user_data_type::ball)) {
-            std::cout << "contact: begin ball" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin ball" << std::endl;
 
-            // todo
-            // this is where we'd have powerups affect
-            // or deal with popping flag carrier
+            ball * b = static_cast<ball*>(
+                cdata.get_ptr_alt(collision_user_data_type::ball)
+            );
+
+            if(! m->powerups.empty() || ! b->powerups.empty()) {
+                if(! same_color(m->type, b->type)) {
+                    if(m->has_powerup(powerup_type::rollingbomb)) {
+                        m->explode();
+                    }
+
+                    if(b->has_powerup(powerup_type::rollingbomb)) {
+                        b->explode();
+                    }
+
+                    if(m->has_powerup(powerup_type::tagpro)) {
+                        b->pop();
+                    }
+                    if(b->has_powerup(powerup_type::tagpro)) {
+                        m->pop();
+                    }
+                }
+            }
         }
 
         if(cdata.has(collision_user_data_type::spike)) {
-            std::cout << "contact: begin spike" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin spike" << std::endl;
 
             if(m) m->pop();
         }
 
         if(cdata.has(collision_user_data_type::bomb)) {
-            std::cout << "contact: begin bomb" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin bomb" << std::endl;
 
             bomb * o = static_cast<bomb*>(
                 cdata.get_ptr(collision_user_data_type::bomb)
@@ -51,7 +70,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
-            std::cout << "contact: begin toggle" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin toggle" << std::endl;
 
             toggle * o = static_cast<toggle*>(
                 cdata.get_ptr(collision_user_data_type::toggle)
@@ -61,7 +80,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::booster)) {
-            std::cout << "contact: begin booster" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin booster" << std::endl;
 
             booster * o = static_cast<booster*>(
                 cdata.get_ptr(collision_user_data_type::booster)
@@ -71,7 +90,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::powerup)) {
-            std::cout << "contact: begin powerup" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin powerup" << std::endl;
 
             powerup * o = static_cast<powerup*>(
                 cdata.get_ptr(collision_user_data_type::powerup)
@@ -81,7 +100,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::flag)) {
-            std::cout << "contact: begin flag" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin flag" << std::endl;
 
             flag * o = static_cast<flag*>(
                 cdata.get_ptr(collision_user_data_type::flag)
@@ -91,7 +110,7 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            std::cout << "contact: begin portal" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: begin portal" << std::endl;
 
             portal * o = static_cast<portal*>(
                 cdata.get_ptr(collision_user_data_type::portal)
@@ -117,14 +136,14 @@ void contact_listener::EndContact(b2Contact* contact)
     });
 
     if(cdata.has(collision_user_data_type::ball)) {
-        std::cout << "contact: ball" << std::endl;
+        if(VERBOSE_CONTACT) std::cout << "contact: ball" << std::endl;
 
         ball * m = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
         if(cdata.has(collision_user_data_type::toggle)) {
-            std::cout << "contact: left toggle" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: left toggle" << std::endl;
 
             toggle * o = static_cast<toggle*>(
                 cdata.get_ptr(collision_user_data_type::toggle)
@@ -134,7 +153,7 @@ void contact_listener::EndContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            std::cout << "contact: portal" << std::endl;
+            if(VERBOSE_CONTACT) std::cout << "contact: portal" << std::endl;
 
             portal * o = static_cast<portal*>(
                 cdata.get_ptr(collision_user_data_type::portal)

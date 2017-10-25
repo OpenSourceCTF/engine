@@ -97,7 +97,7 @@ void tp_map_importer::tp_toggle_ref(
     const tp_pos toggle_check(x, y);
     if(tp_import_toggle_positions.find(toggle_check)
     != tp_import_toggle_positions.end()) {
-        auto & tags = m.toggles[tp_import_toggle_positions[toggle_check]].tags;
+        auto & tags = m.toggles[tp_import_toggle_positions[toggle_check]]->tags;
         tags.emplace_back(toggle_tag(id, type));
     }
 }
@@ -150,7 +150,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
                 ? it.value()["timer"].get<int>()
                 : 0;
 
-            m.toggles.emplace_back(toggle(x, y, timer, {}));
+            m.toggles.emplace_back(new toggle(x, y, timer, {}));
 
             for(auto p : it.value().at("toggle")) {
                 const auto j_pos = p.at("pos");
@@ -161,7 +161,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
             }
 
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
         }
     }
@@ -186,7 +186,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
                 p.has_destination = true;
             }
 
-            m.portals.emplace_back(p);
+            m.portals.emplace_back(new portal(p));
 
             // save position into map
             // so we can reference this same map to find destination id
@@ -198,14 +198,14 @@ int tp_map_importer::tp_import_json(const std::string & src)
         std::size_t id = 0;
         for (json::iterator it = j_portals.begin(); it != j_portals.end(); ++it, ++id) {
             const auto j_port = it.value();
-            portal& p = m.portals.at(id);
+            portal* p = m.portals.at(id).get();
 
-            if(p.has_destination) {
+            if(p->has_destination) {
                 auto j_dest = j_port.at("destination");
                 const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
                 const std::size_t destination_id = tp_import_portal_positions.at(dpos);
 
-                p.destination_id = destination_id;
+                p->destination_id = destination_id;
             }
         }
     }
@@ -233,7 +233,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
             gate_type type = gatetype_map[j_gatetype];
 
             for(auto p : make_square_poly(x, y)) {
-                m.gates.emplace_back(gate(p, type));
+                m.gates.emplace_back(new gate(p, type));
                 tp_toggle_ref(x, y, m.gates.size()-1, toggle_tag_type::gate);
             }
         }
@@ -252,7 +252,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
                 const std::uint32_t radius = it.value()["radius"];
                 const std::uint32_t weight = it.value()["weight"];
 
-                m.spawns.emplace_back(spawn(x, y, radius, weight, type));
+                m.spawns.emplace_back(new spawn(x, y, radius, weight, type));
             }
         };
 
@@ -340,100 +340,100 @@ int tp_map_importer::tp_import_png(const std::string & src)
 
         if(tiletype == tp_tile_type::background) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::background));
+                m.tiles.emplace_back(new tile(p, col, tile_type::background));
             }
         } else if(tiletype == tp_tile_type::tile) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, col, tile_type::normal));
             }
         } else if(tiletype == tp_tile_type::speed_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::speed_red));
+                m.tiles.emplace_back(new tile(p, col, tile_type::speed_red));
             }
         } else if(tiletype == tp_tile_type::speed_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::speed_blue));
+                m.tiles.emplace_back(new tile(p, col, tile_type::speed_blue));
             }
         } else if(tiletype == tp_tile_type::endzone_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::endzone_red));
+                m.tiles.emplace_back(new tile(p, col, tile_type::endzone_red));
             }
         } else if(tiletype == tp_tile_type::endzone_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::endzone_blue));
+                m.tiles.emplace_back(new tile(p, col, tile_type::endzone_blue));
             }
         } else if(tiletype == tp_tile_type::wall) {
             for(auto p : make_square_poly(x, y)) {
-                m.walls.emplace_back(wall(p, config.COLOR_WALL));
+                m.walls.emplace_back(new wall(p, config.COLOR_WALL));
             }
         } else if(tiletype == tp_tile_type::wall_tl) {
-            m.walls.emplace_back(wall(polygon(x, y, x+1, y, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(tile(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x, y, x+1, y, x, y+1), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_tr) {
-            m.walls.emplace_back(wall(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(tile(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_bl) {
-            m.walls.emplace_back(wall(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(tile(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_br) {
-            m.walls.emplace_back(wall(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(tile(polygon(x, y, x+1, y, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y, x, y+1), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::bomb) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.bombs.emplace_back(bomb(x, y));
+            m.bombs.emplace_back(new bomb(x, y));
             tp_toggle_ref(x, y, m.bombs.size()-1, toggle_tag_type::bomb);
         } else if(tiletype == tp_tile_type::spike) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.spikes.emplace_back(spike(x, y));
+            m.spikes.emplace_back(new spike(x, y));
         } else if(tiletype == tp_tile_type::powerup) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.powerups.emplace_back(powerup(x, y));
+            m.powerups.emplace_back(new powerup(x, y));
         } else if(tiletype == tp_tile_type::button) {
             // this is handled by toggle
         } else if(tiletype == tp_tile_type::booster_all) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.boosters.emplace_back(booster(x, y, booster_type::all));
+            m.boosters.emplace_back(new booster(x, y, booster_type::all));
         } else if(tiletype == tp_tile_type::booster_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.boosters.emplace_back(booster(x, y, booster_type::red));
+            m.boosters.emplace_back(new booster(x, y, booster_type::red));
         } else if(tiletype == tp_tile_type::booster_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.boosters.emplace_back(booster(x, y, booster_type::blue));
+            m.boosters.emplace_back(new booster(x, y, booster_type::blue));
         } else if(tiletype == tp_tile_type::gate) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
         } else if(tiletype == tp_tile_type::portal) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
         } else if(tiletype == tp_tile_type::flag_neutral) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.flags.emplace_back(flag(x, y, flag_type::neutral));
+            m.flags.emplace_back(new flag(x, y, flag_type::neutral));
         } else if(tiletype == tp_tile_type::flag_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.flags.emplace_back(flag(x, y, flag_type::red));
+            m.flags.emplace_back(new flag(x, y, flag_type::red));
         } else if(tiletype == tp_tile_type::flag_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.flags.emplace_back(flag(x, y, flag_type::blue));
+            m.flags.emplace_back(new flag(x, y, flag_type::blue));
         } else {
             std::cerr << "error: unhandled tile_type: " << tile_color << std::endl;
             return 1;

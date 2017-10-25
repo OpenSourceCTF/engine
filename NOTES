@@ -1,15 +1,16 @@
 ## TODO
 
-make toggles toggle again
+make powerups load possible powerups from map exporter
+fix portals respawn
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever
-fix portal bug where you get teleported in circle
-make powerups
-make powerups have effects
-track flag ownership and scoring
+have scores saved in game object
 add game end conditions (time, score)
-make gates kill players
+make gates pop players
 serialize map data for server sync
+destroy box2d bodies on destruct
+implement game clear/restart
+add explosions to other events
 handle websocket movement input
     (will require an action queue)
 send map deltas for server
@@ -50,12 +51,6 @@ client says ready with login_token (so server can get user_id, name, degrees)
 
 in future we plan for move to webrtc
 
-## ENGINE
-
-objects need to use unique_ptr or shared_ptr rather than raw ptrs
-for now im just using raw since its faster to dev
-but its unsafe and will be best to switch over at least when game basically works..
-
 ## BUILD
 
 itd be nice if the libraries were just in a folder and built correctly as part of makefile
@@ -67,6 +62,7 @@ improve dependencies in makefile + general cleanup
 
 ## BUGS
 
-* `serve` crashes when [server] games > 1 in config.ini
+run these to look :p
 
-* `serve` "render" crashes when trying to open sfml window
+grep -r "todo" src
+grep -r "fixme" src

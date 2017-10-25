@@ -1,18 +1,18 @@
 #include "toggle_tag.hpp"
 
-void toggle_tag::step_on(map& m, ball* o)
+void toggle_tag::step_on(ball* o)
 {
     switch(type) {
-        case toggle_tag_type::bomb: m.bombs[id].explode(o);  break;
-        case toggle_tag_type::gate: m.gates[id].mark_on(o); break;
+        case toggle_tag_type::bomb: static_cast<bomb*>(ptr)->explode(o); break;
+        case toggle_tag_type::gate: static_cast<gate*>(ptr)->mark_on(o); break;
     }
 }
 
-void toggle_tag::step_off(map& m, ball* o)
+void toggle_tag::step_off(ball* o)
 {
     switch(type) {
         case toggle_tag_type::bomb: break;
-        case toggle_tag_type::gate: m.gates[id].mark_off(o); break;
+        case toggle_tag_type::gate: static_cast<gate*>(ptr)->mark_off(o); break;
     }
 }
 

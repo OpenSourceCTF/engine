@@ -13,6 +13,9 @@
 #include "settings.hpp"
 #include "ball.hpp"
 
+struct collision_user_data;
+struct ball;
+
 struct flag
 {
     float x;
@@ -20,6 +23,7 @@ struct flag
     flag_type type;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
+    bool is_alive;
 
     flag() {}
     flag(
@@ -32,6 +36,7 @@ struct flag
     , type(type)
     , body(nullptr)
     , col_data(nullptr)
+    , is_alive(true)
     {}
 
     void add_to_world(b2World * world);

@@ -11,6 +11,7 @@
 #include "booster_type.hpp"
 #include "ball.hpp"
 
+struct ball;
 
 struct booster
 {

@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <exception>
 #include <iostream>
+#include <memory>
 #include <map>
 #include <unordered_set>
 #include "polygon.hpp"
@@ -49,6 +50,7 @@ constexpr bool same_color(const T a, const U b)
 }
 
 // return the corresponding color from U a to T type
+// todo: this has a terrible name
 template <typename T, typename U>
 T corresponding_color(const U a)
 {
@@ -63,6 +65,20 @@ T corresponding_color(const U a)
             std::terminate();
             return T::red; // error suppressor
     }
+}
+
+template <typename T>
+std::vector<std::unique_ptr<T>> vec_to_uniq_ptr_vec(
+    const std::vector<T> & v
+) {
+    std::vector<std::unique_ptr<T>> ret;
+    ret.reserve(v.size());
+
+    for(auto && o : v) {
+        ret.emplace_back(new T(o));
+    }
+
+    return ret;
 }
 
 std::vector<chain> poly2chain(std::vector<polygon> poly_set);
@@ -137,4 +153,3 @@ constexpr int DISTINCT_COLORS[63][3] =
 };
 
 #endif
-

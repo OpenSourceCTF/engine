@@ -6,19 +6,17 @@
 #include <cstdint>
 #include "libs/json.hpp"
 #include "toggle_tag_type.hpp"
-#include "map.hpp"
-#include "ball.hpp"
 #include "util.hpp"
+#include "ball.hpp"
+#include "gate.hpp"
+#include "bomb.hpp"
 
-struct map;
-
-// id is just the offset in the list of things
-// so id=5 would be map.bombs[4]
-// should we add action?
-// then we could have stuff like spawn bombs or other weird crap
+// id is loaded first
+// then ptr is set after map load
 struct toggle_tag
 {
     std::uint32_t id;
+    void* ptr;
     toggle_tag_type type;
 
     toggle_tag(){}
@@ -27,11 +25,12 @@ struct toggle_tag
         const toggle_tag_type type
     )
     : id(id)
+    , ptr(nullptr)
     , type(type)
     {}
 
-    void step_on(map& m, ball* o);
-    void step_off(map& m, ball* o);
+    void step_on(ball* o);
+    void step_off(ball* o);
 
 };
 

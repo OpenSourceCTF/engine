@@ -3,7 +3,7 @@ LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboo
 
 all: tagos
 
-tagos: build/tagos.o build/contact_listener.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/coord.o build/chain.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/game.o build/server_lobby.o build/random_util.o build/lodepng.o
+tagos: build/tagos.o build/contact_listener.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/coord.o build/chain.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/game.o build/server_lobby.o build/random_util.o build/cslot.o build/lodepng.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 build/tagos.o: src/tagos.cpp src/libs/json.hpp src/libs/INIReader.h 
@@ -78,6 +78,9 @@ build/booster_type.o: src/booster_type.cpp src/booster_type.hpp
 build/powerup.o: src/powerup.cpp src/powerup.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
+build/powerup_type.o: src/powerup_type.cpp src/powerup_type.hpp
+	$(CXX) $(CXXFLAGS) $< -c -o $@
+
 build/spike.o: src/spike.cpp src/spike.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
@@ -109,6 +112,9 @@ build/server_lobby.o: src/server_lobby.cpp src/server_lobby.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/random_util.o: src/random_util.cpp src/random_util.hpp
+	$(CXX) $(CXXFLAGS) $< -c -o $@
+
+build/cslot.o: src/cslot.cpp src/cslot.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/lodepng.o: src/libs/lodepng.cpp src/libs/lodepng.h

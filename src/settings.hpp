@@ -9,7 +9,7 @@ struct settings
     bool is_initialized = false;
 
     float BALL_MOVEMENT_SPEED;
-    float BALL_BOOSTER_FORCE;
+    float BALL_JUKEJUICE_SPEED;
     float BALL_DAMPING;
     float BALL_DENSITY;
     float BALL_RESTITUTION;
@@ -28,9 +28,11 @@ struct settings
 
     float BOOSTER_RADIUS;
     int   BOOSTER_RESPAWN_TIME;
+    float BOOSTER_FORCE;
 
     float POWERUP_RADIUS;
     int   POWERUP_RESPAWN_TIME;
+    int   POWERUP_LASTING_TIME;
 
     float FLAG_RADIUS;
 
@@ -39,8 +41,8 @@ struct settings
     color COLOR_TILE;
     color COLOR_WALL;
 
-    float GUI_INITIAL_WINDOW_WIDTH;
-    float GUI_INITIAL_WINDOW_HEIGHT;
+    int GUI_INITIAL_WINDOW_WIDTH;
+    int GUI_INITIAL_WINDOW_HEIGHT;
     float GUI_MOVEMENT_SPEED_DIV;
 
     std::uint16_t SERVER_LOBBY_PORT;

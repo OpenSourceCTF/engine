@@ -16,9 +16,6 @@ int map_renderer::close_window()
     return 0;
 }
 
-// todo: fixme
-// the verbose output is due to crash during server launch of rendering
-// where create window fails
 int map_renderer::open_window()
 {
 #ifdef DISABLE_RENDER
@@ -34,7 +31,7 @@ int map_renderer::open_window()
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
-    std::cout << "map_renderer: window success" << std::endl;
+	std::cout << "map_renderer: window success" << std::endl;
 
     std::cout << "map_renderer: attempting to create view" << std::endl;
     view = sf::View(sf::FloatRect(
@@ -44,8 +41,9 @@ int map_renderer::open_window()
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
     std::cout << "map_renderer: view success" << std::endl;
-#endif
+
     return 0;
+#endif
 }
 
 int map_renderer::get_input()
@@ -141,24 +139,24 @@ int map_renderer::render() const
         s.setPoint(2, sf::Vector2f(poly.x3 * scaler, poly.y3 * scaler));
     };
 
-    for(auto o : m.walls) {
+    for(auto && o : m.walls) {
         sf::ConvexShape s;
-        add_points(s, o.poly);
-        color_mode(s, o.col);
+        add_points(s, o->poly);
+        color_mode(s, o->col);
         window->draw(s);
     }
     
-    for(auto o : m.tiles) {
+    for(auto && o : m.tiles) {
         sf::ConvexShape s;
-        add_points(s, o.poly);
-        color_mode(s, o.col);
+        add_points(s, o->poly);
+        color_mode(s, o->col);
         window->draw(s);
     }
 
-    for(auto o : m.gates) {
+    for(auto && o : m.gates) {
         sf::ConvexShape s;
-        add_points(s, o.poly);
-        switch(o.current) {
+        add_points(s, o->poly);
+        switch(o->current) {
             case gate_type::off:  s.setFillColor(sf::Color(0,   0,   0,   50)); break;
             case gate_type::on:   s.setFillColor(sf::Color(0,   255, 0,   50)); break;
             case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255, 50)); break;
@@ -167,64 +165,88 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto o : m.portals) {
+    for(auto && o : m.portals) {
         sf::CircleShape s;
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o.x * scaler, o.y  * scaler);
-        s.setFillColor(sf::Color(255, 0, 232));
+        s.setPosition(o->x * scaler, o->y  * scaler);
+        const int alpha = o->is_alive ? 255 : 100;
+        s.setFillColor(sf::Color(255, 0, 232, alpha));
         window->draw(s);
     }
 
-    for(auto o : m.bombs) {
-        if(! o.is_alive) continue;
+    for(auto && o : m.bombs) {
+        if(! o->is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(8);
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o.x * scaler, o.y * scaler);
+        s.setPosition(o->x * scaler, o->y * scaler);
         s.setFillColor(sf::Color(30, 30, 30));
         window->draw(s);
     }
 
-    for(auto o : m.spikes) {
+    for(auto && o : m.spikes) {
         sf::CircleShape s;
         s.setPointCount(3);
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o.x * scaler, o.y  * scaler);
+        s.setPosition(o->x * scaler, o->y  * scaler);
         s.setFillColor(sf::Color(70, 70, 70));
         window->draw(s);
     }
     
-    for(auto o : m.powerups) {
-        if(! o.is_alive) continue;
+    for(auto && o : m.powerups) {
+        if(! o->is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(5);
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o.x * scaler, o.y  * scaler);
+        s.setPosition(o->x * scaler, o->y  * scaler);
         s.setFillColor(sf::Color(30, 255, 30));
+
+        s.setOutlineThickness(2);
+        switch(o->type) {
+            case powerup_type::tagpro:      s.setOutlineColor(sf::Color(255, 0, 0, 255)); break;
+            case powerup_type::jukejuice:   s.setOutlineColor(sf::Color(0, 255, 0, 255)); break;
+            case powerup_type::rollingbomb: s.setOutlineColor(sf::Color(0, 0, 255, 255)); break;
+        }
+
         window->draw(s);
     }
     
-    for(auto o : m.toggles) {
+    for(auto && o : m.toggles) {
         sf::CircleShape s;
         s.setRadius(scaler / 4);
-        s.setPosition((o.x + 0.25) * scaler, (o.y + 0.25)  * scaler);
+        s.setPosition((o->x + 0.25) * scaler, (o->y + 0.25)  * scaler);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setFillColor(sf::Color(230, 200, 100));
         window->draw(s);
     }
 
-    for(auto o : m.boosters) {
-        if(! o.is_alive) continue;
+    for(auto && o : m.flags) {
+        sf::CircleShape s;
+        s.setPointCount(3);
+        s.setRadius(scaler / 2);
+        s.setOrigin(s.getRadius(), s.getRadius());
+        s.setPosition(o->x * scaler, o->y * scaler);
+        const int alpha = o->is_alive ? 255 : 100;
+        switch(o->type) {
+            case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 20, alpha)); break;
+            case flag_type::blue:    s.setFillColor(sf::Color(30, 30, 170, alpha)); break;
+            case flag_type::red:     s.setFillColor(sf::Color(170, 30, 30, alpha)); break;
+        }
+        window->draw(s);
+    }
+
+    for(auto && o : m.boosters) {
+        if(! o->is_alive) continue;
         sf::CircleShape s;
         s.setPointCount(3);
         s.setRadius(scaler / 3);
         s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition((o.x + 0.17) * scaler, (o.y + 0.17)  * scaler);
-        switch(o.type) {
+        s.setPosition((o->x + 0.17) * scaler, (o->y + 0.17)  * scaler);
+        switch(o->type) {
             case booster_type::all:  s.setFillColor(sf::Color(250, 250, 70)); break;
             case booster_type::red:  s.setFillColor(sf::Color(255, 75, 25));  break;
             case booster_type::blue: s.setFillColor(sf::Color(25, 75, 255));  break;
@@ -232,7 +254,7 @@ int map_renderer::render() const
         window->draw(s);
     }
 
-    for(auto& o : m.balls) {
+    for(auto && o : m.balls) {
         if(! o->is_alive) continue;
         b2Vec2 pos = o->get_position();
         sf::CircleShape s;
@@ -243,7 +265,35 @@ int map_renderer::render() const
             case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
             case ball_type::blue: s.setFillColor(sf::Color(50, 50, 200)); break;
         }
+
+        if(! o->powerups.empty()) {
+            s.setOutlineThickness(2);
+            s.setOutlineColor(sf::Color(
+                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
+                (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
+                (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
+                255
+            ));
+        }
+
         window->draw(s);
+
+        if(! o->flags.empty()) {
+            const flag* f = o->flags[0].f;
+
+            b2Vec2 pos = o->get_position();
+            sf::CircleShape s;
+            s.setRadius(scaler / 4);
+            s.setOrigin(s.getRadius(), s.getRadius());
+            s.setPosition(pos.x * scaler, pos.y  * scaler);
+            switch(f->type) {
+                case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 10)); break;
+                case flag_type::blue:    s.setFillColor(sf::Color(70, 70, 230));  break;
+                case flag_type::red:     s.setFillColor(sf::Color(230, 70, 70));  break;
+            }
+
+            window->draw(s);
+        }
     }
 
     auto thick_line = [&](const coord& a, const coord& b) {
