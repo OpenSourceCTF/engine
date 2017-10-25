@@ -47,6 +47,7 @@ constexpr bool same_color(const T a, const U b)
 }
 
 // return the corresponding color from U a to T type
+// todo: this has a terrible name
 template <typename T, typename U>
 T corresponding_color(const U a)
 {
