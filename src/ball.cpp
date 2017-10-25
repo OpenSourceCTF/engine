@@ -78,6 +78,12 @@ void ball::pop()
 
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
+
+    for(auto & f : flags) {
+        f.f->is_alive = true;
+    }
+
+    flags.clear();
 }
 
 void ball::get_boosted()
@@ -145,5 +151,22 @@ void ball::explode()
     // todo explosion here
     std::cout << "rollingboom" << std::endl;
     remove_powerup(powerup_type::rollingbomb);
+}
+
+bool ball::has_flag(const flag_type type)
+{
+    for(auto & o : flags) {
+        if(o.f->type == type) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void ball::add_flag(flag* f)
+{
+    std::cout << "add new flag" << std::endl;
+    flags.emplace_back(ball_flag(f));
 }
 

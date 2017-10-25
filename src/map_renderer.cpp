@@ -223,6 +223,21 @@ int map_renderer::render() const
         window->draw(s);
     }
 
+    for(auto && o : m.flags) {
+        sf::CircleShape s;
+        s.setPointCount(3);
+        s.setRadius(scaler / 2);
+        s.setOrigin(s.getRadius(), s.getRadius());
+        s.setPosition(o->x * scaler, o->y * scaler);
+        const int alpha = o->is_alive ? 255 : 100;
+        switch(o->type) {
+            case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 20, alpha)); break;
+            case flag_type::blue:    s.setFillColor(sf::Color(30, 30, 170, alpha)); break;
+            case flag_type::red:     s.setFillColor(sf::Color(170, 30, 30, alpha)); break;
+        }
+        window->draw(s);
+    }
+
     for(auto && o : m.boosters) {
         if(! o->is_alive) continue;
         sf::CircleShape s;
@@ -261,6 +276,23 @@ int map_renderer::render() const
         }
 
         window->draw(s);
+
+        if(! o->flags.empty()) {
+            const flag* f = o->flags[0].f;
+
+            b2Vec2 pos = o->get_position();
+            sf::CircleShape s;
+            s.setRadius(scaler / 4);
+            s.setOrigin(s.getRadius(), s.getRadius());
+            s.setPosition(pos.x * scaler, pos.y  * scaler);
+            switch(f->type) {
+                case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 10)); break;
+                case flag_type::blue:    s.setFillColor(sf::Color(70, 70, 230));  break;
+                case flag_type::red:     s.setFillColor(sf::Color(230, 70, 70));  break;
+            }
+
+            window->draw(s);
+        }
     }
     
     window->display();

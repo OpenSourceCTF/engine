@@ -420,17 +420,17 @@ int tp_map_importer::tp_import_png(const std::string & src)
             }
         } else if(tiletype == tp_tile_type::flag_neutral) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::neutral));
         } else if(tiletype == tp_tile_type::flag_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::red));
         } else if(tiletype == tp_tile_type::flag_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, col, tile_type::normal));
+                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::blue));
         } else {

@@ -11,6 +11,8 @@
 #include "ball_type.hpp"
 #include "ball_powerup.hpp"
 #include "powerup_type.hpp"
+#include "flag.hpp"
+#include "ball_flag.hpp"
 
 struct ball
 {
@@ -26,7 +28,7 @@ struct ball
     bool is_alive;
     int respawn_counter;
     std::vector<ball_powerup> powerups;
-
+    std::vector<ball_flag> flags;
 
     ball(const ball_type type)
     : type(type)
@@ -53,6 +55,8 @@ struct ball
     bool has_powerup(const powerup_type type);
     void remove_powerup(const powerup_type type);
     void explode();
+    bool has_flag(const flag_type type);
+    void add_flag(flag* f);
 };
 
 #endif

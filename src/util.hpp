@@ -70,7 +70,7 @@ std::vector<T> uniq_ptr_vec_to_vec(
     std::vector<T> ret;
     ret.resize(v.size());
 
-    for(auto & o : v) {
+    for(auto && o : v) {
         ret.emplace_back(*o);
     }
 
