@@ -57,6 +57,8 @@ struct ball
     void explode();
     bool has_flag(const flag_type type);
     void add_flag(flag* f);
+    void reset_flags();
+    void score();
 };
 
 #endif

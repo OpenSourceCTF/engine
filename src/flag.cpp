@@ -32,6 +32,8 @@ void flag::step_on(ball* m)
     if(! same_color(type, m->type)) {
         m->add_flag(this);
         is_alive = false;
+    } else if(! m->flags.empty()) {
+        m->score();
     }
 }
 

@@ -79,11 +79,7 @@ void ball::pop()
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
-    for(auto & f : flags) {
-        f.f->is_alive = true;
-    }
-
-    flags.clear();
+    reset_flags();
 }
 
 void ball::get_boosted()
@@ -170,3 +166,17 @@ void ball::add_flag(flag* f)
     flags.emplace_back(ball_flag(f));
 }
 
+void ball::reset_flags()
+{
+    for(auto & f : flags) {
+        f.f->is_alive = true;
+    }
+
+    flags.clear();
+}
+
+void ball::score()
+{
+    std::cout << "score, yay" << std::endl;
+    reset_flags();
+}
