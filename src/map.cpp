@@ -164,6 +164,19 @@ void to_json(nlohmann::json& j, const map& p)
         return;
     }
 
+    // todo clean me up
+    std::vector<wall>    walls;    for(auto & o : p.walls)    walls.emplace_back(*o);
+    std::vector<tile>    tiles;    for(auto & o : p.tiles)    tiles.emplace_back(*o);
+    std::vector<portal>  portals;  for(auto & o : p.portals)  portals.emplace_back(*o);
+    std::vector<toggle>  toggles;  for(auto & o : p.toggles)  toggles.emplace_back(*o);
+    std::vector<spawn>   spawns;   for(auto & o : p.spawns)   spawns.emplace_back(*o);
+    std::vector<bomb>    bombs;    for(auto & o : p.bombs)    bombs.emplace_back(*o);
+    std::vector<spike>   spikes;   for(auto & o : p.spikes)   spikes.emplace_back(*o);
+    std::vector<powerup> powerups; for(auto & o : p.powerups) powerups.emplace_back(*o);
+    std::vector<booster> boosters; for(auto & o : p.boosters) boosters.emplace_back(*o);
+    std::vector<gate>    gates;    for(auto & o : p.gates)    gates.emplace_back(*o);
+    std::vector<flag>    flags;    for(auto & o : p.flags)    flags.emplace_back(*o);
+
     j = nlohmann::json{
         {"meta", {
             {"type",    to_string(p.type)},
@@ -173,17 +186,17 @@ void to_json(nlohmann::json& j, const map& p)
             {"width",   p.width},
             {"height",  p.height}
         }},
-        {"walls",    uniq_ptr_vec_to_vec(p.walls)},
-        {"tiles",    uniq_ptr_vec_to_vec(p.tiles)},
-        {"portals",  uniq_ptr_vec_to_vec(p.portals)},
-        {"toggles",  uniq_ptr_vec_to_vec(p.toggles)},
-        {"spawns",   uniq_ptr_vec_to_vec(p.spawns)},
-        {"bombs",    uniq_ptr_vec_to_vec(p.bombs)},
-        {"spikes",   uniq_ptr_vec_to_vec(p.spikes)},
-        {"powerups", uniq_ptr_vec_to_vec(p.powerups)},
-        {"boosters", uniq_ptr_vec_to_vec(p.boosters)},
-        {"gates",    uniq_ptr_vec_to_vec(p.gates)},
-        {"flags",    uniq_ptr_vec_to_vec(p.flags)}
+        {"walls",    walls},
+        {"tiles",    tiles},
+        {"portals",  portals},
+        {"toggles",  toggles},
+        {"spawns",   spawns},
+        {"bombs",    bombs},
+        {"spikes",   spikes},
+        {"powerups", powerups},
+        {"boosters", boosters},
+        {"gates",    gates},
+        {"flags",    flags}
     };
 }
 
