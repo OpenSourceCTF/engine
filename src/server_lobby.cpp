@@ -31,6 +31,7 @@ void server_lobby::start_server()
         const std::uint16_t port = config.SERVER_GAME_PORT_START + i;
 
         map * m = nullptr;
+        // todo we need to handle switching maps as time goes on
         try {
             const std::string map_src = config.SERVER_MAPS[i % config.SERVER_MAPS.size()];
             std::cout << "loading: " << map_src << std::endl;
