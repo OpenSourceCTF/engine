@@ -12,8 +12,15 @@ void map_renderer::display_help() const
 
 int map_renderer::close_window()
 {
+#ifdef DISABLE_RENDER
+    std::cerr
+        << "error: built with DISABLE_RENDER"
+        << std::endl;
+    return 0;
+#else
     window->close();
     return 0;
+#endif
 }
 
 int map_renderer::open_window()
@@ -48,6 +55,12 @@ int map_renderer::open_window()
 
 int map_renderer::get_input()
 {
+#ifdef DISABLE_RENDER
+    std::cerr
+        << "error: built with DISABLE_RENDER"
+        << std::endl;
+    return 0;
+#else
     const settings& config = settings::get_instance();
     sf::Event event;
 
@@ -100,6 +113,7 @@ int map_renderer::get_input()
     }
 
     return 1;
+#endif
 }
 
 int map_renderer::render() const
