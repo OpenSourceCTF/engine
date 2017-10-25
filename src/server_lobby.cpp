@@ -28,12 +28,21 @@ void server_lobby::start_server()
     srv_lobby_thread.detach();
 
     for(std::size_t i=0; i<config.SERVER_GAMES; ++i) {
-        std::ifstream t("maps/Boombox.json");
-        std::stringstream buf;
-        buf << t.rdbuf();
-
         const std::uint16_t port = config.SERVER_GAME_PORT_START + i;
-        map * m = new map(nlohmann::json::parse(buf.str()));
+
+        map * m = nullptr;
+        try {
+            const std::string map_src = config.SERVER_MAPS[i % config.SERVER_MAPS.size()];
+            std::cout << "loading: " << map_src << std::endl;
+            std::ifstream t(map_src);
+            std::stringstream buf;
+            buf << t.rdbuf();
+
+            m = new map(nlohmann::json::parse(buf.str()));
+        } catch(nlohmann::detail::parse_error e) {
+            std::cerr << e.what() << std::endl;
+        }
+
         games.emplace_back(game(port, m));
 
         std::thread srv_game_thread(start_game_server, port);

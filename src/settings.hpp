@@ -1,8 +1,12 @@
 #ifndef ML_SETTINGS_HPP
 #define ML_SETTINGS_HPP
 
+#include <vector>
+#include <cstdint>
+#include <boost/algorithm/string/trim.hpp>
 #include "libs/INIReader.h"
 #include "color.hpp"
+#include "util.hpp"
 
 struct settings
 {
@@ -48,6 +52,7 @@ struct settings
     std::uint16_t SERVER_LOBBY_PORT;
     int SERVER_GAMES;
     int SERVER_GAME_PORT_START;
+    std::vector<std::string> SERVER_MAPS;
 
 
     // use this to initialize

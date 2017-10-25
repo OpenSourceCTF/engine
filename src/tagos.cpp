@@ -3,6 +3,8 @@
 #include <sstream>
 #include <cstdlib>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
 #include <Box2D/Box2D.h>
 
@@ -135,7 +137,9 @@ int serve()
                 continue;
             }
 
-            while(renderer.render() && renderer.get_input());
+            while(renderer.render() && renderer.get_input()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+            }
             renderer.close_window();
         } else if(cmd == "stats") {
             const server_lobby& lobby = server_lobby::get_instance();

@@ -53,6 +53,11 @@ settings& settings::get_instance()
         instance.SERVER_LOBBY_PORT      = reader.GetReal("server", "lobby_port", 0);
         instance.SERVER_GAMES           = reader.GetReal("server", "games", 0);
         instance.SERVER_GAME_PORT_START = reader.GetReal("server", "game_port_start", 0);
+        instance.SERVER_MAPS            = split_on(reader.Get("server", "maps", ""), '\n');
+        for(auto & m : instance.SERVER_MAPS) {
+            boost::algorithm::trim(m);
+        }
+
 
         instance.is_initialized = true;
     }
