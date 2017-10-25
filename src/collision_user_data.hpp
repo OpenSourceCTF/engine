@@ -3,6 +3,16 @@
 
 #include "collision_user_data_type.hpp"
 
+#include "ball.hpp"
+#include "wall.hpp"
+#include "spike.hpp"
+#include "bomb.hpp"
+#include "toggle.hpp"
+#include "booster.hpp"
+#include "powerup.hpp"
+#include "flag.hpp"
+#include "portal.hpp"
+
 // forward declares for constructors
 struct ball;
 struct wall;

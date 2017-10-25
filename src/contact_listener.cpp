@@ -1,7 +1,5 @@
 #include "contact_listener.hpp"
 
-struct toggle;
-
 const collision_user_data unknown_data;
 
 static constexpr bool VERBOSE_CONTACT = false;

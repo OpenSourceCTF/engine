@@ -9,6 +9,8 @@
 #include "polygon.hpp"
 #include "color.hpp"
 
+struct collision_user_data;
+
 struct wall
 {
     polygon poly;

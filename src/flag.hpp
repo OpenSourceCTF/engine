@@ -13,6 +13,9 @@
 #include "settings.hpp"
 #include "ball.hpp"
 
+struct collision_user_data;
+struct ball;
+
 struct flag
 {
     float x;

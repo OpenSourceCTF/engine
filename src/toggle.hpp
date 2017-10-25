@@ -6,14 +6,13 @@
 #include <cstdint>
 #include <memory>
 #include "libs/json.hpp"
-#include "map.hpp"
 #include "toggle_tag_type.hpp"
 #include "toggle_tag.hpp"
 #include "collision_user_data.hpp"
 #include "ball.hpp"
 
-struct map;
 struct toggle_tag;
+struct ball;
 
 struct toggle
 {

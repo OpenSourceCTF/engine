@@ -11,6 +11,8 @@
 #include "ball.hpp"
 #include "util.hpp"
 
+struct ball;
+
 struct bomb
 {
     float x;

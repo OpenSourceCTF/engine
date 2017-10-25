@@ -237,5 +237,14 @@ void from_json(const nlohmann::json& j, map& p)
     p.gates    = from_json_helper<gate>(j, "gates");
     p.flags    = from_json_helper<flag>(j, "flags");
 
+    for(auto && o : p.toggles) {
+        for(auto & m : o->tags) {
+            switch(m.type) {
+                case toggle_tag_type::bomb: m.ptr = p.bombs[m.id].get(); break;
+                case toggle_tag_type::gate: m.ptr = p.gates[m.id].get(); break;
+            }
+        }
+    }
+
     p.is_loaded = true;
 }

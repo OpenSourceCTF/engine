@@ -6,11 +6,10 @@
 #include <cstdint>
 #include "libs/json.hpp"
 #include "toggle_tag_type.hpp"
-#include "map.hpp"
-#include "ball.hpp"
 #include "util.hpp"
-
-struct map;
+#include "ball.hpp"
+#include "gate.hpp"
+#include "bomb.hpp"
 
 // id is just the offset in the list of things
 // so id=5 would be map.bombs[4]
@@ -19,6 +18,7 @@ struct map;
 struct toggle_tag
 {
     std::uint32_t id;
+    void* ptr;
     toggle_tag_type type;
 
     toggle_tag(){}
@@ -30,8 +30,16 @@ struct toggle_tag
     , type(type)
     {}
 
-    void step_on(map& m, ball* o);
-    void step_off(map& m, ball* o);
+    toggle_tag(
+        void* ptr,
+        const toggle_tag_type type
+    )
+    : ptr(ptr)
+    , type(type)
+    {}
+
+    void step_on(ball* o);
+    void step_off(ball* o);
 
 };
 

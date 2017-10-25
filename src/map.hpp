@@ -42,7 +42,6 @@
 #include "contact_listener.hpp"
 #include "random_util.hpp"
 
-struct toggle;
 struct ball;
 
 struct map

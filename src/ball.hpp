@@ -14,6 +14,9 @@
 #include "flag.hpp"
 #include "ball_flag.hpp"
 
+struct collision_user_data;
+struct flag;
+
 struct ball
 {
     ball_type type;

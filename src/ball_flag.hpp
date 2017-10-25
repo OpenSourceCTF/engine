@@ -4,6 +4,8 @@
 #include <cstdint>
 #include "flag.hpp"
 
+struct flag;
+
 
 struct ball_flag
 {
