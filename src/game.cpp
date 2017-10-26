@@ -25,13 +25,36 @@ void game::run()
     world = init_world();
 
     while(true) {
+        const std::chrono::high_resolution_clock::time_point t_begin {
+            std::chrono::high_resolution_clock::now()
+        };
+
         this->step();
         world->Step(
             1.0f/config.WORLD_FRAMERATE,
             config.WORLD_VELO_ITERATIONS,
             config.WORLD_POS_ITERATIONS
         );
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / config.WORLD_FRAMERATE));
+
+        const std::chrono::high_resolution_clock::time_point t_end {
+            std::chrono::high_resolution_clock::now()
+        };
+
+        // how long it takes to run 1 game&physics step
+        const auto step_duration {
+            std::chrono::duration_cast<std::chrono::microseconds>(t_end - t_begin)
+        };
+
+        // how long we have available
+        const auto tic_duration {
+            std::chrono::microseconds(1000000 / config.WORLD_FRAMERATE)
+        };
+
+        const std::chrono::microseconds t_sleep(tic_duration - step_duration);
+
+        // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count() << "ms" << std::endl;
+
+        std::this_thread::sleep_for(t_sleep);
     }
 }
 
