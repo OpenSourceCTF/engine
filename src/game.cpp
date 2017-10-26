@@ -12,8 +12,6 @@ void game::run_physics()
 {
     world = m->init_world();
 
-    // todo
-    // this crashes if concurrent games is more than 1
     while(true) {
         world->Step(1/60.0, 8, 3);
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
