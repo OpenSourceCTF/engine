@@ -49,6 +49,10 @@ struct settings
     int GUI_INITIAL_WINDOW_HEIGHT;
     float GUI_MOVEMENT_SPEED_DIV;
 
+    int WORLD_FRAMERATE;
+    int WORLD_VELO_ITERATIONS;
+    int WORLD_POS_ITERATIONS;
+
     std::uint16_t SERVER_LOBBY_PORT;
     int SERVER_GAMES;
     int SERVER_GAME_PORT_START;

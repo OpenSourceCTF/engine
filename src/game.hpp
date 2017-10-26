@@ -14,6 +14,7 @@ struct game
     std::uint32_t max_points;
     std::uint32_t max_length;
     b2World * world;
+    std::size_t timestep;
 
     game(){}
     game(const std::uint16_t port, map* m);

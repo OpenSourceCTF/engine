@@ -6,6 +6,7 @@ game::game(const std::uint16_t port, map* m)
 , max_points(3)
 , max_length(15*60)
 , world(nullptr)
+, timestep(0)
 {}
 
 std::thread game::spawn_thread()
@@ -20,12 +21,17 @@ std::thread game::spawn_thread()
 
 void game::run()
 {
+    const settings& config = settings::get_instance();
     world = init_world();
 
     while(true) {
         this->step();
-        world->Step(1/60.0, 8, 3);
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        world->Step(
+            1.0f/config.WORLD_FRAMERATE,
+            config.WORLD_VELO_ITERATIONS,
+            config.WORLD_POS_ITERATIONS
+        );
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / config.WORLD_FRAMERATE));
     }
 }
 
@@ -92,6 +98,8 @@ void game::step()
             }
         }
     }
+
+    ++timestep;
 }
 
 void game::respawn_ball(ball* b)
