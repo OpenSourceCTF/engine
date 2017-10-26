@@ -18,7 +18,8 @@ struct game
     game(){}
     game(const std::uint16_t port, map* m);
 
-    void run_physics();
+    std::thread spawn_thread();
+    void run();
 };
 
 void to_json(nlohmann::json& j, const game& p);

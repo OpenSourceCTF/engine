@@ -14,6 +14,22 @@
 #include "map_renderer.hpp"
 #include "settings.hpp"
 #include "server_lobby.hpp"
+#include "game.hpp"
+
+int display_renderer(map& m)
+{
+    map_renderer renderer(m);
+
+    if(renderer.open_window() != 0) {
+        std::cerr << "error: open window failed" << std::endl;
+        return 1;
+    }
+
+    while(renderer.render() && renderer.get_input());
+    renderer.close_window();
+
+    return 0;
+}
 
 int export_tp_map(
     const std::string & json_src,
@@ -43,21 +59,15 @@ int render(const std::string & map_src)
     std::stringstream buf;
     buf << t.rdbuf();
 
-    map m = nlohmann::json::parse(buf.str());
-    map_renderer renderer(m);
 
-    if(renderer.open_window() != 0) {
-        std::cerr << "error: open window failed" << std::endl;
+    map m = nlohmann::json::parse(buf.str());
+    game g(0, &m);
+    g.spawn_thread();
+
+    if(display_renderer(*(g.m)) != 0) {
         return EXIT_FAILURE;
     }
 
-    b2World * world = m.init_world();
-    while(renderer.render() && renderer.get_input()) {
-        m.update(world);
-        world->Step(1/60.0, 8, 3);
-    }
-
-    renderer.close_window();
     return EXIT_SUCCESS;
 }
 
@@ -130,17 +140,7 @@ int serve()
                 continue;
             }
 
-            map_renderer renderer(*(lobby.games[game_id].m));
-
-            if(renderer.open_window() != 0) {
-                std::cerr << "error: open window failed" << std::endl;
-                continue;
-            }
-
-            while(renderer.render() && renderer.get_input()) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(16));
-            }
-            renderer.close_window();
+            display_renderer(*(lobby.games[game_id].m));
         } else if(cmd == "stats") {
             const server_lobby& lobby = server_lobby::get_instance();
 

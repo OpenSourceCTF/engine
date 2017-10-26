@@ -8,11 +8,22 @@ game::game(const std::uint16_t port, map* m)
 , world(nullptr)
 {}
 
-void game::run_physics()
+std::thread game::spawn_thread()
+{
+    std::thread thread(
+        &game::run, *this
+    );
+    thread.detach();
+
+    return thread;
+}
+
+void game::run()
 {
     world = m->init_world();
 
     while(true) {
+        m->update(world);
         world->Step(1/60.0, 8, 3);
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }

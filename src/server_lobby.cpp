@@ -44,17 +44,12 @@ void server_lobby::start_server()
             std::cerr << e.what() << std::endl;
         }
 
-        games.emplace_back(game(port, m));
+        games.emplace_back(port, m);
 
         std::thread srv_game_thread(start_game_server, port);
         srv_game_thread.detach();
 
-
-        std::thread phys_game_thread(
-            &game::run_physics,
-            games.back()
-        );
-        phys_game_thread.detach();
+        std::thread phys_game_thread = games.back().spawn_thread();
     }
 }
 

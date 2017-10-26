@@ -38,6 +38,8 @@ int map_renderer::open_window()
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
+    window->setFramerateLimit(60);
+
 	std::cout << "map_renderer: window success" << std::endl;
 
     std::cout << "map_renderer: attempting to create view" << std::endl;
