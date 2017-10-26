@@ -1,8 +1,12 @@
 #ifndef ML_SETTINGS_HPP
 #define ML_SETTINGS_HPP
 
+#include <vector>
+#include <cstdint>
+#include <boost/algorithm/string/trim.hpp>
 #include "libs/INIReader.h"
 #include "color.hpp"
+#include "util.hpp"
 
 struct settings
 {
@@ -45,9 +49,14 @@ struct settings
     int GUI_INITIAL_WINDOW_HEIGHT;
     float GUI_MOVEMENT_SPEED_DIV;
 
+    int WORLD_FRAMERATE;
+    int WORLD_VELO_ITERATIONS;
+    int WORLD_POS_ITERATIONS;
+
     std::uint16_t SERVER_LOBBY_PORT;
     int SERVER_GAMES;
     int SERVER_GAME_PORT_START;
+    std::vector<std::string> SERVER_MAPS;
 
 
     // use this to initialize

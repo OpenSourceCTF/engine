@@ -14,8 +14,10 @@
 struct map_renderer
 {
     map& m;
+#ifndef DISABLE_RENDER
     sf::RenderWindow* window;
     sf::View view;
+#endif
     float scaler;
     bool wireframe;
 

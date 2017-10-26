@@ -4,6 +4,7 @@
 #include <vector>
 #include <thread>
 #include <functional>
+#include <memory>
 #include "libs/json.hpp"
 #include "map.hpp"
 #include "game.hpp"
@@ -12,7 +13,7 @@
 
 struct server_lobby
 {
-    std::vector<game> games;
+    std::vector<std::unique_ptr<game>> games;
     bool is_initialized;
     bool is_alive;
 
@@ -31,8 +32,6 @@ private:
     // prevent client from creating new instances
     server_lobby() {}
 };
-
-void to_json(nlohmann::json& j, const server_lobby& p);
 
 #endif
 

@@ -113,7 +113,7 @@ void ball::add_powerup(const powerup_type type)
     }
 
     std::cout << "add new powerup for:" << config.POWERUP_LASTING_TIME << std::endl;
-    powerups.emplace_back(ball_powerup(type, config.POWERUP_LASTING_TIME));
+    powerups.emplace_back(type, config.POWERUP_LASTING_TIME);
 }
 
 bool ball::has_powerup(const powerup_type type)
@@ -162,7 +162,7 @@ bool ball::has_flag(const flag_type type)
 void ball::add_flag(flag* f)
 {
     std::cout << "add new flag" << std::endl;
-    flags.emplace_back(ball_flag(f));
+    flags.emplace_back(f);
 }
 
 void ball::reset_flags()
