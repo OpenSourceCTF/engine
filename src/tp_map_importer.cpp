@@ -98,7 +98,7 @@ void tp_map_importer::tp_toggle_ref(
     if(tp_import_toggle_positions.find(toggle_check)
     != tp_import_toggle_positions.end()) {
         auto & tags = m.toggles[tp_import_toggle_positions[toggle_check]]->tags;
-        tags.emplace_back(toggle_tag(id, type));
+        tags.emplace_back(id, type);
     }
 }
 

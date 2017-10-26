@@ -119,14 +119,14 @@ void game::respawn_ball(ball* b)
 
         for(auto && f : m->flags) {
             if(f->type == matching_flag_type) {
-                potential_spawns.emplace_back(spawn(f->x, f->y, 1, 1, matching_spawn_type));
+                potential_spawns.emplace_back(f->x, f->y, 1, 1, matching_spawn_type);
             }
         }
 
         // if theres no flags or spawns...
         if(potential_spawns.empty()) {
             std::cerr << "error: no spawns found, placing at 0,0, fix your map" << std::endl;
-            potential_spawns.emplace_back(spawn(0, 0, 1, 1, matching_spawn_type));
+            potential_spawns.emplace_back(0, 0, 1, 1, matching_spawn_type);
         }
     }
 
@@ -142,8 +142,7 @@ void game::respawn_ball(ball* b)
 
 ball* game::add_ball(b2World* world, ball b)
 {
-    std::unique_ptr<ball> o(new ball(b));
-    m->balls.emplace_back(std::unique_ptr<ball>(new ball(b)));
+    m->balls.emplace_back(new ball(b));
     m->balls.back()->add_to_world(world);
     respawn_ball(m->balls.back().get());
 
