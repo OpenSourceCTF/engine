@@ -81,6 +81,20 @@ std::vector<std::unique_ptr<T>> vec_to_uniq_ptr_vec(
     return ret;
 }
 
+template <typename T>
+std::vector<std::shared_ptr<T>> vec_to_shrd_ptr_vec(
+    const std::vector<T> & v
+) {
+    std::vector<std::shared_ptr<T>> ret;
+    ret.reserve(v.size());
+
+    for(auto && o : v) {
+        ret.emplace_back(new T(o));
+    }
+
+    return ret;
+}
+
 std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set);
 
 //color codes for each chain so we can inspect which is which

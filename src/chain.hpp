@@ -6,11 +6,13 @@
 #include "coord.hpp"
 
 struct chain {
-    std::vector<std::unique_ptr<coord>> vertices;
+    std::vector<std::shared_ptr<coord>> vertices;
+    b2Body* body;
 
-    chain() : vertices(0) {}
+    chain() : vertices(0), body(nullptr) {}
 
     void add_vertex(const float x, const float y);
+    void add_to_world(b2World * world);
 };
 
 void to_json(nlohmann::json& j, const chain& p);

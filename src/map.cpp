@@ -135,9 +135,11 @@ b2World * map::init_world()
         add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
     }
 
+    /*
     for(auto && m : walls) {
         m->add_to_world(world);
     }
+    */
 
     for(auto && m : spikes) {
         m->add_to_world(world);
@@ -164,6 +166,10 @@ b2World * map::init_world()
     }
 
     for(auto && m : portals) {
+        m->add_to_world(world);
+    }
+
+    for(auto && m : chains) {
         m->add_to_world(world);
     }
 

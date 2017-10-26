@@ -241,14 +241,15 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
                 }
                 else if (sing_points.find(new_p) != sing_points.end()){
                     CC_end = true;
-                    CC->add_vertex(current_p.first, current_p.second);
+                    CC->add_vertex(new_p.first, new_p.second);
                     leftovers.push(first_e.second);
                 }
                 else {
+                    CC->add_vertex(new_p.first, new_p.second);
                     current_p = new_p;
-                    CC->add_vertex(current_p.first, current_p.second);
                 }
                 ++iter;
+                if(CC->vertices.size() < 2) result.pop_back();
             }
         }
     }
@@ -267,6 +268,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
                     result.emplace_back(new chain);
                     std::unique_ptr<chain>& CC = result.back();
                     CC->add_vertex(current_p.first, current_p.second);
+                    CC->add_vertex(new_p.first, new_p.second);
                 }
             }
         }
@@ -280,6 +282,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
                     result.emplace_back(new chain);
                     std::unique_ptr<chain>& CC = result.back();
                     CC->add_vertex(current_p.first, current_p.second);
+                    CC->add_vertex(new_p.first, new_p.second);
                 }
             }
         }

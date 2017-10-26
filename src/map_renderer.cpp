@@ -309,6 +309,7 @@ int map_renderer::render() const
         return res;
     };
 
+    /*
     int i = 0;
     for(const auto& ch : m.chains) {
         int N = ch->vertices.size();
@@ -324,6 +325,7 @@ int map_renderer::render() const
         }
         ++i;
     }
+    */
 
     
     
