@@ -70,11 +70,6 @@ struct map
     std::vector<std::unique_ptr<ball>>    balls;
 
     map();
-
-    void update(b2World* world);
-    b2World* init_world();
-    ball* add_ball(b2World* world, ball b);
-    void respawn_ball(ball* b);
 };
 
 void to_json(nlohmann::json& j, const map& p);

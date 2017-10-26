@@ -20,6 +20,11 @@ struct game
 
     std::thread spawn_thread();
     void run();
+    void step();
+
+    b2World* init_world();
+    ball* add_ball(b2World* world, ball b);
+    void respawn_ball(ball* b);
 };
 
 void to_json(nlohmann::json& j, const game& p);
