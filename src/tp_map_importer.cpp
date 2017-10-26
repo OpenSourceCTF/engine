@@ -65,7 +65,7 @@ std::vector<polygon> make_square_poly(
         polygon(x, y, x+1, y, x+1, y+1),
         polygon(x, y, x, y+1, x+1, y+1)
     };
-};
+}
 
 
 int tp_map_importer::tp_import(
