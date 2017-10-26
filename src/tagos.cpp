@@ -140,13 +140,13 @@ int serve()
                 continue;
             }
 
-            display_renderer(*(lobby.games[game_id].m));
+            display_renderer(*(lobby.games[game_id].get()->m));
         } else if(cmd == "stats") {
             const server_lobby& lobby = server_lobby::get_instance();
 
             std::size_t total_players = 0;
             for(std::size_t i=0; i<lobby.games.size(); ++i) {
-                const game& g = lobby.games[i];
+                const game& g = *(lobby.games[i]);
                 const std::size_t g_players = g.m->balls.size();
                 std::cout
                     << "game: " << i << "\t"

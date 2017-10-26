@@ -8,6 +8,7 @@
 
 #include "server_lobby.hpp"
 #include "user.hpp"
+#include "request_lobby_games_response.hpp"
 
 struct server_lobby;
 

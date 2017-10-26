@@ -12,7 +12,7 @@ game::game(const std::uint16_t port, map* m)
 std::thread game::spawn_thread()
 {
     std::thread thread(
-        &game::run, *this
+        &game::run, std::ref(*this)
     );
     thread.detach();
 
@@ -28,6 +28,13 @@ void game::run()
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
+
+        while(client_actions_queue.empty()) {
+            std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
+            const client_action a = std::move(client_actions_queue.front());
+            // todo: handle actions
+            client_actions_queue.pop();
+        }
 
         this->step();
         world->Step(
@@ -227,16 +234,3 @@ b2World * game::init_world()
     return world;
 }
 
-void to_json(nlohmann::json& j, const game& p)
-{
-    // todo
-    // we want score and time remaining here as well
-    j = nlohmann::json{
-        {"port",         p.port},
-        {"max_points",   p.max_points},
-        {"max_length",   p.max_length},
-        {"map_name",     p.m->name},
-        {"map_author",   p.m->author},
-        {"player_count", p.m->balls.size()}
-    };
-}

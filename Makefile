@@ -1,7 +1,7 @@
 override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic
 override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
 
-OBJECTS=build/tagos.o build/contact_listener.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/game.o build/server_lobby.o build/random_util.o build/cslot.o build/lodepng.o
+OBJECTS=build/tagos.o build/contact_listener.o build/map_renderer.o build/tp_map_importer.o build/gate.o build/gate_type.o build/map.o build/map_type.o build/toggle.o build/toggle_tag_type.o build/toggle_tag.o build/color.o build/util.o build/polygon.o build/settings.o build/ball.o build/wall.o build/flag.o build/flag_type.o build/booster.o build/booster_type.o build/powerup_type.o build/powerup.o build/spike.o build/bomb.o build/portal.o build/spawn.o build/spawn_type.o build/tile.o build/tile_type.o build/websocket_server.o build/game.o build/server_lobby.o build/random_util.o build/cslot.o build/lodepng.o build/request_lobby_games_response.o
 
 all: tagos
 
@@ -119,6 +119,9 @@ build/cslot.o: src/cslot.cpp src/cslot.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/lodepng.o: src/libs/lodepng.cpp src/libs/lodepng.h
+	$(CXX) $(CXXFLAGS) $< -c -o $@
+
+build/request_lobby_games_response.o: src/request_lobby_games_response.cpp src/request_lobby_games_response.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 .PHONY: clean

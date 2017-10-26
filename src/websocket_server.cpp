@@ -17,10 +17,25 @@ void on_lobby_request_games(
 ) {
     const server_lobby& lobby = server_lobby::get_instance();
 
+    std::vector<request_lobby_games_response> games;
+    games.reserve(lobby.games.size());
+
+    for(auto && o : lobby.games) {
+        games.emplace_back(
+            o->port,
+            o->max_points,
+            o->max_length,
+            o->timestep,
+            o->m->name,
+            o->m->author,
+            o->m->balls.size()
+        );
+    }
+
     try {
         srv->send(
             hdl,
-            nlohmann::json({{"games", lobby.games}}).dump(),
+            nlohmann::json({{"games", games}}).dump(),
             msg->get_opcode()
         );
     } catch (const websocketpp::lib::error_code& e) {
