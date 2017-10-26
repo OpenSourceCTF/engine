@@ -190,6 +190,7 @@ void to_json(nlohmann::json& j, const map& p)
     std::vector<booster> boosters; for(auto & o : p.boosters) boosters.emplace_back(*o);
     std::vector<gate>    gates;    for(auto & o : p.gates)    gates.emplace_back(*o);
     std::vector<flag>    flags;    for(auto & o : p.flags)    flags.emplace_back(*o);
+    std::vector<chain>   chains;   for(auto & o : p.chains)   chains.emplace_back(*o);
 
     j = nlohmann::json{
         {"meta", {
@@ -251,7 +252,7 @@ void from_json(const nlohmann::json& j, map& p)
     p.boosters = from_json_helper<booster>(j, "boosters");
     p.gates    = from_json_helper<gate>(j, "gates");
     p.flags    = from_json_helper<flag>(j, "flags");
-    p.chains    = from_json_helper<flag>(j, "chains");
+    p.chains   = from_json_helper<chain>(j, "chains");
 
     for(auto && o : p.portals) {
         o->destination_ptr = p.portals[o->destination_id].get();

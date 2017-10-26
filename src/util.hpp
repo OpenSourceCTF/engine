@@ -81,7 +81,7 @@ std::vector<std::unique_ptr<T>> vec_to_uniq_ptr_vec(
     return ret;
 }
 
-std::vector<chain> poly2chain(std::vector<polygon> poly_set);
+std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set);
 
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html

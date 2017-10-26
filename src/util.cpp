@@ -49,7 +49,7 @@ std::vector<std::string> split_on(const std::string & str, const char n)
  * which define the same regions as the input set
  * of polygons
  */
-std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
+std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
 
     using edge = std::pair<std::pair<float,float>,std::pair<float,float>>;
 
@@ -170,7 +170,7 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
                        decltype(point_hash)> sing_points(outside_edges.size()
                                                          * 4,
                                                          point_hash);
-    std::vector<chain> result;
+    std::vector<std::unique_ptr<chain>> result;
 
     //collect the good edges into cycles
     //it'd be more efficient to erase edges as we go along
@@ -181,12 +181,14 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
              ++i)
     {
         if(visited_e.find(*i) == visited_e.end()) {
-            chain CC;
+            result.emplace_back();
+            std::unique_ptr<chain>& CC = result.back();
             auto first_e = *i;
 
             auto current_p = first_e.first;
-            CC.add_vertex(coord(current_p.first,
-                                current_p.second));
+            CC->vertices.emplace_back();
+            coord c = coord(current_p.first, current_p.second);
+            CC->vertices.back().reset(&c);
             bool CC_end = false;
 
             //for safety
@@ -236,37 +238,24 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
                         }
                     }
                 }
-                /*
-                if(new_p != std::make_pair<float,float>(-1,-1)) {
-                    CC.add_vertex(coord(new_p.first,new_p.second));
-                }
-                if(   new_p == first_e.first
-                   || new_p == first_e.second
-                   || visited_e.size() == outside_edges.size()
-                   || stop)
-                {
-                    CC_end = true;
-                }
-                else {
-                    current_p = new_p;
-                }
-                ++iter;
-                */
                 if(   new_p == std::make_pair<float,float>(-1,-1)) {
                     CC_end = true;
                 }
                 else if (sing_points.find(new_p) != sing_points.end()){
                     CC_end = true;
-                    CC.add_vertex(coord(new_p.first,new_p.second));
+                    CC->vertices.emplace_back();
+                    coord c = coord(current_p.first, current_p.second);
+                    CC->vertices.back().reset(&c);
                     leftovers.push(first_e.second);
                 }
                 else {
                     current_p = new_p;
-                    CC.add_vertex(coord(new_p.first,new_p.second));
+                    CC->vertices.emplace_back();
+                    coord c = coord(current_p.first, current_p.second);
+                    CC->vertices.back().reset(&c);
                 }
                 ++iter;
             }
-            result.push_back(CC);
         }
     }
     while(!leftovers.empty()) {
@@ -281,10 +270,11 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
             {
                 new_p = it->second;
                 if(new_p != current_p) {
-                    chain CC;
-                    CC.add_vertex(coord(current_p.first,current_p.second));
-                    CC.add_vertex(coord(new_p.first,new_p.second));
-                    result.push_back(CC);
+                    result.emplace_back();
+                    std::unique_ptr<chain>& CC = result.back();
+                    CC->vertices.emplace_back();
+                    coord c = coord(current_p.first, current_p.second);
+                    CC->vertices.back().reset(&c);
                 }
             }
         }
@@ -295,10 +285,11 @@ std::vector<chain> poly2chain(std::vector<polygon> poly_set) {
             {
                 new_p = it->first;
                 if(new_p != current_p) {
-                    chain CC;
-                    CC.add_vertex(coord(current_p.first,current_p.second));
-                    CC.add_vertex(coord(new_p.first,new_p.second));
-                    result.push_back(CC);
+                    result.emplace_back();
+                    std::unique_ptr<chain>& CC = result.back();
+                    CC->vertices.emplace_back();
+                    coord c = coord(current_p.first, current_p.second);
+                    CC->vertices.back().reset(&c);
                 }
             }
         }
