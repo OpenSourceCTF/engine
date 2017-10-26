@@ -2,6 +2,7 @@
 #include "util.hpp"
 
 void chain::add_vertex(const float x, const float y) {
+        vertices.emplace_back(std::unique_ptr<coord>(new coord(x,y)));
 }
 
 void to_json(nlohmann::json& j, const chain& ch) {

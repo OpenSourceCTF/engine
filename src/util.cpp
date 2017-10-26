@@ -181,14 +181,12 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
              ++i)
     {
         if(visited_e.find(*i) == visited_e.end()) {
-            result.emplace_back();
+            result.emplace_back(new chain);
             std::unique_ptr<chain>& CC = result.back();
             auto first_e = *i;
 
             auto current_p = first_e.first;
-            CC->vertices.emplace_back();
-            coord c = coord(current_p.first, current_p.second);
-            CC->vertices.back().reset(&c);
+            CC->add_vertex(current_p.first, current_p.second);
             bool CC_end = false;
 
             //for safety
@@ -243,16 +241,12 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
                 }
                 else if (sing_points.find(new_p) != sing_points.end()){
                     CC_end = true;
-                    CC->vertices.emplace_back();
-                    coord c = coord(current_p.first, current_p.second);
-                    CC->vertices.back().reset(&c);
+                    CC->add_vertex(current_p.first, current_p.second);
                     leftovers.push(first_e.second);
                 }
                 else {
                     current_p = new_p;
-                    CC->vertices.emplace_back();
-                    coord c = coord(current_p.first, current_p.second);
-                    CC->vertices.back().reset(&c);
+                    CC->add_vertex(current_p.first, current_p.second);
                 }
                 ++iter;
             }
@@ -270,11 +264,9 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
             {
                 new_p = it->second;
                 if(new_p != current_p) {
-                    result.emplace_back();
+                    result.emplace_back(new chain);
                     std::unique_ptr<chain>& CC = result.back();
-                    CC->vertices.emplace_back();
-                    coord c = coord(current_p.first, current_p.second);
-                    CC->vertices.back().reset(&c);
+                    CC->add_vertex(current_p.first, current_p.second);
                 }
             }
         }
@@ -285,11 +277,9 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
             {
                 new_p = it->first;
                 if(new_p != current_p) {
-                    result.emplace_back();
+                    result.emplace_back(new chain);
                     std::unique_ptr<chain>& CC = result.back();
-                    CC->vertices.emplace_back();
-                    coord c = coord(current_p.first, current_p.second);
-                    CC->vertices.back().reset(&c);
+                    CC->add_vertex(current_p.first, current_p.second);
                 }
             }
         }

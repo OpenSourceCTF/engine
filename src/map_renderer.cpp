@@ -315,7 +315,7 @@ int map_renderer::render() const
         sf::VertexArray lines(sf::Lines, N);
         for(auto it = ch->vertices.begin(); it != ch->vertices.end(); ++it) {
             if(std::next(it) != ch->vertices.end()) {
-                auto rect(thick_line(*it,*std::next(it)));
+                auto rect(thick_line(**it,**std::next(it)));
                 rect.setFillColor(sf::Color(DISTINCT_COLORS[i%63][0],
                                             DISTINCT_COLORS[i%63][1],
                                             DISTINCT_COLORS[i%63][2]));
