@@ -2,6 +2,8 @@
 #define ML_CLIENT_ACTION_HPP
 
 #include "client_action_type.hpp"
+#include "client_action_movement.hpp"
+#include "client_action_chat.hpp"
 
 // todo make client_action types akin to game_event
 struct client_action
