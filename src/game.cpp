@@ -29,7 +29,7 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        while(client_actions_queue.empty()) {
+        while(! client_actions_queue.empty()) {
             std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
             const client_action a = std::move(client_actions_queue.front());
             // todo: handle actions
