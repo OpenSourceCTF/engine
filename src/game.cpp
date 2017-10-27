@@ -59,7 +59,7 @@ void game::run()
 
         const std::chrono::microseconds t_sleep(tic_duration - step_duration);
 
-        // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count() << "ms" << std::endl;
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count() << "ms" << std::endl;
 
         std::this_thread::sleep_for(t_sleep);
     }
@@ -199,10 +199,6 @@ b2World * game::init_world()
         add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
     }
 
-    for(auto && o : m->walls) {
-        o->add_to_world(world);
-    }
-
     for(auto && o : m->spikes) {
         o->add_to_world(world);
     }
@@ -228,6 +224,10 @@ b2World * game::init_world()
     }
 
     for(auto && o : m->portals) {
+        o->add_to_world(world);
+    }
+
+    for(auto && o : m->chains) {
         o->add_to_world(world);
     }
 
