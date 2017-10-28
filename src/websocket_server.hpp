@@ -9,6 +9,7 @@
 #include "server_lobby.hpp"
 #include "user.hpp"
 #include "request_lobby_games_response.hpp"
+#include "request_game_sync_response.hpp"
 
 struct server_lobby;
 
@@ -49,7 +50,7 @@ void on_game_chat(
     const std::string& chat_msg
 );
 
-void on_game_ready(
+void on_game_sync(
     server* srv,
     websocketpp::connection_hdl hdl,
     message_ptr msg,

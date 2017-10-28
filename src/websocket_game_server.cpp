@@ -38,14 +38,25 @@ void handle_game_message(
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
         std::cout << j.dump() << std::endl;
 
-        if(j.find("ready") != j.end()) {
-            const std::string login_token = j["ready"].at("login_token").get<std::string>();
-            return on_game_ready(srv, hdl, msg, login_token);
-        }
+        if(j.find("request") != j.end()) {
+            const std::string req = j.at("request").get<std::string>();
+            std::cout << "req: " << req << std::endl;
 
-        if(j.find("chat") != j.end()) {
-            const std::string chat_msg = j.at("chat").get<std::string>();
-            return on_game_chat(srv, hdl, msg, chat_msg);
+            if(req == "gamesync") {
+                const std::string login_token = j.at("login_token").get<std::string>();
+                return on_game_sync(srv, hdl, msg, login_token);
+            }
+
+            if(req == "chat") {
+                const std::string chat_msg = j.at("msg").get<std::string>();
+                return on_game_chat(srv, hdl, msg, chat_msg);
+            }
+        } else {
+            srv->send(
+                hdl,
+                nlohmann::json({{"error", "missing_request"}}).dump(),
+                msg->get_opcode()
+            );
         }
     } catch(...) {
         srv->send(
@@ -69,15 +80,15 @@ void on_game_chat(
     // broadcast chat_msg
 }
 
-void on_game_ready(
+void on_game_sync(
     server* srv,
     websocketpp::connection_hdl hdl,
     message_ptr msg,
     const std::string& login_token
 ) {
-    server_lobby& lobby = server_lobby::get_instance();
+    const server_lobby& lobby = server_lobby::get_instance();
 
-    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    const game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
 
     /* get login_token
      * so we can get user_id, name, degrees
@@ -87,7 +98,11 @@ void on_game_ready(
 
 
     if(g.m->balls.size() >= 8) {
-        // error
+        srv->send(
+            hdl,
+            nlohmann::json({{"sync", {"error", "game_full"}}}).dump(),
+            msg->get_opcode()
+        );
         return;
     }
 
@@ -101,7 +116,7 @@ void on_game_ready(
     try {
         srv->send(
             hdl,
-            nlohmann::json({{"mapsync", "todo"}}).dump(),
+            nlohmann::json({{"sync", request_game_sync_response(g)}}).dump(),
             msg->get_opcode()
         );
     } catch (const websocketpp::lib::error_code& e) {

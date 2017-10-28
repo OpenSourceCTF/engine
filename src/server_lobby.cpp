@@ -53,7 +53,7 @@ void server_lobby::start_server()
     }
 }
 
-game& server_lobby::get_game_from_port(const std::uint16_t port)
+game& server_lobby::get_game_from_port(const std::uint16_t port) const
 {
     const settings& config = settings::get_instance();
     return *(games[(port - config.SERVER_GAME_PORT_START)].get());
