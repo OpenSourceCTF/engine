@@ -24,6 +24,7 @@ void game::run()
     const settings& config = settings::get_instance();
     world = init_world();
 
+    // consider std::sleep_until here
     while(true) {
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
