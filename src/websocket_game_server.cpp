@@ -52,18 +52,14 @@ void handle_game_message(
                 return on_game_chat(srv, hdl, msg, chat_msg);
             }
         } else {
-            srv->send(
-                hdl,
-                nlohmann::json({{"error", "missing_request"}}).dump(),
-                msg->get_opcode()
-            );
+            try_send(srv, hdl, msg, {
+                {"error", "missing_request"}
+            });
         }
     } catch(...) {
-        srv->send(
-            hdl,
-            nlohmann::json({{"error", "json_parse_error"}}).dump(),
-            msg->get_opcode()
-        );
+        try_send(srv, hdl, msg, {
+            {"error", "json_parse_error"}
+        });
     }
 } 
 
@@ -98,11 +94,9 @@ void on_game_sync(
 
 
     if(g.m->balls.size() >= 8) {
-        srv->send(
-            hdl,
-            nlohmann::json({{"sync", {"error", "game_full"}}}).dump(),
-            msg->get_opcode()
-        );
+        try_send(srv, hdl, msg, {
+            {"sync", {"error", "game_full"}}
+        });
         return;
     }
 
@@ -113,17 +107,9 @@ void on_game_sync(
      * notify all clients on game of new ball
      * save connection hdl/server into stdmap
      */
-    try {
-        srv->send(
-            hdl,
-            nlohmann::json({{"sync", request_game_sync_response(g)}}).dump(),
-            msg->get_opcode()
-        );
-    } catch (const websocketpp::lib::error_code& e) {
-        std::cerr
-            << "Echo failed because: " << e
-            << "(" << e.message() << ")"
-            << std::endl;
-    }
+
+    try_send(srv, hdl, msg, {
+        {"sync", request_game_sync_response(g)} 
+    });
 }
 

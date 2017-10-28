@@ -7,6 +7,7 @@
 #include <websocketpp/server.hpp>
 
 #include "server_lobby.hpp"
+#include "player.hpp"
 #include "user.hpp"
 #include "request_lobby_games_response.hpp"
 #include "request_game_sync_response.hpp"
@@ -27,6 +28,13 @@ std::uint16_t get_local_port(
     server* srv,
     websocketpp::connection_hdl hdl
 );
+
+bool try_send(
+    server* srv,
+    websocketpp::connection_hdl hdl,
+    message_ptr msg,
+    nlohmann::json try_msg
+); 
 
 // NOTE: these are implemented in websocket_lobby_server and websocket_game_server
 // define a callback to handle incoming messages

@@ -109,7 +109,7 @@ build/tile_type.o: src/tile_type.cpp src/tile_type.hpp
 build/websocket_server.o: src/websocket_server.cpp src/websocket_server.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-build/game.o: src/game.cpp src/game.hpp
+build/game.o: src/game.cpp src/game.hpp src/player.hpp
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 build/server_lobby.o: src/server_lobby.cpp src/server_lobby.hpp

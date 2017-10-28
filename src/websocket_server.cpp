@@ -10,3 +10,26 @@ std::uint16_t get_local_port(
     return local_endpoint.port();
 }
 
+bool try_send(
+    server* srv,
+    websocketpp::connection_hdl hdl,
+    message_ptr msg,
+    nlohmann::json try_msg
+) {
+    try {
+        srv->send(
+            hdl,
+            try_msg.dump(),
+            msg->get_opcode()
+        );
+    } catch (const websocketpp::lib::error_code& e) {
+        std::cerr
+            << "Echo failed because: " << e
+            << "(" << e.message() << ")"
+            << std::endl;
+        return false;
+    }
+
+    return false;
+}
+

@@ -196,8 +196,8 @@ b2World * game::init_world()
     thread_local static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
 
-    for(std::size_t i=0; i<8; ++i) {
-        add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
+    for(std::size_t i=0; i<4; ++i) {
+        add_ball(world, ball(i % 2 ? ball_type::red : ball_type::blue));
     }
 
     for(auto && o : m->walls) {

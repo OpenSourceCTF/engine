@@ -6,9 +6,11 @@
 #include <thread>
 #include <mutex>
 #include <queue>
+#include <memory>
 #include "libs/json.hpp"
 #include "map.hpp"
 #include "client_action.hpp"
+#include "player.hpp"
 
 struct game
 {
@@ -18,6 +20,7 @@ struct game
     std::uint32_t max_length;
     b2World * world;
     std::size_t timestep;
+    std::vector<std::unique_ptr<player>> players;
     std::mutex client_actions_queue_mutex;
     std::queue<client_action> client_actions_queue;
 
