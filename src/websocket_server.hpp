@@ -9,6 +9,7 @@
 #include "server_lobby.hpp"
 #include "player.hpp"
 #include "user.hpp"
+#include "random_util.hpp"
 #include "request_lobby_games_response.hpp"
 #include "request_game_sync_response.hpp"
 

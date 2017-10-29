@@ -2,22 +2,15 @@
 
 void to_json(nlohmann::json& j, const request_game_sync_response& p)
 {
-    std::vector<nlohmann::json> balls;
-    balls.reserve(p.g.m->balls.size());
+    std::vector<nlohmann::json> players;
+    players.reserve(p.g.players.size());
 
-    for(auto & o : p.g.m->balls) {
-        const b2Vec2 pos  = o->get_position();
-        const b2Vec2 velo = o->get_linear_velocity();
-
-        balls.emplace_back(nlohmann::json{
-            {"type", to_string(o->type)},
+    for(auto & o : p.g.players) {
+        players.emplace_back(nlohmann::json{
             {"name", o->name},
             {"is_registered", o->is_registered},
-            {"user_id", o->user_id},
+            {"player_id", o->player_id},
             {"degree", o->degree},
-            {"is_alive", o->is_alive},
-            {"px", pos.x},  {"py", pos.y},
-            {"vx", velo.x}, {"vy", velo.y},
         });
     }
 
@@ -25,7 +18,7 @@ void to_json(nlohmann::json& j, const request_game_sync_response& p)
         {"game", 
             {"timestep", p.g.timestep}
         },
-        {"balls", balls}
+        {"players", players}
     };
 
     // add these (and maybe more?)

@@ -33,8 +33,9 @@ struct game
     void step();
 
     b2World* init_world();
-    ball* add_ball(b2World* world, ball b);
+    ball* add_ball(ball b);
     void respawn_ball(ball* b);
+    void add_player(player p);
 };
 
 #endif

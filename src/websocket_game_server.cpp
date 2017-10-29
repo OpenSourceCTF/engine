@@ -84,7 +84,7 @@ void on_game_sync(
 ) {
     const server_lobby& lobby = server_lobby::get_instance();
 
-    const game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
 
     /* get login_token
      * so we can get user_id, name, degrees
@@ -93,6 +93,7 @@ void on_game_sync(
     // user o = something(login_token);
 
 
+    // check game still has open slot
     if(g.m->balls.size() >= 8) {
         try_send(srv, hdl, msg, {
             {"sync", {"error", "game_full"}}
@@ -100,16 +101,36 @@ void on_game_sync(
         return;
     }
 
-    /*
-     * check game still has open slot
-     * we send all map data here to sync user
-     * add clients ball
-     * notify all clients on game of new ball
-     * save connection hdl/server into stdmap
-     */
-
+    // we send all map data here to sync user
     try_send(srv, hdl, msg, {
         {"sync", request_game_sync_response(g)} 
     });
+
+    // add ball & player to game
+    // select ball color
+    const ball_type color = [](const game& g){
+        std::size_t red_cnt  = 0;
+        std::size_t blue_cnt = 0;
+
+        for(auto && o : g.players) {
+            if(o->b->type == ball_type::red)  ++red_cnt;
+            if(o->b->type == ball_type::blue) ++blue_cnt;
+        }
+
+        if(red_cnt > red_cnt)  return ball_type::blue;
+        if(red_cnt < blue_cnt) return ball_type::red;
+
+        return std::uniform_int_distribution<int>(0, 2)(random_util::get_instance().eng) == 0
+            ? ball_type::red
+            : ball_type::blue;
+    }(g);
+
+    ball* b = g.add_ball(ball(ball_type::red));
+    g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
+
+    /*
+     * notify all clients on game of new ball
+     * save connection hdl/server into stdmap
+     */
 }
 

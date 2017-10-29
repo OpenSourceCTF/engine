@@ -18,6 +18,7 @@ struct player
     game* g;
     ball* b;
     std::string player_id;
+    bool is_registered;
     std::string name;
     int degree;
 
@@ -27,6 +28,7 @@ struct player
         game* g,
         ball* b,
         const std::string player_id,
+        const bool is_registered,
         const std::string name,
         const int degree
     )
@@ -35,6 +37,7 @@ struct player
     , g(g)
     , b(b)
     , player_id(player_id)
+    , is_registered(is_registered)
     , name(name)
     , degree(degree)
     {}
