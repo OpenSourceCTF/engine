@@ -12,6 +12,8 @@
 #include "client_action.hpp"
 #include "player.hpp"
 
+struct player;
+
 struct game
 {
     std::uint16_t port;
@@ -35,7 +37,7 @@ struct game
     b2World* init_world();
     ball* add_ball(ball b);
     void respawn_ball(ball* b);
-    void add_player(player p);
+    player* add_player(player p);
 };
 
 #endif

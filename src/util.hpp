@@ -10,6 +10,7 @@
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <cassert>
 #include "polygon.hpp"
 
 constexpr float PI     = 3.141592653589793;

@@ -22,7 +22,7 @@ void on_lobby_request_games(
         );
     }
 
-    try_send(srv, hdl, msg, {
+    try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
         {"games", games}
     });
 
@@ -42,7 +42,7 @@ void handle_lobby_message(
         }
 
     } catch(...) {
-        try_send(srv, hdl, msg, {
+        try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
             {"error", "json_parse_error"}
         });
     }

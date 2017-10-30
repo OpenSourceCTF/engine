@@ -13,14 +13,14 @@ std::uint16_t get_local_port(
 bool try_send(
     server* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg,
+    websocketpp::frame::opcode::value opcode,
     nlohmann::json try_msg
 ) {
     try {
         srv->send(
             hdl,
             try_msg.dump(),
-            msg->get_opcode()
+            opcode
         );
     } catch (const websocketpp::lib::error_code& e) {
         std::cerr
@@ -33,3 +33,20 @@ bool try_send(
     return false;
 }
 
+bool try_broadcast(
+    game* g,
+    nlohmann::json try_msg
+) {
+    bool ret = true;
+
+    for(auto && o : g->players) {
+        if(! try_send(
+            o->srv,
+            o->con,
+            websocketpp::frame::opcode::value::text,
+            try_msg
+        )) ret = false;
+    }
+
+    return ret;
+}

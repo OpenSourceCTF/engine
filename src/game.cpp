@@ -237,7 +237,8 @@ b2World * game::init_world()
     return world;
 }
 
-void game::add_player(player p)
+player* game::add_player(player p)
 {
     players.emplace_back(new player(p));
+    return players.back().get();
 }

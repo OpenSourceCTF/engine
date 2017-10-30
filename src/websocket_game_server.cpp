@@ -52,12 +52,12 @@ void handle_game_message(
                 return on_game_chat(srv, hdl, msg, chat_msg);
             }
         } else {
-            try_send(srv, hdl, msg, {
+            try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
                 {"error", "missing_request"}
             });
         }
     } catch(...) {
-        try_send(srv, hdl, msg, {
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
             {"error", "json_parse_error"}
         });
     }
@@ -95,14 +95,14 @@ void on_game_sync(
 
     // check game still has open slot
     if(g.m->balls.size() >= 8) {
-        try_send(srv, hdl, msg, {
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
             {"sync", {"error", "game_full"}}
         });
         return;
     }
 
     // we send all map data here to sync user
-    try_send(srv, hdl, msg, {
+    try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
         {"sync", request_game_sync_response(g)} 
     });
 
@@ -120,17 +120,14 @@ void on_game_sync(
         if(red_cnt > red_cnt)  return ball_type::blue;
         if(red_cnt < blue_cnt) return ball_type::red;
 
-        return std::uniform_int_distribution<int>(0, 2)(random_util::get_instance().eng) == 0
+        return std::uniform_int_distribution<int>(0, 1)(random_util::get_instance().eng) == 0
             ? ball_type::red
             : ball_type::blue;
     }(g);
 
     ball* b = g.add_ball(ball(ball_type::red));
-    g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
+    player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
 
-    /*
-     * notify all clients on game of new ball
-     * save connection hdl/server into stdmap
-     */
+    try_broadcast(&g, game_event(game_event_player_joined(p)));
 }
 
