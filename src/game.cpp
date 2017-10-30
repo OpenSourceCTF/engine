@@ -119,7 +119,6 @@ void game::step()
     for(auto && o : m->portals) {
         if(! o->is_alive) {
             if(o->has_cooldown) {
-                std::cout << o->cooldown_counter << std::endl;
                 if(o->is_cooling_down && --(o->cooldown_counter) == 0) {
                     o->is_alive = true;
                     o->is_cooling_down = false;

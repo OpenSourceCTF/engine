@@ -77,12 +77,17 @@ void to_json(nlohmann::json& j, const portal& p)
 
 void from_json(const nlohmann::json& j, portal& p)
 {
+    const settings& config = settings::get_instance();
+
     p.x = j.at("x").get<float>();
     p.y = j.at("y").get<float>();
 
     p.has_cooldown = j.at("has_cooldown").get<bool>();
     if(p.has_cooldown) {
         p.cooldown = j.at("cooldown").get<int>();
+        if(p.cooldown == 0) {
+            p.cooldown = config.PORTAL_RESPAWN_TIME; // default
+        }
     }
 
     p.has_destination = j.at("has_destination").get<bool>();

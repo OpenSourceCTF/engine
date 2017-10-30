@@ -41,6 +41,7 @@ struct settings
     float FLAG_RADIUS;
 
     float PORTAL_RADIUS;
+    int   PORTAL_RESPAWN_TIME;
 
     color COLOR_TILE;
     color COLOR_WALL;
