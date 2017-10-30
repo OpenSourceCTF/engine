@@ -3,7 +3,7 @@
 void toggle_tag::step_on(ball* o)
 {
     switch(type) {
-        case toggle_tag_type::bomb: static_cast<bomb*>(ptr)->explode(o); break;
+        case toggle_tag_type::bomb: static_cast<bomb*>(ptr)->explode(); break;
         case toggle_tag_type::gate: static_cast<gate*>(ptr)->mark_on(o); break;
     }
 }

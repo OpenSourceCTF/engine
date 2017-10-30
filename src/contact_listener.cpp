@@ -36,11 +36,11 @@ void contact_listener::BeginContact(b2Contact* contact)
             if(! m->powerups.empty() || ! b->powerups.empty()) {
                 if(! same_color(m->type, b->type)) {
                     if(m->has_powerup(powerup_type::rollingbomb)) {
-                        m->explode();
+                        m->rb_explode();
                     }
 
                     if(b->has_powerup(powerup_type::rollingbomb)) {
-                        b->explode();
+                        b->rb_explode();
                     }
 
                     if(m->has_powerup(powerup_type::tagpro)) {
@@ -66,7 +66,7 @@ void contact_listener::BeginContact(b2Contact* contact)
                 cdata.get_ptr(collision_user_data_type::bomb)
             );
 
-            if(o) o->explode(m);
+            if(o) o->explode();
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
@@ -95,6 +95,8 @@ void contact_listener::BeginContact(b2Contact* contact)
             powerup * o = static_cast<powerup*>(
                 cdata.get_ptr(collision_user_data_type::powerup)
             );
+
+            std::cout << to_string(o->type) << std::endl;
 
             if(o) o->step_on(m);
         }

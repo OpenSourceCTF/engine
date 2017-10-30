@@ -1,5 +1,6 @@
 #include "bomb.hpp"
 
+
 bomb::bomb(
     const float x,
     const float y
@@ -10,7 +11,11 @@ bomb::bomb(
 , col_data(nullptr)
 , is_alive(true)
 , respawn_counter(0)
-{}
+{
+    const settings& config = settings::get_instance();
+    ex = explosion(config.BOMB_EXPLOSION_FORCE,
+                   config.BOMB_EXPLOSION_RADIUS);
+}
 
 void bomb::add_to_world(b2World * world)
 {
@@ -48,7 +53,7 @@ struct ExplodeAABBCallback : public b2QueryCallback
     }
 };
 
-void bomb::explode(ball* b)
+void bomb::explode()
 {
     if(! is_alive) {
         return;
@@ -57,38 +62,7 @@ void bomb::explode(ball* b)
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
     std::cout << "boom: " << x << "," << y << std::endl;
-
-    ExplodeAABBCallback callback;
-    b2AABB aabb;
-    aabb.lowerBound = b2Vec2(x - config.BOMB_EXPLOSION_RADIUS, y - config.BOMB_EXPLOSION_RADIUS);
-    aabb.upperBound = b2Vec2(x + config.BOMB_EXPLOSION_RADIUS, y + config.BOMB_EXPLOSION_RADIUS);
-
-    body->GetWorld()->QueryAABB(&callback, aabb);
-
-    for(auto & m : callback.bodies) {
-        const float d = dist(x, y, m->GetPosition().x, m->GetPosition().y);
-
-        if(d >= config.BOMB_EXPLOSION_RADIUS) {
-            continue;
-        }
-
-        const float f = map_val(
-            d,
-            0, config.BOMB_EXPLOSION_RADIUS,
-            config.BOMB_EXPLOSION_FORCE, 0
-        );
-
-        const b2Vec2 apos = body->GetPosition();
-        const b2Vec2 bpos = m->GetPosition();
-
-        const float a = std::atan2(bpos.y - apos.y, bpos.x - apos.x);
-
-        m->ApplyForce(
-            b2Vec2(f * std::cos(a), f * std::sin(a)),
-            m->GetWorldCenter(),
-            true
-        );
-    }
+    ex.explode(x,y,body->GetWorld());
 
     is_alive = false;
 }

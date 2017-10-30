@@ -1,5 +1,22 @@
 #include "ball.hpp"
 
+ball::ball(const ball_type type)
+: type(type)
+, name("someball")
+, is_registered(false)
+, user_id("000000-0000-0000-000000")
+, degree(0)
+, body(nullptr)
+, col_data(nullptr)
+, portal_transport_ptr(nullptr)
+, is_alive(true)
+{
+    const settings& config = settings::get_instance();
+    pop_ex = explosion(config.BALL_POP_FORCE,
+                       config.BALL_POP_RADIUS);
+    rb_ex = explosion(config.ROLLING_BOMB_FORCE,
+                      config.ROLLING_BOMB_RADIUS);
+}
 void ball::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -75,6 +92,9 @@ void ball::pop()
 {
     const settings& config = settings::get_instance();
 
+    auto pos = this->get_position();
+    pop_ex.explode(pos.x,pos.y,body->GetWorld());
+
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
@@ -141,10 +161,12 @@ void ball::remove_powerup(const powerup_type type)
     );
 }
 
-void ball::explode()
+void ball::rb_explode()
 {
     // todo explosion here
     std::cout << "rollingboom" << std::endl;
+    auto pos = this->get_position();
+    rb_ex.explode(pos.x,pos.y,body->GetWorld());
     remove_powerup(powerup_type::rollingbomb);
 }
 
