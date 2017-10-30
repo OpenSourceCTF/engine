@@ -33,20 +33,31 @@ void portal::add_to_world(b2World * world)
 
 void portal::step_on(ball* m)
 {
-    if(! is_alive) return;
-
     std::cout << "portal stepped on" << std::endl;
 
-    if(has_destination) {
-        std::cout << "move to: " << destination_id << std::endl;
+    portal* p = this;
 
-        m->set_portal_transport(destination_ptr);
-        is_alive = false;
+    while(p->has_destination) {
+        if(! p->is_alive) return;
 
-        if(has_cooldown) {
-            is_cooling_down = true;
-            cooldown_counter = cooldown;
-        }
+        std::cout << "move to: " << p->destination_id << std::endl;
+        portal* dest = p->destination_ptr; 
+
+        m->set_portal_transport(dest);
+
+        const auto disable_portal = [](portal* o) {
+            o->is_alive = false;
+
+            if(o->has_cooldown) {
+                o->is_cooling_down = true;
+                o->cooldown_counter = o->cooldown;
+            }
+        };
+
+        disable_portal(p);
+        disable_portal(dest);
+
+        p = dest;
     }
 }
 
