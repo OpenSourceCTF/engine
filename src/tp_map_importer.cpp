@@ -392,7 +392,11 @@ int tp_map_importer::tp_import_png(const std::string & src)
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
             }
-            m.powerups.emplace_back(new powerup(x, y));
+            m.powerups.emplace_back(new powerup(x, y, {
+                powerup_type::tagpro,
+                powerup_type::jukejuice,
+                powerup_type::rollingbomb
+            }));
         } else if(tiletype == tp_tile_type::button) {
             // this is handled by toggle
         } else if(tiletype == tp_tile_type::booster_all) {

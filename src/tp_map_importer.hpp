@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include "map.hpp"
+#include "powerup_type.hpp"
 
 struct tp_map_importer
 {
