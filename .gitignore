@@ -1,1 +1,5 @@
 tagos
+compile_commands.json
+.gdbinit
+.gdbcoms
+**/*.orig

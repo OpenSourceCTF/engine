@@ -28,8 +28,6 @@ struct wall
     , body(nullptr)
     , col_data(nullptr)
     {}
-
-    void add_to_world(b2World * world);
 };
 
 void to_json(nlohmann::json& j, const wall& p);

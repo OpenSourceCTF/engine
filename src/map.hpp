@@ -41,7 +41,9 @@
 #include "ball_powerup.hpp"
 #include "contact_listener.hpp"
 #include "random_util.hpp"
+#include "chain.hpp"
 
+struct toggle;
 struct ball;
 
 struct map
@@ -68,6 +70,7 @@ struct map
     std::vector<std::unique_ptr<flag>>    flags;
     std::vector<std::unique_ptr<powerup>> powerups;
     std::vector<std::unique_ptr<ball>>    balls;
+    std::vector<std::unique_ptr<chain>>   chains;
 
     map();
 };
