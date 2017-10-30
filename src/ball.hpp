@@ -22,10 +22,6 @@ struct portal;
 struct ball
 {
     ball_type type;
-    std::string name;
-    bool is_registered;
-    std::string user_id;
-    std::uint32_t degree;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
     portal* portal_transport_ptr;
@@ -36,10 +32,6 @@ struct ball
 
     ball(const ball_type type)
     : type(type)
-    , name("someball")
-    , is_registered(false)
-    , user_id("000000-0000-0000-000000")
-    , degree(0)
     , body(nullptr)
     , col_data(nullptr)
     , portal_transport_ptr(nullptr)

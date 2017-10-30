@@ -22,18 +22,9 @@ void on_lobby_request_games(
         );
     }
 
-    try {
-        srv->send(
-            hdl,
-            nlohmann::json({{"games", games}}).dump(),
-            msg->get_opcode()
-        );
-    } catch (const websocketpp::lib::error_code& e) {
-        std::cerr
-            << "Echo failed because: " << e
-            << "(" << e.message() << ")"
-            << std::endl;
-    }
+    try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
+        {"games", games}
+    });
 
 }
 
@@ -51,11 +42,9 @@ void handle_lobby_message(
         }
 
     } catch(...) {
-        srv->send(
-            hdl,
-            nlohmann::json({{"error", "json_parse_error"}}).dump(),
-            msg->get_opcode()
-        );
+        try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
+            {"error", "json_parse_error"}
+        });
     }
 }
 

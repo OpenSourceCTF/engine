@@ -24,12 +24,13 @@ void game::run()
     const settings& config = settings::get_instance();
     world = init_world();
 
+    // consider std::sleep_until here
     while(true) {
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
 
-        while(client_actions_queue.empty()) {
+        while(! client_actions_queue.empty()) {
             std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
             const client_action a = std::move(client_actions_queue.front());
             // todo: handle actions
@@ -178,7 +179,7 @@ void game::respawn_ball(ball* b)
     );
 }
 
-ball* game::add_ball(b2World* world, ball b)
+ball* game::add_ball(ball b)
 {
     m->balls.emplace_back(new ball(b));
     m->balls.back()->add_to_world(world);
@@ -188,15 +189,17 @@ ball* game::add_ball(b2World* world, ball b)
 }
 
 
+// this maybe should be broken up
 b2World * game::init_world()
 {
-    b2World* world = new b2World(b2Vec2(0, 0));
+    world = new b2World(b2Vec2(0, 0));
+
     // todo: does this need to be thread_local
     thread_local static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
 
-    for(std::size_t i=0; i<8; ++i) {
-        add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
+    for(std::size_t i=0; i<4; ++i) {
+        add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
     }
 
     for(auto && o : m->walls) {
@@ -234,3 +237,8 @@ b2World * game::init_world()
     return world;
 }
 
+player* game::add_player(player p)
+{
+    players.emplace_back(new player(p));
+    return players.back().get();
+}

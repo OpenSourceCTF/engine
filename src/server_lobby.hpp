@@ -27,7 +27,7 @@ struct server_lobby
 
     void start_server();
 
-    game& get_game_from_port(const std::uint16_t port);
+    game& get_game_from_port(const std::uint16_t port) const;
 private:
     // prevent client from creating new instances
     server_lobby() {}

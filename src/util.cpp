@@ -7,7 +7,8 @@ float map_val(
     const float bx,
     const float by
 ) {
-      return bx + (by - bx) * ((v - ax) / (ay - ax));
+    assert(ax != ay && "ax and ay must never be equal, what the hell are you doing?");
+    return bx + (by - bx) * ((v - ax) / (ay - ax));
 }
 
 float dist(
