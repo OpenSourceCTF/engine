@@ -12,10 +12,10 @@ ball::ball(const ball_type type)
 , is_alive(true)
 {
     const settings& config = settings::get_instance();
-    pop_ex = explosion(config.BALL_POP_FORCE,
-                       config.BALL_POP_RADIUS);
-    rb_ex = explosion(config.ROLLING_BOMB_FORCE,
-                      config.ROLLING_BOMB_RADIUS);
+    pop_ex = explosion(config.BALL_POP_RADIUS,
+                       config.BALL_POP_FORCE);
+    rb_ex = explosion(config.ROLLING_BOMB_RADIUS,
+                      config.ROLLING_BOMB_FORCE);
 }
 void ball::add_to_world(b2World * world)
 {

@@ -25,6 +25,9 @@ struct bomb
     explosion ex;
 
     bomb() {
+        const settings& config = settings::get_instance();
+        ex = explosion(config.BOMB_EXPLOSION_RADIUS,
+                       config.BOMB_EXPLOSION_FORCE);
     }
     bomb(
         const float x,
