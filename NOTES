@@ -1,6 +1,5 @@
 ## TODO
 
-make powerups load possible powerups from map exporter
 fix portals respawn
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever

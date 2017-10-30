@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 #include <Box2D/Box2D.h>
 #include "libs/json.hpp"
 #include "collision_user_data.hpp"
@@ -25,7 +26,8 @@ struct powerup
     powerup();
     powerup(
         const float x,
-        const float y
+        const float y,
+        const std::vector<powerup_type> possible_types
     );
 
     void add_to_world(b2World * world);
