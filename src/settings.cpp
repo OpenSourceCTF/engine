@@ -20,6 +20,8 @@ settings& settings::get_instance()
         instance.BALL_FRICTION        = reader.GetReal("ball", "friction", 0);
         instance.BALL_RESTITUTION     = reader.GetReal("ball", "restitution", 0);
         instance.BALL_RADIUS          = reader.GetReal("ball", "radius", 0);
+        instance.BALL_POP_FORCE       = reader.GetReal("ball","pop_force",0);
+        instance.BALL_POP_RADIUS       = reader.GetReal("ball","pop_radius",0);
         instance.BALL_RESPAWN_TIME    = reader.GetInteger("ball", "respawn_time", 0);
 
         instance.SPIKE_RADIUS = reader.GetReal("spike", "radius", 0);
@@ -38,6 +40,8 @@ settings& settings::get_instance()
         instance.POWERUP_RADIUS       = reader.GetReal("powerup", "radius", 0);
         instance.POWERUP_RESPAWN_TIME = reader.GetInteger("powerup", "respawn_time", 0);
         instance.POWERUP_LASTING_TIME = reader.GetInteger("powerup", "lasting_time", 0);
+        instance.ROLLING_BOMB_FORCE   = reader.GetReal("rolling_bomb", "exp_force", 0);
+        instance.ROLLING_BOMB_RADIUS   = reader.GetReal("rolling_bomb", "exp_radius", 0);
 
         instance.FLAG_RADIUS = reader.GetReal("flag", "radius", 0);
 

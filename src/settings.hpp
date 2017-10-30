@@ -19,6 +19,8 @@ struct settings
     float BALL_RESTITUTION;
     float BALL_FRICTION;
     float BALL_RADIUS;
+    float BALL_POP_FORCE;
+    float BALL_POP_RADIUS;
     int   BALL_RESPAWN_TIME;
 
     float SPIKE_RADIUS;
@@ -37,6 +39,9 @@ struct settings
     float POWERUP_RADIUS;
     int   POWERUP_RESPAWN_TIME;
     int   POWERUP_LASTING_TIME;
+
+    float ROLLING_BOMB_FORCE;
+    float ROLLING_BOMB_RADIUS;
 
     float FLAG_RADIUS;
 
