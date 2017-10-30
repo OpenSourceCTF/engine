@@ -16,6 +16,8 @@
 #include "polygon.hpp"
 #include "chain.hpp"
 
+struct chain;
+
 constexpr float PI     = 3.141592653589793;
 constexpr float TWO_PI = 6.283185307179586;
 
