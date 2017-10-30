@@ -4,8 +4,7 @@
 // the types of tiles from tagpro .png map
 enum class tp_tile_type
 {
-    background,
-    tile,
+    background, tile,
     speed_red,
     speed_blue,
     endzone_red,
@@ -337,6 +336,7 @@ int tp_map_importer::tp_import_png(const std::string & src)
         const tp_tile_type tiletype = tp_tiletype_map[tile_color];
 
         const color col(tile_color); // we use this for walls, tiles for now for ease
+
         if(tiletype == tp_tile_type::background) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(new tile(p, col, tile_type::background));
@@ -442,6 +442,15 @@ int tp_map_importer::tp_import_png(const std::string & src)
             return 1;
         }
     }
+
+    /* could do this as polys are added but keeping
+     * it isolated for now
+     */
+    std::vector<polygon> poly_set;
+    for(const auto& w : m.walls) {
+        poly_set.push_back(w->poly);
+    }
+    m.chains = poly2chain(poly_set);
 
     return 0;
 }
