@@ -6,6 +6,7 @@ struct ExplodeAABBCallback : public b2QueryCallback
   
     bool ReportFixture(b2Fixture* fixture)
 	{
+        if(fixture->GetBody()->GetMass() > 0)
         bodies.push_back(fixture->GetBody()); 
         return true; // continue
     }
@@ -37,7 +38,6 @@ void explosion::explode(float x, float y, b2World* world) {
         b2Vec2 force_vec(bpos.x - x, bpos.y - y);
         force_vec.Normalize();
         force_vec *= f;
-
         m->ApplyForce(
             force_vec,
             m->GetWorldCenter(),

@@ -1,6 +1,5 @@
 #include "bomb.hpp"
 
-
 bomb::bomb(
     const float x,
     const float y
@@ -13,8 +12,8 @@ bomb::bomb(
 , respawn_counter(0)
 {
     const settings& config = settings::get_instance();
-    ex = explosion(config.BOMB_EXPLOSION_FORCE,
-                   config.BOMB_EXPLOSION_RADIUS);
+    ex = explosion(config.BOMB_EXPLOSION_RADIUS,
+                   config.BOMB_EXPLOSION_FORCE);
 }
 
 void bomb::add_to_world(b2World * world)
@@ -40,18 +39,6 @@ void bomb::add_to_world(b2World * world)
 
     is_alive = true;
 }
-
-//subclass b2QueryCallback
-struct ExplodeAABBCallback : public b2QueryCallback
-{
-    std::vector<b2Body*> bodies;
-  
-    bool ReportFixture(b2Fixture* fixture)
-	{
-        bodies.push_back(fixture->GetBody()); 
-        return true; // continue
-    }
-};
 
 void bomb::explode()
 {
