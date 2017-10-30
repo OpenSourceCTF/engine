@@ -33,14 +33,18 @@ void contact_listener::BeginContact(b2Contact* contact)
                 cdata.get_ptr_alt(collision_user_data_type::ball)
             );
 
-            if(! m->powerups.empty() || ! b->powerups.empty()) {
-                if(! same_color(m->type, b->type)) {
+            if(! same_color(m->type, b->type)) {
+                bool disable_flag_check = false;
+
+                if(! m->powerups.empty() || ! b->powerups.empty()) {
                     if(m->has_powerup(powerup_type::rollingbomb)) {
                         m->explode();
+                        disable_flag_check = true;
                     }
 
                     if(b->has_powerup(powerup_type::rollingbomb)) {
                         b->explode();
+                        disable_flag_check = true;
                     }
 
                     if(m->has_powerup(powerup_type::tagpro)) {
@@ -48,6 +52,16 @@ void contact_listener::BeginContact(b2Contact* contact)
                     }
                     if(b->has_powerup(powerup_type::tagpro)) {
                         m->pop();
+                    }
+                }
+
+                if(! disable_flag_check && (! m->flags.empty() || ! b->flags.empty())) {
+                    if(m->has_flag(inv_corresponding_color<flag_type>(m->type))) {
+                        m->pop();
+                    }
+
+                    if(b->has_flag(inv_corresponding_color<flag_type>(b->type))) {
+                        b->pop();
                     }
                 }
             }
