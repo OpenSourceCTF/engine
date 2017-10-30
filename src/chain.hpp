@@ -4,8 +4,10 @@
 #include <vector>
 #include <Box2D/Box2D.h>
 #include "coord.hpp"
+#include "util.hpp"
 
-struct chain {
+struct chain
+{
     std::vector<std::shared_ptr<coord>> vertices;
     b2Body* body;
 
