@@ -2,7 +2,6 @@
 
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever
-have scores saved in game object
 add game end conditions (time, score)
 make gates pop players
 serialize map data for server sync
@@ -14,6 +13,13 @@ handle websocket movement input
 send map deltas for server
     (will require a queue for updates)
 handle chat
+
+---
+
+run these to look for bugs
+
+`grep -r "todo" src`
+`grep -r "fixme" src`
 
 
 ## NETWORK
@@ -54,13 +60,3 @@ in future we plan for move to webrtc
 itd be nice if the libraries were just in a folder and built correctly as part of makefile
 maybe with subrepositories?
 
-make it easy to switch between debug and release mode in makefile
-
-improve dependencies in makefile + general cleanup
-
-## BUGS
-
-run these to look :p
-
-grep -r "todo" src
-grep -r "fixme" src
