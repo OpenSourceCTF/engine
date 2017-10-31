@@ -16,7 +16,7 @@ struct explosion
         force(force)
     { }
 
-    void explode(float x, float y, b2World* world);
+    void explode(const b2Vec2 pos, b2World* world);
 };
 
 #endif

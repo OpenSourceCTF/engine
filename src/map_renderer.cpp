@@ -272,7 +272,7 @@ int map_renderer::render() const
 
     for(auto && o : m.balls) {
         if(! o->is_alive) continue;
-        b2Vec2 pos = o->get_position();
+        b2Vec2 pos = o->body->GetPosition();
         sf::CircleShape s;
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
@@ -297,7 +297,6 @@ int map_renderer::render() const
         if(! o->flags.empty()) {
             const flag* f = o->flags[0].f;
 
-            b2Vec2 pos = o->get_position();
             sf::CircleShape s;
             s.setRadius(scaler / 4);
             s.setOrigin(s.getRadius(), s.getRadius());

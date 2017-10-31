@@ -55,7 +55,7 @@ void ball::set_portal_transport(portal* p)
 
 void ball::set_position(const b2Vec2 pos)
 {
-    body->SetTransform(pos, get_angle());
+    body->SetTransform(pos, body->GetAngle());
 }
 
 void ball::move(const int x, const int y)
@@ -75,27 +75,11 @@ void ball::move(const int x, const int y)
     );
 }
 
-b2Vec2 ball::get_position() const
-{
-    return body->GetPosition();
-}
-
-float ball::get_angle() const
-{
-    return body->GetAngle();
-}
-
-b2Vec2 ball::get_linear_velocity() const
-{
-    return body->GetLinearVelocity();
-}
-
 void ball::pop()
 {
     const settings& config = settings::get_instance();
 
-    auto pos = this->get_position();
-    pop_ex.explode(pos.x,pos.y,body->GetWorld());
+    pop_ex.explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
@@ -123,7 +107,6 @@ void ball::get_boosted()
 void ball::add_powerup(const powerup_type type)
 {
     std::cout << "powerup received" << std::endl;
-    std::cout << get_position().x << std::endl;
     const settings& config = settings::get_instance();
 
     for(auto & o : powerups) {
@@ -165,8 +148,7 @@ void ball::remove_powerup(const powerup_type type)
 
 void ball::rb_explode()
 {
-    auto pos = this->get_position();
-    rb_ex.explode(pos.x,pos.y,body->GetWorld());
+    rb_ex.explode(body->GetPosition(), body->GetWorld());
     remove_powerup(powerup_type::rollingbomb);
 }
 

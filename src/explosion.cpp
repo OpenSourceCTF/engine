@@ -12,16 +12,16 @@ struct ExplodeAABBCallback : public b2QueryCallback
     }
 };
 
-void explosion::explode(float x, float y, b2World* world) {
+void explosion::explode(const b2Vec2 pos, b2World* world) {
     ExplodeAABBCallback callback;
     b2AABB aabb;
-    aabb.lowerBound = b2Vec2(x - radius, y - radius);
-    aabb.upperBound = b2Vec2(x + radius, y + radius);
+    aabb.lowerBound = b2Vec2(pos.x - radius, pos.y - radius);
+    aabb.upperBound = b2Vec2(pos.x + radius, pos.y + radius);
 
     world->QueryAABB(&callback, aabb);
 
     for(auto & m : callback.bodies) {
-        const float d = dist(x, y, m->GetPosition().x, m->GetPosition().y);
+        const float d = dist(pos.x, pos.y, m->GetPosition().x, m->GetPosition().y);
 
         if(d >= radius) {
             continue;
@@ -35,7 +35,7 @@ void explosion::explode(float x, float y, b2World* world) {
 
         const b2Vec2 bpos = m->GetPosition();
 
-        b2Vec2 force_vec(bpos.x - x, bpos.y - y);
+        b2Vec2 force_vec(bpos.x - pos.x, bpos.y - pos.y);
         force_vec.Normalize();
         force_vec *= f;
         m->ApplyForce(

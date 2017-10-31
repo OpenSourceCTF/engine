@@ -48,8 +48,7 @@ void bomb::explode()
 
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
-    std::cout << "boom: " << x << "," << y << std::endl;
-    ex.explode(x,y,body->GetWorld());
+    ex.explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
 }
