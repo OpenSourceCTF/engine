@@ -17,6 +17,11 @@ send map deltas for server
     (will require a queue for updates)
 handle chat
 
+### ploff
+
+chain vertices are shared_ptr - look at
+get the good config values
+
 
 ## NETWORK
 
