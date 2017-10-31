@@ -14,6 +14,7 @@
 #include "flag.hpp"
 #include "ball_flag.hpp"
 #include "portal.hpp"
+#include "explosion.hpp"
 
 struct collision_user_data;
 struct flag;
@@ -29,14 +30,10 @@ struct ball
     int respawn_counter;
     std::vector<ball_powerup> powerups;
     std::vector<ball_flag> flags;
+    explosion rb_ex;
+    explosion pop_ex;
 
-    ball(const ball_type type)
-    : type(type)
-    , body(nullptr)
-    , col_data(nullptr)
-    , portal_transport_ptr(nullptr)
-    , is_alive(true)
-    {}
+    ball(const ball_type type);
 
     void set_portal_transport(portal* p);
     void add_to_world(b2World * world);
@@ -50,7 +47,7 @@ struct ball
     void add_powerup(const powerup_type type);
     bool has_powerup(const powerup_type type);
     void remove_powerup(const powerup_type type);
-    void explode();
+    void rb_explode();
     bool has_flag(const flag_type type);
     void add_flag(flag* f);
     void reset_flags();

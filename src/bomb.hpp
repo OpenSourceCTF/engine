@@ -10,6 +10,7 @@
 #include "collision_user_data.hpp"
 #include "ball.hpp"
 #include "util.hpp"
+#include "explosion.hpp"
 
 struct ball;
 
@@ -21,15 +22,20 @@ struct bomb
     std::shared_ptr<collision_user_data> col_data;
     bool is_alive;
     int respawn_counter;
+    explosion ex;
 
-    bomb(){}
+    bomb() {
+        const settings& config = settings::get_instance();
+        ex = explosion(config.BOMB_EXPLOSION_RADIUS,
+                       config.BOMB_EXPLOSION_FORCE);
+    }
     bomb(
         const float x,
         const float y
     );
 
     void add_to_world(b2World* world);
-    void explode(ball* b);
+    void explode();
 };
 
 void to_json(nlohmann::json& j, const bomb& p);
