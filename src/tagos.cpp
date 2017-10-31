@@ -9,6 +9,8 @@
 #include <Box2D/Box2D.h>
 
 #include "libs/json.hpp"
+#include "libs/linenoise.hpp"
+
 #include "map.hpp"
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
@@ -16,19 +18,30 @@
 #include "server_lobby.hpp"
 #include "game.hpp"
 
+std::thread renderer_thread;
+bool close_renderer_window=false;
+bool renderer_window_open=false;
+
 int display_renderer(map& m)
 {
+    renderer_window_open = true;
     map_renderer renderer(m);
+
+    int rcode = 0;
 
     if(renderer.open_window() != 0) {
         std::cerr << "error: open window failed" << std::endl;
-        return 1;
+        rcode = 1;
+        goto exit;
     }
 
-    while(renderer.render() && renderer.get_input());
+    while(! close_renderer_window && renderer.render() && renderer.get_input());
     renderer.close_window();
 
-    return 0;
+exit:
+    renderer_window_open = false;
+    close_renderer_window = false;
+    return rcode;
 }
 
 int export_tp_map(
@@ -77,9 +90,18 @@ int serve()
     lobby.start_server();
 
     while(lobby.is_alive) {
-        std::cout << std::endl << "$ " << std::flush;
         std::string line;
-        std::getline(std::cin, line);
+
+        bool quit = linenoise::Readline("$ ", line);
+
+        if(quit) {
+            if(renderer_window_open) {
+                close_renderer_window = true;
+                continue;
+            } else {
+                break;
+            }
+        }
 
         std::vector<std::string> iparts;
         {
@@ -140,7 +162,14 @@ int serve()
                 continue;
             }
 
-            display_renderer(*(lobby.games[game_id].get()->m));
+            if(! renderer_window_open) {
+                renderer_thread = std::thread(
+                    &display_renderer, std::ref(*(lobby.games[game_id].get()->m))
+                );
+                renderer_thread.detach();
+            } else {
+                std::cout << "close existing render window first" << std::endl;
+            }
         } else if(cmd == "stats") {
             const server_lobby& lobby = server_lobby::get_instance();
 
@@ -168,6 +197,8 @@ int serve()
                 << "unrecognized command (try help)"
                 << std::endl;
         }
+
+        linenoise::AddHistory(line.c_str());
     }
 
     return 0;
