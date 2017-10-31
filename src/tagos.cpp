@@ -5,6 +5,7 @@
 #include <fstream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 #include <Box2D/Box2D.h>
 
@@ -86,6 +87,23 @@ int render(const std::string & map_src)
 
 int serve()
 {
+    linenoise::SetCompletionCallback([](
+        const char* ebuf,
+        std::vector<std::string>& completions
+    ) {
+        const std::vector<std::string> cmds = {"quit", "help", "render", "stats"};
+        const std::string edit(ebuf);
+
+        for(auto && o : cmds) {
+            if(edit[0] == o[0]) {
+                completions.push_back(o);
+            }
+        }
+
+        // todo: add completion for multiple characters
+        // and handling for render N 
+    });
+
     server_lobby& lobby = server_lobby::get_instance();
     lobby.start_server();
 
