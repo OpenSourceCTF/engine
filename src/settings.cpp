@@ -10,7 +10,7 @@ settings& settings::get_instance()
 
     INIReader reader("config.ini");
     if(reader.ParseError() < 0) {
-        std::cerr << "error: cannot load 'config.ini'" << std::endl;
+        spdlog::get("game")->error("cannot load 'config.ini'");
         return instance;
     } else {
         instance.BALL_MOVEMENT_SPEED  = reader.GetReal("ball", "movement_speed", 0);

@@ -8,6 +8,8 @@
 #include <vector>
 
 #include <Box2D/Box2D.h>
+#include <spdlog/spdlog.h>
+
 
 #include "libs/json.hpp"
 #include "libs/linenoise.hpp"
@@ -91,7 +93,7 @@ int serve()
         const char* ebuf,
         std::vector<std::string>& completions
     ) {
-        const std::vector<std::string> cmds = {"quit", "help", "render", "stats"};
+        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log"};
         const std::string edit(ebuf);
 
         for(auto && o : cmds) {
@@ -146,6 +148,7 @@ int serve()
                 << "\tquit           (quits server)\n" 
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
+                << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
                 << std::endl;
         } else if(cmd == "render") {
             if(iparts.size() != 2) {
@@ -210,6 +213,26 @@ int serve()
                 << "total games:\t" << lobby.games.size() << "\n"
                 << "total players:\t" << total_players
                 << std::endl;
+        } else if(cmd == "log") {
+            if(iparts.size() != 2) {
+                std::cout
+                    << "log requires two arguments"
+                    << std::endl;
+                continue;
+            }
+
+            const std::string level = iparts[1];
+                 if(level == "trace") spdlog::set_level(spdlog::level::trace);
+            else if(level == "debug") spdlog::set_level(spdlog::level::debug);
+            else if(level == "info")  spdlog::set_level(spdlog::level::info);
+            else if(level == "crit")  spdlog::set_level(spdlog::level::critical);
+            else if(level == "error") spdlog::set_level(spdlog::level::err);
+            else {
+                std::cout << "invalid log argument" << std::endl;
+                continue;
+            }
+
+            std::cout << "log level set to: " << level << std::endl;
         } else {
             std::cout
                 << "unrecognized command (try help)"
@@ -231,6 +254,16 @@ int main(int argc, char ** argv)
         std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
         std::cerr << "./tagos render maps/head.json" << std::endl;
         std::cerr << "./tagos serve" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    try {
+        spdlog::stdout_logger_mt("game"); // initialize game log
+        /*spdlog::set_error_handler([](const std::string& msg) {
+            std::cerr << "error: spdlog handler: " << msg << std::endl;
+        });*/
+    } catch (const spdlog::spdlog_ex& ex) {
+        std::cerr << "error: log init failed: " << ex.what() << std::endl;
         return EXIT_FAILURE;
     }
 

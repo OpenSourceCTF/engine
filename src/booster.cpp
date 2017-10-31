@@ -29,7 +29,7 @@ void booster::step_on(ball* m)
     if(! is_alive) {
         return;
     }
-    std::cout << "booster stepped on" << std::endl;
+    spdlog::get("game")->debug("booster stepped on");
 
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;

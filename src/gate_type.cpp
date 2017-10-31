@@ -8,7 +8,7 @@ std::string to_string(const gate_type m)
         case gate_type::blue: return "blue"; break;
         case gate_type::red:  return "red"; break;
         default:
-            std::cerr << "error: gate_type not enumerated in to_string" << std::endl;
+            spdlog::get("game")->error("gate_type not enumerated in to_string");
             return "";
     }
 }
@@ -20,6 +20,6 @@ gate_type gate_type_from_string(const std::string & m)
     if(m == "blue") { return gate_type::blue; }
     if(m == "red")  { return gate_type::red; }
 
-    std::cerr << "error: gate_type " << m << " not enumerated in from_string" << std::endl;
+    spdlog::get("game")->error("gate_type ", m, " not enumerated in from_string");
     return gate_type::off; // for warning suppression mainly
 }

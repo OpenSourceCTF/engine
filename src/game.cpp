@@ -62,7 +62,7 @@ void game::run()
 
         const std::chrono::microseconds t_sleep(tic_duration - step_duration);
 
-        //std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count() << "ms" << std::endl;
+        // spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
 
         std::this_thread::sleep_for(t_sleep);
     }
@@ -136,7 +136,7 @@ void game::step()
 
 void game::respawn_ball(ball* b)
 {
-    std::cout << "respawning" << std::endl;
+    spdlog::get("game")->debug("respawning");
     random_util& rng = random_util::get_instance();
 
     std::vector<spawn> potential_spawns;
@@ -165,7 +165,7 @@ void game::respawn_ball(ball* b)
 
         // if theres no flags or spawns...
         if(potential_spawns.empty()) {
-            std::cerr << "error: no spawns found, placing at 0,0, fix your map" << std::endl;
+            spdlog::get("game")->info("no spawns found, placing at 0,0, fix your map");
             potential_spawns.emplace_back(0, 0, 1, 1, matching_spawn_type);
         }
     }
@@ -251,7 +251,7 @@ player* game::add_player(player p)
 
 void game::score(ball* b)
 {
-    std::cout << "score!" << std::endl;
+    spdlog::get("game")->debug("score!");
 
     if(b->type == ball_type::red) {
         ++red_points;

@@ -23,10 +23,7 @@ bool try_send(
             opcode
         );
     } catch (const websocketpp::lib::error_code& e) {
-        std::cerr
-            << "Echo failed because: " << e
-            << "(" << e.message() << ")"
-            << std::endl;
+        spdlog::get("game")->critical(e.message());
         return false;
     }
 

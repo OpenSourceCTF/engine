@@ -1,6 +1,7 @@
 #ifndef ML_GAME_EVENT_HPP
 #define ML_GAME_EVENT_HPP
 
+#include <spdlog/spdlog.h>
 #include "libs/json.hpp"
 #include "game_event_type.hpp"
 #include "game_event_player_joined.hpp"

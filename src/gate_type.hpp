@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include "libs/json.hpp"
 
 enum class gate_type

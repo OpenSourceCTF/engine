@@ -10,7 +10,7 @@ void to_json(nlohmann::json& j, const game_event& p)
             to_json(data, *static_cast<game_event_player_joined*>(p.ptr));
             break;
         default:
-            std::cerr << "error: game_event_type not enumerated in to_json" << std::endl;
+            spdlog::get("game")->error("game_event_type not enumerated in to_json");
             break;
     }
 

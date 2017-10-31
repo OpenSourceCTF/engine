@@ -52,7 +52,7 @@ void powerup::step_on(ball* m)
     if(! is_alive) {
         return;
     }
-    std::cout << "powerup stepped on: " << to_string(type) << std::endl;
+    spdlog::get("game")->debug("powerup stepped on ", to_string(type));
     const settings& config = settings::get_instance();
 
     m->add_powerup(type);
@@ -64,7 +64,7 @@ void powerup::step_on(ball* m)
 powerup_type powerup::get_random_type()
 {
     if(possible_types.empty()) {
-        std::cerr << "error: powerup get_random_type called but no types available" << std::endl;
+        spdlog::get("game")->info("powerup get_random_type called but no types available");
         return powerup_type::tagpro;
     }
 

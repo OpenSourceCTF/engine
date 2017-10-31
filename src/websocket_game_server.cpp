@@ -2,7 +2,7 @@
 
 int start_game_server(const std::uint16_t port) 
 {
-    std::cout << "starting tagos game server... ";
+    spdlog::get("game")->info("starting tagos game server on port: {0:d}", port);
     server srv;
 
     try {
@@ -13,15 +13,13 @@ int start_game_server(const std::uint16_t port)
         srv.set_message_handler(bind(&handle_game_message,&srv,::_1,::_2));
         srv.listen(port);
 
-        std::cout << "on port: " << port << std::endl;
-
         srv.start_accept();
         srv.run();
     } catch (websocketpp::exception const & e) {
-        std::cerr << "error: server exception: " << e.what() << std::endl;
+        spdlog::get("game")->error("server exception", e.what());
         return 1;
     } catch (...) {
-        std::cerr << "error: unknown server exception" << std::endl;
+        spdlog::get("game")->error("unknown server exception");
         return 1;
     }
 
@@ -36,11 +34,9 @@ void handle_game_message(
 ) {
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
-        std::cout << j.dump() << std::endl;
 
         if(j.find("request") != j.end()) {
             const std::string req = j.at("request").get<std::string>();
-            std::cout << "req: " << req << std::endl;
 
             if(req == "gamesync") {
                 const std::string login_token = j.at("login_token").get<std::string>();

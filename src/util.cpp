@@ -159,8 +159,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
     }
 
     if(outside_edges.begin() == outside_edges.end()) {
-        //shouldn't happen unless the polygons live on a torus
-        std::cerr << "something is really wrong" << std::endl;
+        spdlog::get("game")->error("polygons on a taurus");
         exit(EXIT_FAILURE);
     } 
 

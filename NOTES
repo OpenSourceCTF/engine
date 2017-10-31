@@ -13,6 +13,7 @@ handle websocket movement input
 send map deltas for server
     (will require a queue for updates)
 handle chat
+fix segfault on quit
 
 ---
 

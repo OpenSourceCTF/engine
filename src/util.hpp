@@ -13,6 +13,7 @@
 #include <cassert>
 #include <map>
 #include <unordered_set>
+#include <spdlog/spdlog.h>
 #include "polygon.hpp"
 #include "chain.hpp"
 
@@ -63,7 +64,7 @@ T corresponding_color(const U a)
         case U::red:  return T::red;
         case U::blue: return T::blue;
         default:
-            std::cerr << "error: corresponding_color doesn't exist" << std::endl;
+            spdlog::get("game")->error("corresponding_color doesn't exist");
             std::terminate();
             return T::red; // error suppressor
     }
@@ -80,7 +81,7 @@ T inv_corresponding_color(const U a)
         case U::red:  return T::blue;
         case U::blue: return T::red;
         default:
-            std::cerr << "error: inv_corresponding_color doesn't exist" << std::endl;
+            spdlog::get("game")->error("inv_corresponding_color doesn't exist");
             std::terminate();
             return T::red; // error suppressor
     }

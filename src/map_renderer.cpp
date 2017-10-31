@@ -33,23 +33,23 @@ int map_renderer::open_window()
 #else
     const settings& config = settings::get_instance();
 
-    std::cout << "map_renderer: attempting to create window" << std::endl;
+    spdlog::get("game")->debug("map_renderer: attempting to create window");
     window = new sf::RenderWindow(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
     window->setFramerateLimit(60);
 
-	std::cout << "map_renderer: window success" << std::endl;
+    spdlog::get("game")->debug("map_renderer: window success");
 
-    std::cout << "map_renderer: attempting to create view" << std::endl;
+    spdlog::get("game")->debug("map_renderer: attempting to create view");
     view = sf::View(sf::FloatRect(
         0,
         0,
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
-    std::cout << "map_renderer: view success" << std::endl;
+    spdlog::get("game")->debug("map_renderer: view success");
 
     return 0;
 #endif

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 #include "libs/json.hpp"
 
 enum class map_type

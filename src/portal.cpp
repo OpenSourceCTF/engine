@@ -33,14 +33,14 @@ void portal::add_to_world(b2World * world)
 
 void portal::step_on(ball* m)
 {
-    std::cout << "portal stepped on" << std::endl;
+    spdlog::get("game")->debug("portal stepped on");
 
     portal* p = this;
 
     while(p->has_destination) {
         if(! p->is_alive) return;
 
-        std::cout << "move to: " << p->destination_id << std::endl;
+        spdlog::get("game")->debug("move to: {0:d}", p->destination_id);
         portal* dest = p->destination_ptr; 
 
         m->set_portal_transport(dest);
@@ -63,7 +63,7 @@ void portal::step_on(ball* m)
 
 void portal::step_off(ball* m)
 {
-    std::cout << "portal stepped off" << std::endl;
+    spdlog::get("game")->debug("portal stepped off");
 }
 
 void to_json(nlohmann::json& j, const portal& p)

@@ -2,6 +2,7 @@
 #define ML_CONTACT_LISTENER_HPP
 
 #include <Box2D/Box2D.h>
+#include <spdlog/spdlog.h>
 #include "cslot.hpp"
 #include "collision_user_data.hpp"
 #include "ball.hpp"

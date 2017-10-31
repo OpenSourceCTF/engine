@@ -28,7 +28,7 @@ void flag::step_on(ball* m)
 {
     if(! is_alive) return;
 
-    std::cout << "flag stepped on" << std::endl;
+    spdlog::get("game")->debug("flag stepped on");
     if(! same_color(type, m->type)) {
         m->add_flag(this);
         is_alive = false;

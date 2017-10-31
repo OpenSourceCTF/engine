@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 enum class ball_type
 {

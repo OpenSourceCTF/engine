@@ -10,9 +10,9 @@ color::color(const std::string & hex)
         b = hex.length() >= 6 ? std::stoi(hex.substr(4, 2), 0, 16) : 255;
         a = hex.length() >= 8 ? std::stoi(hex.substr(6, 2), 0, 16) : 255;
     } catch(const std::exception& e) {
-        std::cerr << "error: exception in color constructor stoi (" << e.what() << ")" << std::endl;
+        spdlog::get("game")->critical("exception in color constructor stoi (", e.what(), ")");
     } catch(...) {
-        std::cerr << "error: unknown exception in color constructor stoi" << std::endl;
+        spdlog::get("game")->critical("unknown exception in color constructor stoi");
     }
 }
 

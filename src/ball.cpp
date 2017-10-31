@@ -106,18 +106,19 @@ void ball::get_boosted()
 
 void ball::add_powerup(const powerup_type type)
 {
-    std::cout << "powerup received" << std::endl;
+    spdlog::get("game")->debug("powerup received");
+
     const settings& config = settings::get_instance();
 
     for(auto & o : powerups) {
         if(o.type == type) {
-            std::cout << "increase time" << std::endl;
+            spdlog::get("game")->debug("increase time");
             o.counter = config.POWERUP_LASTING_TIME;
             return;
         }
     }
 
-    std::cout << "add new powerup for:" << config.POWERUP_LASTING_TIME << std::endl;
+    spdlog::get("game")->debug("add new powerup for {0:d}", config.POWERUP_LASTING_TIME);
     powerups.emplace_back(type, config.POWERUP_LASTING_TIME);
 }
 
@@ -165,7 +166,7 @@ bool ball::has_flag(const flag_type type)
 
 void ball::add_flag(flag* f)
 {
-    std::cout << "add new flag" << std::endl;
+    spdlog::get("game")->debug("add new flag");
     flags.emplace_back(f);
 }
 

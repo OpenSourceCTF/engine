@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <Box2D/Box2D.h>
+#include <spdlog/spdlog.h>
 #include <memory>
 #include "settings.hpp"
 #include "util.hpp"
