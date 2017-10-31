@@ -12,6 +12,8 @@
 #include "ball.hpp"
 #include "powerup_type.hpp"
 
+struct collision_user_data;
+
 struct powerup
 {
     float x;

@@ -7,6 +7,8 @@
 #include "collision_user_data.hpp"
 #include "settings.hpp"
 
+struct collision_user_data;
+
 struct spike
 {
     float x;

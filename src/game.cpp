@@ -5,6 +5,8 @@ game::game(const std::uint16_t port, map* m)
 , m(m)
 , max_points(3)
 , max_length(15*60)
+, red_points(0)
+, blue_points(0)
 , world(nullptr)
 , timestep(0)
 {}
@@ -181,10 +183,13 @@ void game::respawn_ball(ball* b)
 ball* game::add_ball(ball b)
 {
     m->balls.emplace_back(new ball(b));
-    m->balls.back()->add_to_world(world);
-    respawn_ball(m->balls.back().get());
 
-    return m->balls.back().get();
+    ball* B = m->balls.back().get();
+
+    B->add_to_world(world);
+    respawn_ball(B);
+
+    return B;
 }
 
 
@@ -198,7 +203,9 @@ b2World * game::init_world()
     world->SetContactListener(&contact_listener_instance);
 
     for(std::size_t i=0; i<4; ++i) {
-        add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
+        ball* b = add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
+        player* p = add_player(player(this, b, "player_id", true, "name", 100));
+        b->set_player_ptr(p);
     }
 
     for(auto && o : m->spikes) {
@@ -241,3 +248,17 @@ player* game::add_player(player p)
     players.emplace_back(new player(p));
     return players.back().get();
 }
+
+void game::score(ball* b)
+{
+    std::cout << "score!" << std::endl;
+
+    if(b->type == ball_type::red) {
+        ++red_points;
+    }
+
+    if(b->type == ball_type::blue) {
+        ++blue_points;
+    }
+}
+

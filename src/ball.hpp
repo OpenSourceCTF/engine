@@ -15,10 +15,12 @@
 #include "ball_flag.hpp"
 #include "portal.hpp"
 #include "explosion.hpp"
+#include "player.hpp"
 
 struct collision_user_data;
 struct flag;
 struct portal;
+struct player;
 
 struct ball
 {
@@ -32,9 +34,11 @@ struct ball
     std::vector<ball_flag> flags;
     explosion rb_ex;
     explosion pop_ex;
+    player* player_ptr;
 
     ball(const ball_type type);
 
+    void set_player_ptr(player* p);
     void set_portal_transport(portal* p);
     void add_to_world(b2World * world);
     void set_position(const b2Vec2 pos);

@@ -13,6 +13,7 @@
 #include "player.hpp"
 
 struct player;
+struct map;
 
 struct game
 {
@@ -20,6 +21,8 @@ struct game
     map* m;
     std::uint32_t max_points;
     std::uint32_t max_length;
+    std::uint32_t red_points;
+    std::uint32_t blue_points;
     b2World * world;
     std::size_t timestep;
     std::vector<std::unique_ptr<player>> players;
@@ -38,6 +41,7 @@ struct game
     ball* add_ball(ball b);
     void respawn_ball(ball* b);
     player* add_player(player p);
+    void score(ball* b);
 };
 
 #endif

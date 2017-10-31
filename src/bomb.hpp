@@ -13,6 +13,7 @@
 #include "explosion.hpp"
 
 struct ball;
+struct collision_user_data;
 
 struct bomb
 {

@@ -150,7 +150,10 @@ int serve()
                 const std::size_t g_players = g.m->balls.size();
                 std::cout
                     << "game: " << i << "\t"
-                    << "players: " << g_players
+                    << "players: " << g_players << "\t"
+                    << "red_score: " << g.red_points << "\t"
+                    << "blue_score: "<< g.blue_points << "\t"
+                    << "timestep: " << g.timestep
                     << "\n";
                 total_players += g_players;
             }

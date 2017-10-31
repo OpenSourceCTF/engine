@@ -4,6 +4,7 @@
 #include <array>
 #include "collision_user_data.hpp"
 
+
 // this holds two collision user datas together
 // representing a contact between two things
 struct cslot

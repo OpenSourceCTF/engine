@@ -6,6 +6,7 @@ ball::ball(const ball_type type)
 , col_data(nullptr)
 , portal_transport_ptr(nullptr)
 , is_alive(true)
+, player_ptr(nullptr)
 {
     const settings& config = settings::get_instance();
     pop_ex = explosion(config.BALL_POP_RADIUS,
@@ -36,10 +37,15 @@ void ball::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::ball, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
+}
+
+void ball::set_player_ptr(player* p)
+{
+    player_ptr = p;
 }
 
 void ball::set_portal_transport(portal* p)
@@ -159,8 +165,6 @@ void ball::remove_powerup(const powerup_type type)
 
 void ball::rb_explode()
 {
-    // todo explosion here
-    std::cout << "rollingboom" << std::endl;
     auto pos = this->get_position();
     rb_ex.explode(pos.x,pos.y,body->GetWorld());
     remove_powerup(powerup_type::rollingbomb);
@@ -194,6 +198,6 @@ void ball::reset_flags()
 
 void ball::score()
 {
-    std::cout << "score, yay" << std::endl;
     reset_flags();
+    player_ptr->g->score(this);
 }

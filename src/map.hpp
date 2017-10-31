@@ -45,6 +45,13 @@
 
 struct toggle;
 struct ball;
+struct gate;
+struct booster;
+struct portal;
+struct wall;
+struct spike;
+struct bomb;
+struct powerup;
 
 struct map
 {

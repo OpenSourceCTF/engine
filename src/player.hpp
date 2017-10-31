@@ -13,6 +13,7 @@ struct game;
 
 struct player
 {
+    bool local;
     websocketpp::connection_hdl con;
     server* srv;
     game* g;
@@ -32,8 +33,29 @@ struct player
         const std::string name,
         const int degree
     )
-    : con(con)
+    : local(false)
+    , con(con)
     , srv(srv)
+    , g(g)
+    , b(b)
+    , player_id(player_id)
+    , is_registered(is_registered)
+    , name(name)
+    , degree(degree)
+    {}
+
+    // for "bots"
+    player(
+        game* g,
+        ball* b,
+        const std::string player_id,
+        const bool is_registered,
+        const std::string name,
+        const int degree
+    )
+    : local(true)
+    , con()
+    , srv(nullptr)
     , g(g)
     , b(b)
     , player_id(player_id)
