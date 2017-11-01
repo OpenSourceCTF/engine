@@ -7,6 +7,7 @@ void map_renderer::display_help() const
         << std::endl
         << "movement: arrow keys" << std::endl
         << "wireframe toggle: p" << std::endl
+        << "switch player: j/k"
         << "zoom: mousewheel" << std::endl;
 }
 
@@ -55,6 +56,7 @@ int map_renderer::open_window()
 #endif
 }
 
+int current_ball = 0;
 int map_renderer::get_input()
 {
 #ifdef DISABLE_RENDER
@@ -88,6 +90,14 @@ int map_renderer::get_input()
             if(event.key.code == sf::Keyboard::Key::P) {
                 wireframe = !wireframe;
             }
+            if(event.key.code == sf::Keyboard::Key::J) {
+                ++current_ball;
+                current_ball %= m.balls.size();
+            }
+            if(event.key.code == sf::Keyboard::Key::K) {
+                --current_ball;
+                current_ball %= m.balls.size();
+            }
         }
     }
 
@@ -98,7 +108,7 @@ int map_renderer::get_input()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[0]->move(move_x, move_y);
+        if(move_x || move_y) m.balls[current_ball]->move(move_x, move_y);
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
