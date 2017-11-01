@@ -20,9 +20,9 @@ void gate::mark_off(ball* b)
     current = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
 }
 
-void gate::kill_if_other(ball* b) {
-    if(type == gate_type::off) return;
-    if(!same_color(type,b->type)) b->pop();
+void gate::kill_if_other(std::unique_ptr<ball>& b) {
+    if(current == gate_type::off) return;
+    if(!same_color(current,b->type)) b->pop();
 }
 
 void gate::add_to_world(b2World* world) {

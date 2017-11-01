@@ -33,7 +33,7 @@ struct gate
 
     void mark_on(ball* b);
     void mark_off(ball* b);
-    void kill_if_other(ball* b);
+    void kill_if_other(std::unique_ptr<ball>& b);
     void add_to_world(b2World* world);
 };
 

@@ -17,6 +17,7 @@
 #include "portal.hpp"
 #include "explosion.hpp"
 #include "player.hpp"
+#include "gate.hpp"
 
 struct collision_user_data;
 struct flag;
@@ -36,6 +37,7 @@ struct ball
     explosion rb_ex;
     explosion pop_ex;
     player* player_ptr;
+    std::unordered_set<gate*> in_gate_ptrs;
 
     ball(const ball_type type);
 

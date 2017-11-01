@@ -97,6 +97,12 @@ void game::step()
             o->set_position(b2Vec2(p->x, p->y));
             o->portal_transport_ptr = nullptr;
         }
+        if(o->in_gate_ptrs.size()) {
+            for(const auto& g : o->in_gate_ptrs) {
+                g->kill_if_other(o);
+            }
+            if(!o->is_alive) o->in_gate_ptrs = {};
+        }
     }
 
     for(auto && o : m->bombs) {
