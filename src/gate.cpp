@@ -7,7 +7,7 @@ void gate::mark_on(ball* b)
     else spdlog::get("game")->error("ball_type neither red nor blue");
 
     if(red_minus_blue == 0) { current = type; return; }
-    type = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
+    current = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
 }
 
 void gate::mark_off(ball* b)
@@ -17,7 +17,7 @@ void gate::mark_off(ball* b)
     else spdlog::get("game")->error("ball_type neither red nor blue");
 
     if(red_minus_blue == 0) { current = type; return; }
-    type = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
+    current = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
 }
 
 void gate::kill_if_other(ball* b) {
