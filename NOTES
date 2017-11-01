@@ -7,7 +7,6 @@ make gates pop players
 serialize map data for server sync
 destroy box2d bodies on destruct
 implement game clear/restart
-add explosions to other events
 handle websocket movement input
     (will require an action queue)
 send map deltas for server
