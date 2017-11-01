@@ -28,4 +28,4 @@ $(BUILD)/%.o: $(SRC)/%.cpp
 .PHONY: clean
 
 clean:
-	@rm build/*
+	@rm -f build/*
