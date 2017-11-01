@@ -17,9 +17,9 @@
 #include <memory>
 #include <algorithm>
 
-#include "libs/lodepng.h"
-#include "libs/json.hpp"
+#include <json.hpp>
 
+#include "lodepng.h"
 #include "map_type.hpp"
 #include "polygon.hpp"
 #include "color.hpp"

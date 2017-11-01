@@ -7,7 +7,7 @@
 #include <iostream>
 #include <exception>
 #include <spdlog/spdlog.h>
-#include "libs/json.hpp"
+#include <json.hpp>
 
 struct color
 {

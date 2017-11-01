@@ -5,7 +5,7 @@
 #include <thread>
 #include <functional>
 #include <memory>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "map.hpp"
 #include "game.hpp"
 #include "websocket_server.hpp"

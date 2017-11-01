@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_TYPE_HPP
 
 #include <spdlog/spdlog.h>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include <string>
 #include <iostream>
 

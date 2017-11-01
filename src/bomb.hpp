@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cmath>
 #include <Box2D/Box2D.h>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "settings.hpp"
 #include "collision_user_data.hpp"
 #include "ball.hpp"

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <Box2D/Box2D.h>
 #include <spdlog/spdlog.h>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "settings.hpp"
 #include "collision_user_data.hpp"
 #include "booster_type.hpp"

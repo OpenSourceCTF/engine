@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "polygon.hpp"
 
 #include "gate_type.hpp"

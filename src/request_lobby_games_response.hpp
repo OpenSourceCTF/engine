@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <string>
-#include "libs/json.hpp"
+#include <json.hpp>
 
 struct request_lobby_games_response
 {

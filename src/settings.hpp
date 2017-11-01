@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <boost/algorithm/string/trim.hpp>
-#include "libs/INIReader.h"
+#include <INIReader.h>
 #include "color.hpp"
 #include "util.hpp"
 

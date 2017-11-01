@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <string>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "game.hpp"
 #include "ball_type.hpp"
 
