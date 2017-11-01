@@ -212,6 +212,10 @@ b2World * game::init_world()
         o->add_to_world(world);
     }
 
+    for(auto && o : m->gates) {
+        o->add_to_world(world);
+    }
+
     for(auto && o : m->bombs) {
         o->add_to_world(world);
     }

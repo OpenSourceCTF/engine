@@ -220,7 +220,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
 
             std::map<std::string, gate_type> gatetype_map = {
                 {"off",  gate_type::off},
-                {"on",   gate_type::on},
+                {"on",   gate_type::green},
                 {"red",  gate_type::red},
                 {"blue", gate_type::blue}
             };

@@ -4,7 +4,7 @@ std::string to_string(const gate_type m)
 {
     switch(m) {
         case gate_type::off:  return "off";  break;
-        case gate_type::on:   return "on";   break;
+        case gate_type::green:   return "green";   break;
         case gate_type::blue: return "blue"; break;
         case gate_type::red:  return "red"; break;
         default:
@@ -16,7 +16,7 @@ std::string to_string(const gate_type m)
 gate_type gate_type_from_string(const std::string & m)
 {
     if(m == "off")  { return gate_type::off; }
-    if(m == "on")   { return gate_type::on; }
+    if(m == "green")   { return gate_type::green; }
     if(m == "blue") { return gate_type::blue; }
     if(m == "red")  { return gate_type::red; }
 

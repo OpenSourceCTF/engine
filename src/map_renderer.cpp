@@ -173,10 +173,10 @@ int map_renderer::render() const
         sf::ConvexShape s;
         add_points(s, o->poly);
         switch(o->current) {
-            case gate_type::off:  s.setFillColor(sf::Color(0,   0,   0,   50)); break;
-            case gate_type::on:   s.setFillColor(sf::Color(0,   255, 0,   50)); break;
-            case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255, 50)); break;
-            case gate_type::red:  s.setFillColor(sf::Color(255, 0,   0,   50)); break;
+            case gate_type::off:  s.setFillColor(sf::Color(0,   0,   0)); break;
+            case gate_type::green:   s.setFillColor(sf::Color(0,   255, 0)); break;
+            case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255)); break;
+            case gate_type::red:  s.setFillColor(sf::Color(255, 0,   0)); break;
         }
         window->draw(s);
     }
