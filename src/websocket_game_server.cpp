@@ -123,6 +123,7 @@ void on_game_sync(
 
     ball* b = g.add_ball(ball(ball_type::red));
     player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
+    b->set_player_ptr(p);
 
     try_broadcast(&g, game_event(game_event_player_joined(p)));
 }
