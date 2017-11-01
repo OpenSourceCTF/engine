@@ -33,8 +33,6 @@ struct ball
     int respawn_counter;
     std::vector<ball_powerup> powerups;
     std::vector<ball_flag> flags;
-    explosion rb_ex;
-    explosion pop_ex;
     player* player_ptr;
 
     ball(const ball_type type);

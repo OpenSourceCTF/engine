@@ -8,11 +8,6 @@ ball::ball(const ball_type type)
 , is_alive(true)
 , player_ptr(nullptr)
 {
-    const settings& config = settings::get_instance();
-    pop_ex = explosion(config.BALL_POP_RADIUS,
-                       config.BALL_POP_FORCE);
-    rb_ex = explosion(config.ROLLING_BOMB_RADIUS,
-                      config.ROLLING_BOMB_FORCE);
 }
 void ball::add_to_world(b2World * world)
 {
@@ -79,7 +74,8 @@ void ball::pop()
 {
     const settings& config = settings::get_instance();
 
-    pop_ex.explode(body->GetPosition(), body->GetWorld());
+    explosion(config.BALL_POP_RADIUS, config.BALL_POP_FORCE)
+        .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
@@ -149,7 +145,11 @@ void ball::remove_powerup(const powerup_type type)
 
 void ball::rb_explode()
 {
-    rb_ex.explode(body->GetPosition(), body->GetWorld());
+    const settings& config = settings::get_instance();
+
+    explosion(config.ROLLING_BOMB_RADIUS, config.ROLLING_BOMB_FORCE)
+        .explode(body->GetPosition(), body->GetWorld());
+
     remove_powerup(powerup_type::rollingbomb);
 }
 

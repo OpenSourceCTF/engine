@@ -11,9 +11,6 @@ bomb::bomb(
 , is_alive(true)
 , respawn_counter(0)
 {
-    const settings& config = settings::get_instance();
-    ex = explosion(config.BOMB_EXPLOSION_RADIUS,
-                   config.BOMB_EXPLOSION_FORCE);
 }
 
 void bomb::add_to_world(b2World * world)
@@ -48,7 +45,8 @@ void bomb::explode()
 
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
-    ex.explode(body->GetPosition(), body->GetWorld());
+    explosion(config.BOMB_EXPLOSION_RADIUS, config.BOMB_EXPLOSION_FORCE)
+        .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
 }
