@@ -37,5 +37,5 @@ void to_json(nlohmann::json& j, const chain& p) {
 }
 
 void from_json(const nlohmann::json& j, chain& p) {
-    p.vertices = vec_to_shrd_ptr_vec(j.at("vertices").get<std::vector<coord>>());
+    p.vertices = vec_to_smart_ptr_vec<std::shared_ptr<coord>>(j.at("vertices").get<std::vector<coord>>());
 }

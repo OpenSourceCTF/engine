@@ -88,29 +88,17 @@ T inv_corresponding_color(const U a)
     }
 }
 
-template <typename T>
-std::vector<std::unique_ptr<T>> vec_to_uniq_ptr_vec(
-    const std::vector<T> & v
+// pass a smart_ptr as parameter
+// like vec_to_smart_ptr_vec<std::unique_ptr<wall>>
+template <typename Container>
+std::vector<Container> vec_to_smart_ptr_vec(
+    const std::vector<typename Container::element_type> & v
 ) {
-    std::vector<std::unique_ptr<T>> ret;
+    std::vector<Container> ret;
     ret.reserve(v.size());
 
     for(auto && o : v) {
-        ret.emplace_back(new T(o));
-    }
-
-    return ret;
-}
-
-template <typename T>
-std::vector<std::shared_ptr<T>> vec_to_shrd_ptr_vec(
-    const std::vector<T> & v
-) {
-    std::vector<std::shared_ptr<T>> ret;
-    ret.reserve(v.size());
-
-    for(auto && o : v) {
-        ret.emplace_back(new T(o));
+        ret.emplace_back(new typename Container::element_type(o));
     }
 
     return ret;
