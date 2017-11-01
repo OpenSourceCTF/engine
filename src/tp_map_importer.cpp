@@ -61,10 +61,8 @@ std::vector<polygon> make_square_poly(
     const float y
 ) {
     return {
-        polygon(x, y, x+1, y, x+1, y+1),
-        polygon(x, y, x, y+1, x+1, y+1)
-        // polygon(x - 0.5f, y - 0.5f, x + 0.5f, y - 0.5f, x + 0.5f, y + 0.5f),
-        // polygon(x - 0.5f, y - 0.5f, x - 0.5f, y + 0.5f, x + 0.5f, y + 0.5f)
+        polygon(x - 0.5f, y - 0.5f, x + 0.5f, y - 0.5f, x + 0.5f, y + 0.5f),
+        polygon(x - 0.5f, y - 0.5f, x - 0.5f, y + 0.5f, x + 0.5f, y + 0.5f)
     };
 }
 
