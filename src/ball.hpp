@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <Box2D/Box2D.h>
+#include <spdlog/spdlog.h>
 #include <memory>
 #include "settings.hpp"
 #include "util.hpp"
@@ -15,18 +16,16 @@
 #include "ball_flag.hpp"
 #include "portal.hpp"
 #include "explosion.hpp"
+#include "player.hpp"
 
 struct collision_user_data;
 struct flag;
 struct portal;
+struct player;
 
 struct ball
 {
     ball_type type;
-    std::string name;
-    bool is_registered;
-    std::string user_id;
-    std::uint32_t degree;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
     portal* portal_transport_ptr;
@@ -36,16 +35,15 @@ struct ball
     std::vector<ball_flag> flags;
     explosion rb_ex;
     explosion pop_ex;
+    player* player_ptr;
 
     ball(const ball_type type);
 
+    void set_player_ptr(player* p);
     void set_portal_transport(portal* p);
     void add_to_world(b2World * world);
     void set_position(const b2Vec2 pos);
     void move(const int x, const int y);
-    b2Vec2 get_position() const;
-    float get_angle() const;
-    b2Vec2 get_linear_velocity() const;
     void pop();
     void get_boosted();
     void add_powerup(const powerup_type type);

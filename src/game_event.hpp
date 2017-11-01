@@ -1,7 +1,10 @@
 #ifndef ML_GAME_EVENT_HPP
 #define ML_GAME_EVENT_HPP
 
+#include <spdlog/spdlog.h>
+#include <json.hpp>
 #include "game_event_type.hpp"
+#include "game_event_player_joined.hpp"
 #include "game_event_ball_respawn.hpp"
 #include "game_event_ball_popped.hpp"
 #include "game_event_ball_boosted.hpp"
@@ -19,12 +22,15 @@
 struct game_event
 {
     game_event_type type;
+    void* ptr;
 
     // todo -- fill these out for other types
-    game_event(const game_event_ball_respawn e)
-    : type(game_event_type::ball_respawn)
-    , ptr(new game_event_ball_respawn(e))
+    game_event(const game_event_player_joined e)
+    : type(game_event_type::player_joined)
+    , ptr(new game_event_player_joined(e))
+    {}
 };
 
+void to_json(nlohmann::json& j, const game_event& p);
 
 #endif

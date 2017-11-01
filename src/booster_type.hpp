@@ -3,8 +3,8 @@
 
 #include <string>
 #include <iostream>
-
-#include "libs/json.hpp"
+#include <spdlog/spdlog.h>
+#include <json.hpp>
 
 enum class booster_type
 {

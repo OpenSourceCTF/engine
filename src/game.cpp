@@ -5,6 +5,8 @@ game::game(const std::uint16_t port, map* m)
 , m(m)
 , max_points(3)
 , max_length(15*60)
+, red_points(0)
+, blue_points(0)
 , world(nullptr)
 , timestep(0)
 {}
@@ -24,12 +26,13 @@ void game::run()
     const settings& config = settings::get_instance();
     world = init_world();
 
+    // consider std::sleep_until here
     while(true) {
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
 
-        while(client_actions_queue.empty()) {
+        while(! client_actions_queue.empty()) {
             std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
             const client_action a = std::move(client_actions_queue.front());
             // todo: handle actions
@@ -59,7 +62,7 @@ void game::run()
 
         const std::chrono::microseconds t_sleep(tic_duration - step_duration);
 
-        //std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count() << "ms" << std::endl;
+        // spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
 
         std::this_thread::sleep_for(t_sleep);
     }
@@ -118,7 +121,6 @@ void game::step()
     for(auto && o : m->portals) {
         if(! o->is_alive) {
             if(o->has_cooldown) {
-                std::cout << o->cooldown_counter << std::endl;
                 if(o->is_cooling_down && --(o->cooldown_counter) == 0) {
                     o->is_alive = true;
                     o->is_cooling_down = false;
@@ -134,7 +136,7 @@ void game::step()
 
 void game::respawn_ball(ball* b)
 {
-    std::cout << "respawning" << std::endl;
+    spdlog::get("game")->debug("respawning");
     random_util& rng = random_util::get_instance();
 
     std::vector<spawn> potential_spawns;
@@ -163,7 +165,7 @@ void game::respawn_ball(ball* b)
 
         // if theres no flags or spawns...
         if(potential_spawns.empty()) {
-            std::cerr << "error: no spawns found, placing at 0,0, fix your map" << std::endl;
+            spdlog::get("game")->info("no spawns found, placing at 0,0, fix your map");
             potential_spawns.emplace_back(0, 0, 1, 1, matching_spawn_type);
         }
     }
@@ -178,25 +180,32 @@ void game::respawn_ball(ball* b)
     );
 }
 
-ball* game::add_ball(b2World* world, ball b)
+ball* game::add_ball(ball b)
 {
     m->balls.emplace_back(new ball(b));
-    m->balls.back()->add_to_world(world);
-    respawn_ball(m->balls.back().get());
 
-    return m->balls.back().get();
+    ball* B = m->balls.back().get();
+
+    B->add_to_world(world);
+    respawn_ball(B);
+
+    return B;
 }
 
 
+// this maybe should be broken up
 b2World * game::init_world()
 {
-    b2World* world = new b2World(b2Vec2(0, 0));
+    world = new b2World(b2Vec2(0, 0));
+
     // todo: does this need to be thread_local
     thread_local static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
 
-    for(std::size_t i=0; i<8; ++i) {
-        add_ball(world, ball(i < 4 ? ball_type::red : ball_type::blue));
+    for(std::size_t i=0; i<4; ++i) {
+        ball* b = add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
+        player* p = add_player(player(this, b, "player_id", true, "name", 100));
+        b->set_player_ptr(p);
     }
 
     for(auto && o : m->spikes) {
@@ -232,5 +241,24 @@ b2World * game::init_world()
     }
 
     return world;
+}
+
+player* game::add_player(player p)
+{
+    players.emplace_back(new player(p));
+    return players.back().get();
+}
+
+void game::score(ball* b)
+{
+    spdlog::get("game")->debug("score!");
+
+    if(b->type == ball_type::red) {
+        ++red_points;
+    }
+
+    if(b->type == ball_type::blue) {
+        ++blue_points;
+    }
 }
 

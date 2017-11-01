@@ -22,18 +22,9 @@ void on_lobby_request_games(
         );
     }
 
-    try {
-        srv->send(
-            hdl,
-            nlohmann::json({{"games", games}}).dump(),
-            msg->get_opcode()
-        );
-    } catch (const websocketpp::lib::error_code& e) {
-        std::cerr
-            << "Echo failed because: " << e
-            << "(" << e.message() << ")"
-            << std::endl;
-    }
+    try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
+        {"games", games}
+    });
 
 }
 
@@ -51,11 +42,9 @@ void handle_lobby_message(
         }
 
     } catch(...) {
-        srv->send(
-            hdl,
-            nlohmann::json({{"error", "json_parse_error"}}).dump(),
-            msg->get_opcode()
-        );
+        try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
+            {"error", "json_parse_error"}
+        });
     }
 }
 
@@ -63,7 +52,7 @@ int start_lobby_server(
     server_lobby& lobby,
     const std::uint16_t port
 ) {
-    std::cout << "starting tagos lobby server... ";
+    spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);
     server srv;
 
     try {
@@ -74,16 +63,14 @@ int start_lobby_server(
         srv.set_message_handler(bind(&handle_lobby_message,&srv,::_1,::_2));
         srv.listen(port);
 
-        std::cout << "on port: " << port << std::endl;
-
         srv.start_accept();
         srv.run();
     } catch (websocketpp::exception const & e) {
-        std::cerr << "error: server exception: " << e.what() << std::endl;
+        spdlog::get("game")->error("server exception", e.what());
         lobby.is_alive = false;
         return 1;
     } catch (...) {
-        std::cerr << "error: unknown server exception" << std::endl;
+        spdlog::get("game")->error("unknown server exception");
         lobby.is_alive = false;
         return 1;
     }

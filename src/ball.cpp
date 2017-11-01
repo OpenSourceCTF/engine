@@ -2,14 +2,11 @@
 
 ball::ball(const ball_type type)
 : type(type)
-, name("someball")
-, is_registered(false)
-, user_id("000000-0000-0000-000000")
-, degree(0)
 , body(nullptr)
 , col_data(nullptr)
 , portal_transport_ptr(nullptr)
 , is_alive(true)
+, player_ptr(nullptr)
 {
     const settings& config = settings::get_instance();
     pop_ex = explosion(config.BALL_POP_RADIUS,
@@ -40,10 +37,15 @@ void ball::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
     body->SetLinearDamping(config.BALL_DAMPING);
     body->ResetMassData();
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::ball, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
+}
+
+void ball::set_player_ptr(player* p)
+{
+    player_ptr = p;
 }
 
 void ball::set_portal_transport(portal* p)
@@ -53,7 +55,7 @@ void ball::set_portal_transport(portal* p)
 
 void ball::set_position(const b2Vec2 pos)
 {
-    body->SetTransform(pos, get_angle());
+    body->SetTransform(pos, body->GetAngle());
 }
 
 void ball::move(const int x, const int y)
@@ -73,27 +75,11 @@ void ball::move(const int x, const int y)
     );
 }
 
-b2Vec2 ball::get_position() const
-{
-    return body->GetPosition();
-}
-
-float ball::get_angle() const
-{
-    return body->GetAngle();
-}
-
-b2Vec2 ball::get_linear_velocity() const
-{
-    return body->GetLinearVelocity();
-}
-
 void ball::pop()
 {
     const settings& config = settings::get_instance();
 
-    auto pos = this->get_position();
-    pop_ex.explode(pos.x,pos.y,body->GetWorld());
+    pop_ex.explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
@@ -120,19 +106,19 @@ void ball::get_boosted()
 
 void ball::add_powerup(const powerup_type type)
 {
-    std::cout << "powerup received" << std::endl;
-    std::cout << get_position().x << std::endl;
+    spdlog::get("game")->debug("powerup received");
+
     const settings& config = settings::get_instance();
 
     for(auto & o : powerups) {
         if(o.type == type) {
-            std::cout << "increase time" << std::endl;
+            spdlog::get("game")->debug("increase time");
             o.counter = config.POWERUP_LASTING_TIME;
             return;
         }
     }
 
-    std::cout << "add new powerup for:" << config.POWERUP_LASTING_TIME << std::endl;
+    spdlog::get("game")->debug("add new powerup for {0:d}", config.POWERUP_LASTING_TIME);
     powerups.emplace_back(type, config.POWERUP_LASTING_TIME);
 }
 
@@ -163,10 +149,7 @@ void ball::remove_powerup(const powerup_type type)
 
 void ball::rb_explode()
 {
-    // todo explosion here
-    std::cout << "rollingboom" << std::endl;
-    auto pos = this->get_position();
-    rb_ex.explode(pos.x,pos.y,body->GetWorld());
+    rb_ex.explode(body->GetPosition(), body->GetWorld());
     remove_powerup(powerup_type::rollingbomb);
 }
 
@@ -183,7 +166,7 @@ bool ball::has_flag(const flag_type type)
 
 void ball::add_flag(flag* f)
 {
-    std::cout << "add new flag" << std::endl;
+    spdlog::get("game")->debug("add new flag");
     flags.emplace_back(f);
 }
 
@@ -198,6 +181,6 @@ void ball::reset_flags()
 
 void ball::score()
 {
-    std::cout << "score, yay" << std::endl;
     reset_flags();
+    player_ptr->g->score(this);
 }

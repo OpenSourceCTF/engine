@@ -33,23 +33,23 @@ int map_renderer::open_window()
 #else
     const settings& config = settings::get_instance();
 
-    std::cout << "map_renderer: attempting to create window" << std::endl;
+    spdlog::get("game")->debug("map_renderer: attempting to create window");
     window = new sf::RenderWindow(sf::VideoMode(
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ), "tagos");
     window->setFramerateLimit(60);
 
-	std::cout << "map_renderer: window success" << std::endl;
+    spdlog::get("game")->debug("map_renderer: window success");
 
-    std::cout << "map_renderer: attempting to create view" << std::endl;
+    spdlog::get("game")->debug("map_renderer: attempting to create view");
     view = sf::View(sf::FloatRect(
         0,
         0,
         config.GUI_INITIAL_WINDOW_WIDTH,
         config.GUI_INITIAL_WINDOW_HEIGHT
     ));
-    std::cout << "map_renderer: view success" << std::endl;
+    spdlog::get("game")->debug("map_renderer: view success");
 
     return 0;
 #endif
@@ -272,7 +272,7 @@ int map_renderer::render() const
 
     for(auto && o : m.balls) {
         if(! o->is_alive) continue;
-        b2Vec2 pos = o->get_position();
+        b2Vec2 pos = o->body->GetPosition();
         sf::CircleShape s;
         s.setRadius(scaler / 2);
         s.setOrigin(s.getRadius(), s.getRadius());
@@ -297,7 +297,6 @@ int map_renderer::render() const
         if(! o->flags.empty()) {
             const flag* f = o->flags[0].f;
 
-            b2Vec2 pos = o->get_position();
             sf::CircleShape s;
             s.setRadius(scaler / 4);
             s.setOrigin(s.getRadius(), s.getRadius());

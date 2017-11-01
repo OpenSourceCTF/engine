@@ -18,7 +18,7 @@ void booster::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::booster, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
@@ -29,7 +29,7 @@ void booster::step_on(ball* m)
     if(! is_alive) {
         return;
     }
-    std::cout << "booster stepped on" << std::endl;
+    spdlog::get("game")->debug("booster stepped on");
 
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;

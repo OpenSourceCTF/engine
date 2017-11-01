@@ -10,7 +10,8 @@ powerup::powerup()
 
 powerup::powerup(
     const float x,
-    const float y
+    const float y,
+    const std::vector<powerup_type> possible_types
 )
 : x(x)
 , y(y)
@@ -18,11 +19,7 @@ powerup::powerup(
 , col_data(nullptr)
 , is_alive(true)
 , respawn_counter(0)
-, possible_types({
-    powerup_type::tagpro,
-    powerup_type::jukejuice,
-    powerup_type::rollingbomb
-})
+, possible_types(possible_types)
 , type(get_random_type())
 {}
 
@@ -44,7 +41,7 @@ void powerup::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::powerup, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
@@ -55,7 +52,7 @@ void powerup::step_on(ball* m)
     if(! is_alive) {
         return;
     }
-    std::cout << "powerup stepped on: " << to_string(type) << std::endl;
+    spdlog::get("game")->debug("powerup stepped on ", to_string(type));
     const settings& config = settings::get_instance();
 
     m->add_powerup(type);
@@ -67,7 +64,7 @@ void powerup::step_on(ball* m)
 powerup_type powerup::get_random_type()
 {
     if(possible_types.empty()) {
-        std::cerr << "error: powerup get_random_type called but no types available" << std::endl;
+        spdlog::get("game")->info("powerup get_random_type called but no types available");
         return powerup_type::tagpro;
     }
 
@@ -80,11 +77,25 @@ powerup_type powerup::get_random_type()
 
 void to_json(nlohmann::json& j, const powerup& p)
 {
-    j = nlohmann::json{{"x", p.x}, {"y", p.y}};
+    std::vector<std::string> types;
+    for(auto & o : p.possible_types) {
+        types.emplace_back(to_string(o));
+    };
+
+    j = nlohmann::json{
+        {"x", p.x},
+        {"y", p.y},
+        {"types", types}
+    };
 }
 
 void from_json(const nlohmann::json& j, powerup& p)
 {
     p.x = j.at("x").get<float>();
     p.y = j.at("y").get<float>();
+
+    const std::vector<std::string> types = j.at("types").get<std::vector<std::string>>();
+    for(auto & o : types) {
+        p.possible_types.emplace_back(powerup_type_from_string(o));
+    }
 }

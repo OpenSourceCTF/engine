@@ -5,7 +5,7 @@
 #include <string>
 #include <cstdint>
 #include <memory>
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "toggle_tag_type.hpp"
 #include "toggle_tag.hpp"
 #include "collision_user_data.hpp"

@@ -8,7 +8,8 @@ float map_val(
     const float bx,
     const float by
 ) {
-      return bx + (by - bx) * ((v - ax) / (ay - ax));
+    assert(ax != ay && "ax and ay must never be equal, what the hell are you doing?");
+    return bx + (by - bx) * ((v - ax) / (ay - ax));
 }
 
 float dist(
@@ -158,8 +159,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
     }
 
     if(outside_edges.begin() == outside_edges.end()) {
-        //shouldn't happen unless the polygons live on a torus
-        std::cerr << "something is really wrong" << std::endl;
+        spdlog::get("game")->error("polygons on a taurus");
         exit(EXIT_FAILURE);
     } 
 

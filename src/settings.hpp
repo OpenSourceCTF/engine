@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <boost/algorithm/string/trim.hpp>
-#include "libs/INIReader.h"
+#include <INIReader.h>
 #include "color.hpp"
 #include "util.hpp"
 
@@ -46,6 +46,7 @@ struct settings
     float FLAG_RADIUS;
 
     float PORTAL_RADIUS;
+    int   PORTAL_RESPAWN_TIME;
 
     color COLOR_TILE;
     color COLOR_WALL;

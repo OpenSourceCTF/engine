@@ -5,10 +5,13 @@
 #include <fstream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 #include <Box2D/Box2D.h>
+#include <spdlog/spdlog.h>
+#include <json.hpp>
+#include <linenoise.hpp>
 
-#include "libs/json.hpp"
 #include "map.hpp"
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
@@ -16,19 +19,30 @@
 #include "server_lobby.hpp"
 #include "game.hpp"
 
+std::thread renderer_thread;
+bool close_renderer_window=false;
+bool renderer_window_open=false;
+
 int display_renderer(map& m)
 {
+    renderer_window_open = true;
     map_renderer renderer(m);
+
+    int rcode = 0;
 
     if(renderer.open_window() != 0) {
         std::cerr << "error: open window failed" << std::endl;
-        return 1;
+        rcode = 1;
+        goto exit;
     }
 
-    while(renderer.render() && renderer.get_input());
+    while(! close_renderer_window && renderer.render() && renderer.get_input());
     renderer.close_window();
 
-    return 0;
+exit:
+    renderer_window_open = false;
+    close_renderer_window = false;
+    return rcode;
 }
 
 int export_tp_map(
@@ -73,13 +87,39 @@ int render(const std::string & map_src)
 
 int serve()
 {
+    linenoise::SetCompletionCallback([](
+        const char* ebuf,
+        std::vector<std::string>& completions
+    ) {
+        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log"};
+        const std::string edit(ebuf);
+
+        for(auto && o : cmds) {
+            if(edit[0] == o[0]) {
+                completions.push_back(o);
+            }
+        }
+
+        // todo: add completion for multiple characters
+        // and handling for render N 
+    });
+
     server_lobby& lobby = server_lobby::get_instance();
     lobby.start_server();
 
     while(lobby.is_alive) {
-        std::cout << std::endl << "$ " << std::flush;
         std::string line;
-        std::getline(std::cin, line);
+
+        bool quit = linenoise::Readline("$ ", line);
+
+        if(quit) {
+            if(renderer_window_open) {
+                close_renderer_window = true;
+                continue;
+            } else {
+                break;
+            }
+        }
 
         std::vector<std::string> iparts;
         {
@@ -106,6 +146,7 @@ int serve()
                 << "\tquit           (quits server)\n" 
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
+                << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
                 << std::endl;
         } else if(cmd == "render") {
             if(iparts.size() != 2) {
@@ -140,7 +181,14 @@ int serve()
                 continue;
             }
 
-            display_renderer(*(lobby.games[game_id].get()->m));
+            if(! renderer_window_open) {
+                renderer_thread = std::thread(
+                    &display_renderer, std::ref(*(lobby.games[game_id].get()->m))
+                );
+                renderer_thread.detach();
+            } else {
+                std::cout << "close existing render window first" << std::endl;
+            }
         } else if(cmd == "stats") {
             const server_lobby& lobby = server_lobby::get_instance();
 
@@ -150,7 +198,10 @@ int serve()
                 const std::size_t g_players = g.m->balls.size();
                 std::cout
                     << "game: " << i << "\t"
-                    << "players: " << g_players
+                    << "players: " << g_players << "\t"
+                    << "red_score: " << g.red_points << "\t"
+                    << "blue_score: "<< g.blue_points << "\t"
+                    << "timestep: " << g.timestep
                     << "\n";
                 total_players += g_players;
             }
@@ -160,11 +211,33 @@ int serve()
                 << "total games:\t" << lobby.games.size() << "\n"
                 << "total players:\t" << total_players
                 << std::endl;
+        } else if(cmd == "log") {
+            if(iparts.size() != 2) {
+                std::cout
+                    << "log requires two arguments"
+                    << std::endl;
+                continue;
+            }
+
+            const std::string level = iparts[1];
+                 if(level == "trace") spdlog::set_level(spdlog::level::trace);
+            else if(level == "debug") spdlog::set_level(spdlog::level::debug);
+            else if(level == "info")  spdlog::set_level(spdlog::level::info);
+            else if(level == "crit")  spdlog::set_level(spdlog::level::critical);
+            else if(level == "error") spdlog::set_level(spdlog::level::err);
+            else {
+                std::cout << "invalid log argument" << std::endl;
+                continue;
+            }
+
+            std::cout << "log level set to: " << level << std::endl;
         } else {
             std::cout
                 << "unrecognized command (try help)"
                 << std::endl;
         }
+
+        linenoise::AddHistory(line.c_str());
     }
 
     return 0;
@@ -179,6 +252,16 @@ int main(int argc, char ** argv)
         std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
         std::cerr << "./tagos render maps/head.json" << std::endl;
         std::cerr << "./tagos serve" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    try {
+        spdlog::stdout_logger_mt("game"); // initialize game log
+        /*spdlog::set_error_handler([](const std::string& msg) {
+            std::cerr << "error: spdlog handler: " << msg << std::endl;
+        });*/
+    } catch (const spdlog::spdlog_ex& ex) {
+        std::cerr << "error: log init failed: " << ex.what() << std::endl;
         return EXIT_FAILURE;
     }
 

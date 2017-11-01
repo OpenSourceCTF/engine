@@ -10,7 +10,7 @@ std::string to_string(const tile_type m)
         case tile_type::endzone_red:  return "endzone_red";  break;
         case tile_type::endzone_blue: return "endzone_blue"; break;
         default:
-            std::cerr << "error: tile_type not enumerated in to_string" << std::endl;
+            spdlog::get("game")->error("tile_type not enumerated in to_string");
             return "";
     }
 }
@@ -24,6 +24,6 @@ tile_type tile_type_from_string(const std::string & m)
     if(m == "endzone_red")  { return tile_type::endzone_red; }
     if(m == "endzone_blue") { return tile_type::endzone_blue; }
 
-    std::cerr << "error: tile_type " << m << " not enumerated in from_string" << std::endl;
+    spdlog::get("game")->error("tile_type ", m, " not enumerated in from_string");
     return tile_type::background; // for warning suppression mainly
 }

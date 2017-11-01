@@ -10,7 +10,7 @@ settings& settings::get_instance()
 
     INIReader reader("config.ini");
     if(reader.ParseError() < 0) {
-        std::cerr << "error: cannot load 'config.ini'" << std::endl;
+        spdlog::get("game")->error("cannot load 'config.ini'");
         return instance;
     } else {
         instance.BALL_MOVEMENT_SPEED  = reader.GetReal("ball", "movement_speed", 0);
@@ -45,7 +45,8 @@ settings& settings::get_instance()
 
         instance.FLAG_RADIUS = reader.GetReal("flag", "radius", 0);
 
-        instance.PORTAL_RADIUS = reader.GetReal("portal", "radius", 0);
+        instance.PORTAL_RADIUS       = reader.GetReal("portal", "radius", 0);
+        instance.PORTAL_RESPAWN_TIME = reader.GetInteger("portal", "respawn_time", 0);
 
         instance.COLOR_TILE = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL = color(reader.Get("color", "wall", "000000"));

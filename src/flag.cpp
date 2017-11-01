@@ -18,7 +18,7 @@ void flag::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::flag, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
@@ -28,7 +28,7 @@ void flag::step_on(ball* m)
 {
     if(! is_alive) return;
 
-    std::cout << "flag stepped on" << std::endl;
+    spdlog::get("game")->debug("flag stepped on");
     if(! same_color(type, m->type)) {
         m->add_flag(this);
         is_alive = false;

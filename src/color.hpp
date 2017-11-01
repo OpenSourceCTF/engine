@@ -6,8 +6,8 @@
 #include <iomanip>
 #include <iostream>
 #include <exception>
-
-#include "libs/json.hpp"
+#include <spdlog/spdlog.h>
+#include <json.hpp>
 
 struct color
 {

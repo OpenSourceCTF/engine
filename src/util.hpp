@@ -10,10 +10,14 @@
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <cassert>
 #include <map>
 #include <unordered_set>
+#include <spdlog/spdlog.h>
 #include "polygon.hpp"
 #include "chain.hpp"
+
+struct chain;
 
 constexpr float PI     = 3.141592653589793;
 constexpr float TWO_PI = 6.283185307179586;
@@ -50,7 +54,6 @@ constexpr bool same_color(const T a, const U b)
 }
 
 // return the corresponding color from U a to T type
-// todo: this has a terrible name
 template <typename T, typename U>
 T corresponding_color(const U a)
 {
@@ -61,7 +64,24 @@ T corresponding_color(const U a)
         case U::red:  return T::red;
         case U::blue: return T::blue;
         default:
-            std::cerr << "error: corresponding_color doesn't exist" << std::endl;
+            spdlog::get("game")->error("corresponding_color doesn't exist");
+            std::terminate();
+            return T::red; // error suppressor
+    }
+}
+
+// return the inverted corresponding color from U a to T type
+template <typename T, typename U>
+T inv_corresponding_color(const U a)
+{
+    static_assert(std::is_enum<T>::value, "T must be enum");
+    static_assert(std::is_enum<U>::value, "U must be enum");
+
+    switch(a) {
+        case U::red:  return T::blue;
+        case U::blue: return T::red;
+        default:
+            spdlog::get("game")->error("inv_corresponding_color doesn't exist");
             std::terminate();
             return T::red; // error suppressor
     }

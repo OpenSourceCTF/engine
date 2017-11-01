@@ -8,7 +8,7 @@ map::map()
 void to_json(nlohmann::json& j, const map& p)
 {
     if(! p.is_loaded) {
-        std::cerr << "error: map not loaded" << std::endl;
+        spdlog::get("game")->error("map not loaded");
         j = nlohmann::json{{"error", "map not loaded"}};
         return;
     }
@@ -62,7 +62,7 @@ std::vector<std::unique_ptr<T>> from_json_helper(
 void from_json(const nlohmann::json& j, map& p)
 {
     if(p.is_loaded) {
-        std::cerr << "error: map already loaded" << std::endl;
+        spdlog::get("game")->error("map already loaded");
         return;
     }
 

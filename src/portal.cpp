@@ -25,7 +25,7 @@ void portal::add_to_world(b2World * world)
     fdef.shape = &bshape;
     fdef.isSensor = true;
     body->CreateFixture(&fdef);
-    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(this));
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::portal, this));
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
@@ -33,26 +33,37 @@ void portal::add_to_world(b2World * world)
 
 void portal::step_on(ball* m)
 {
-    if(! is_alive) return;
+    spdlog::get("game")->debug("portal stepped on");
 
-    std::cout << "portal stepped on" << std::endl;
+    portal* p = this;
 
-    if(has_destination) {
-        std::cout << "move to: " << destination_id << std::endl;
+    while(p->has_destination) {
+        if(! p->is_alive) return;
 
-        m->set_portal_transport(destination_ptr);
-        is_alive = false;
+        spdlog::get("game")->debug("move to: {0:d}", p->destination_id);
+        portal* dest = p->destination_ptr; 
 
-        if(has_cooldown) {
-            is_cooling_down = true;
-            cooldown_counter = cooldown;
-        }
+        m->set_portal_transport(dest);
+
+        const auto disable_portal = [](portal* o) {
+            o->is_alive = false;
+
+            if(o->has_cooldown) {
+                o->is_cooling_down = true;
+                o->cooldown_counter = o->cooldown;
+            }
+        };
+
+        disable_portal(p);
+        disable_portal(dest);
+
+        p = dest;
     }
 }
 
 void portal::step_off(ball* m)
 {
-    std::cout << "portal stepped off" << std::endl;
+    spdlog::get("game")->debug("portal stepped off");
 }
 
 void to_json(nlohmann::json& j, const portal& p)
@@ -66,12 +77,17 @@ void to_json(nlohmann::json& j, const portal& p)
 
 void from_json(const nlohmann::json& j, portal& p)
 {
+    const settings& config = settings::get_instance();
+
     p.x = j.at("x").get<float>();
     p.y = j.at("y").get<float>();
 
     p.has_cooldown = j.at("has_cooldown").get<bool>();
     if(p.has_cooldown) {
         p.cooldown = j.at("cooldown").get<int>();
+        if(p.cooldown == 0) {
+            p.cooldown = config.PORTAL_RESPAWN_TIME; // default
+        }
     }
 
     p.has_destination = j.at("has_destination").get<bool>();

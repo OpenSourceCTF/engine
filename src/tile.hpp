@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-#include "libs/json.hpp"
+#include <json.hpp>
 #include "polygon.hpp"
 #include "color.hpp"
 #include "tile_type.hpp"

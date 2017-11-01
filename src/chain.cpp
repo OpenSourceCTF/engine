@@ -1,8 +1,7 @@
 #include "chain.hpp"
-#include "util.hpp"
 
 void chain::add_vertex(const float x, const float y) {
-        vertices.emplace_back(std::shared_ptr<coord>(new coord(x,y)));
+    vertices.emplace_back(std::shared_ptr<coord>(new coord(x,y)));
 }
 
 void chain::add_to_world(b2World * world)
@@ -15,14 +14,14 @@ void chain::add_to_world(b2World * world)
     body = world->CreateBody(&bdef);
 
 
-    b2Vec2 vs[vertices.size()];
+    std::vector<b2Vec2> vs(vertices.size());
     int i = 0;
     for(auto& v : vertices) {
         vs[i].Set(v->x,v->y);
         ++i;
     }
     b2ChainShape ch;
-    ch.CreateChain(vs, vertices.size());
+    ch.CreateChain(vs.data(), vertices.size());
 
     b2FixtureDef fdef;
     fdef.shape = &ch;
@@ -30,13 +29,13 @@ void chain::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
 }
 
-void to_json(nlohmann::json& j, const chain& ch) {
-    std::vector<coord> verts; for(auto& v : ch.vertices) verts.emplace_back(*v);
+void to_json(nlohmann::json& j, const chain& p) {
+    std::vector<coord> verts; for(auto& v : p.vertices) verts.emplace_back(*v);
     j = nlohmann::json {
         {"vertices", verts}
     };
 }
 
-void from_json(const nlohmann::json& j, chain& ch) {
-    ch.vertices = vec_to_shrd_ptr_vec(j.at("vertices").get<std::vector<coord>>());
+void from_json(const nlohmann::json& j, chain& p) {
+    p.vertices = vec_to_shrd_ptr_vec(j.at("vertices").get<std::vector<coord>>());
 }
