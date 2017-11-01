@@ -2,6 +2,7 @@
 #define ML_UTIL_HPP
 
 #include <vector>
+#include <array>
 #include <string>
 #include <sstream>
 #include <cstdint>
@@ -119,8 +120,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set);
 
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html
-constexpr int DISTINCT_COLORS[63][3] =
-{
+constexpr std::array<std::array<int, 3>, 63> DISTINCT_COLORS = {{
     {1, 0, 103},
     {213, 255, 0},
     {255, 0, 86},
@@ -184,6 +184,6 @@ constexpr int DISTINCT_COLORS[63][3] =
     {0, 255, 198},
     {255, 110, 65},
     {232, 94, 190}
-};
+}};
 
 #endif
