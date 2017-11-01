@@ -37,12 +37,14 @@ bool try_broadcast(
     bool ret = true;
 
     for(auto && o : g->players) {
-        if(! try_send(
-            o->srv,
-            o->con,
-            websocketpp::frame::opcode::value::text,
-            try_msg
-        )) ret = false;
+        if(! o->local) {
+            if(! try_send(
+                o->srv,
+                o->con,
+                websocketpp::frame::opcode::value::text,
+                try_msg
+            )) ret = false;
+        }
     }
 
     return ret;
