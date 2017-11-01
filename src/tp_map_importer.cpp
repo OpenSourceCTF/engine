@@ -61,10 +61,8 @@ std::vector<polygon> make_square_poly(
     const float y
 ) {
     return {
-        polygon(x, y, x+1, y, x+1, y+1),
-        polygon(x, y, x, y+1, x+1, y+1)
-        // polygon(x - 0.5f, y - 0.5f, x + 0.5f, y - 0.5f, x + 0.5f, y + 0.5f),
-        // polygon(x - 0.5f, y - 0.5f, x - 0.5f, y + 0.5f, x + 0.5f, y + 0.5f)
+        polygon(x - 0.5f, y - 0.5f, x + 0.5f, y - 0.5f, x + 0.5f, y + 0.5f),
+        polygon(x - 0.5f, y - 0.5f, x - 0.5f, y + 0.5f, x + 0.5f, y + 0.5f)
     };
 }
 
@@ -368,17 +366,17 @@ int tp_map_importer::tp_import_png(const std::string & src)
                 m.walls.emplace_back(new wall(p, config.COLOR_WALL));
             }
         } else if(tiletype == tp_tile_type::wall_tl) {
-            m.walls.emplace_back(new wall(polygon(x, y, x+1, y, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(new tile(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x-0.5f, y-0.5f, x+0.5f, y-0.5f, x-0.5f, y+1), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x+0.5f, y-0.5f, x+0.5f, y+0.5f, x-0.5f, y+0.5f), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_tr) {
-            m.walls.emplace_back(new wall(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x-0.5f, y-0.5f, x+0.5f, y-0.5f, x+0.5f, y+0.5f), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x-0.5f, y-0.5f, x+0.5f, y+0.5f, x-0.5f, y+0.5f), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_bl) {
-            m.walls.emplace_back(new wall(polygon(x, y, x+1, y+1, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y, x+1, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x-0.5f, y-0.5f, x+0.5f, y+0.5f, x-0.5f, y+0.5f), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x-0.5f, y-0.5f, x+0.5f, y-0.5f, x+0.5f, y+0.5f), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::wall_br) {
-            m.walls.emplace_back(new wall(polygon(x+1, y, x+1, y+1, x, y+1), config.COLOR_WALL));
-            m.tiles.emplace_back(new tile(polygon(x, y, x+1, y, x, y+1), config.COLOR_TILE, tile_type::normal));
+            m.walls.emplace_back(new wall(polygon(x+0.5f, y-0.5f, x+0.5f, y+0.5f, x-0.5f, y+0.5f), config.COLOR_WALL));
+            m.tiles.emplace_back(new tile(polygon(x-0.5f, y-0.5f, x+0.5f, y-0.5f, x-0.5f, y+0.5f), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::bomb) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
