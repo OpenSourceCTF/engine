@@ -104,7 +104,9 @@ std::vector<Container> vec_to_smart_ptr_vec(
     return ret;
 }
 
-std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set);
+std::vector<std::unique_ptr<chain>> poly2chain(
+    const std::vector<polygon> & poly_set
+);
 
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html
