@@ -13,6 +13,13 @@ ws.on('message', (msg) => {
     console.log('received: %s', msg);
     let data = JSON.parse(msg);
 
+    if(data.event == "gamesync") {
+        ws.send(JSON.stringify({
+            "request": "chat",
+            "msg": "hello world"
+        }));
+    }
+
     if(data.event == "chat") {
         console.log(data.data.player_id, data.data.msg);
     }
