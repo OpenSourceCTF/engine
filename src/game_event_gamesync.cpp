@@ -15,9 +15,13 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
     }
 
     j = nlohmann::json{
-        {"game", 
+        {"game", {
+            {"max_points", p.g.max_points},
+            {"max_length", p.g.max_length},
+            {"red_points", p.g.red_points},
+            {"blue_points", p.g.blue_points},
             {"timestep", p.g.timestep}
-        },
+        }},
         {"players", players}
     };
 
