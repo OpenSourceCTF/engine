@@ -16,7 +16,7 @@
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
 #include "settings.hpp"
-#include "server_lobby.hpp"
+#include "lobby_server.hpp"
 #include "game.hpp"
 
 std::thread renderer_thread;
@@ -104,7 +104,7 @@ int serve()
         // and handling for render N 
     });
 
-    server_lobby& lobby = server_lobby::get_instance();
+    lobby_server& lobby = lobby_server::get_instance();
     lobby.start_server();
 
     while(lobby.is_alive) {
@@ -156,7 +156,7 @@ int serve()
                 continue;
             }
 
-            const server_lobby& lobby = server_lobby::get_instance();
+            const lobby_server& lobby = lobby_server::get_instance();
 
             if(lobby.games.size() == 0) {
                 std::cerr << "error: no games currently running" << std::endl;
@@ -190,7 +190,7 @@ int serve()
                 std::cout << "close existing render window first" << std::endl;
             }
         } else if(cmd == "stats") {
-            const server_lobby& lobby = server_lobby::get_instance();
+            const lobby_server& lobby = lobby_server::get_instance();
 
             std::size_t total_players = 0;
             for(std::size_t i=0; i<lobby.games.size(); ++i) {

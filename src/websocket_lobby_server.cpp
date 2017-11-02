@@ -1,11 +1,12 @@
 #include "websocket_server.hpp"
+#include "websocket_lobby_server.hpp"
 
 void on_lobby_request_games(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
 ) {
-    const server_lobby& lobby = server_lobby::get_instance();
+    const lobby_server& lobby = lobby_server::get_instance();
 
     std::vector<lobby_event_games_game> games;
     games.reserve(lobby.games.size());
@@ -29,9 +30,9 @@ void on_lobby_request_games(
 }
 
 void handle_lobby_message(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
 ) {
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
@@ -49,7 +50,7 @@ void handle_lobby_message(
 }
 
 int start_lobby_server(
-    server_lobby& lobby,
+    lobby_server& lobby,
     const std::uint16_t port
 ) {
     spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);

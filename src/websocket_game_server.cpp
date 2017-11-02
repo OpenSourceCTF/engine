@@ -1,4 +1,4 @@
-#include "websocket_server.hpp"
+#include "websocket_game_server.hpp"
 
 int start_game_server(const std::uint16_t port) 
 {
@@ -28,9 +28,9 @@ int start_game_server(const std::uint16_t port)
 
 
 void handle_game_message(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
 ) {
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
@@ -60,12 +60,12 @@ void handle_game_message(
 } 
 
 void on_game_chat(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
     const std::string& chat_msg
 ) {
-    server_lobby& lobby = server_lobby::get_instance();
+    lobby_server& lobby = lobby_server::get_instance();
 
     game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
     player* p = g.get_player_from_con(hdl);
@@ -81,12 +81,12 @@ void on_game_chat(
 }
 
 void on_game_sync(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
     const std::string& login_token
 ) {
-    const server_lobby& lobby = server_lobby::get_instance();
+    const lobby_server& lobby = lobby_server::get_instance();
 
     game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
 

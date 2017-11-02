@@ -1,7 +1,7 @@
 #include "websocket_server.hpp"
 
 std::uint16_t get_local_port(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
 ) {
     server::connection_ptr connection = srv->get_con_from_hdl(hdl);
@@ -11,7 +11,7 @@ std::uint16_t get_local_port(
 }
 
 bool try_send(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
     websocketpp::frame::opcode::value opcode,
     nlohmann::json try_msg

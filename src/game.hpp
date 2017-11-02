@@ -11,7 +11,7 @@
 #include "map.hpp"
 #include "client_action.hpp"
 #include "player.hpp"
-#include "websocket_server.hpp"
+#include "websocket_game_server.hpp"
 
 struct player;
 struct map;

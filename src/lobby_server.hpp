@@ -8,31 +8,31 @@
 #include <json.hpp>
 #include "map.hpp"
 #include "game.hpp"
-#include "websocket_server.hpp"
+#include "websocket_lobby_server.hpp"
 #include "settings.hpp"
 
 struct game;
 
-struct server_lobby
+struct lobby_server
 {
     std::vector<std::unique_ptr<game>> games;
     bool is_initialized;
     bool is_alive;
 
     // use this to initialize
-    static server_lobby& get_instance();
+    static lobby_server& get_instance();
 
     // prevent copies
-    server_lobby(server_lobby const&) = delete;
+    lobby_server(lobby_server const&) = delete;
     // prevent move which could invalidate state
-    server_lobby(server_lobby&&) = delete;
+    lobby_server(lobby_server&&) = delete;
 
     void start_server();
 
     game& get_game_from_port(const std::uint16_t port) const;
 private:
     // prevent client from creating new instances
-    server_lobby() {}
+    lobby_server() {}
 };
 
 #endif
