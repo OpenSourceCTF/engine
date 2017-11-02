@@ -1,5 +1,8 @@
 ## TODO
 
+remove players from game on disconnect
+    or if they havent moved in X seconds
+        unless they're by themselves
 track stepping on toggles by players
     so we can tell when it is 2blue+1red or whatever
 add game end conditions (time, score)
@@ -7,11 +10,8 @@ make gates pop players
 serialize map data for server sync
 destroy box2d bodies on destruct
 implement game clear/restart
-handle websocket movement input
-    (will require an action queue)
 send map deltas for server
     (will require a queue for updates)
-handle chat
 fix segfault on quit
 
 ---

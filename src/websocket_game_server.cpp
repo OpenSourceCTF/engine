@@ -41,11 +41,20 @@ void handle_game_message(
             if(req == "gamesync") {
                 const std::string login_token = j.at("login_token").get<std::string>();
                 return on_game_sync(srv, hdl, msg, login_token);
-            }
 
-            if(req == "chat") {
+            } else if(req == "chat") {
                 const std::string chat_msg = j.at("msg").get<std::string>();
                 return on_game_chat(srv, hdl, msg, chat_msg);
+
+            } else if(req == "movement") {
+                const int xdir = j.at("xdir").get<int>();
+                const int ydir = j.at("ydir").get<int>();
+                return on_game_movement(srv, hdl, msg, xdir, ydir);
+
+            } else {
+                try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+                    {"error", "unknown_request"}
+                });
             }
         } else {
             try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
@@ -74,6 +83,28 @@ void on_game_chat(
         g.add_client_action(client_action(client_action_chat(p, chat_msg)));
     } else {
         spdlog::get("game")->debug("player chatted but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+    }
+}
+
+void on_game_movement(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    const int xdir,
+    const int ydir
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
+
+    if(p) {
+        g.add_client_action(client_action(client_action_movement(p, xdir, ydir)));
+    } else {
+        spdlog::get("game")->debug("player movement but hasnt joined yet");
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
             {"error", "not_joined"}
         });

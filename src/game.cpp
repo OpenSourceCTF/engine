@@ -32,6 +32,8 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
+        handle_client_actions();
+
         this->step();
         world->Step(
             1.0f/config.WORLD_FRAMERATE,
@@ -67,7 +69,6 @@ void game::handle_client_actions()
         std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
         const client_action a = std::move(client_actions_queue.front());
 
-        // todo: handle all actions
         switch(a.type) {
         case client_action_type::player_joined: {
             client_action_player_joined* m = static_cast<client_action_player_joined*>(a.ptr);
@@ -77,6 +78,12 @@ void game::handle_client_actions()
         case client_action_type::chat: {
             client_action_chat* m = static_cast<client_action_chat*>(a.ptr);
             try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
+        } break;
+
+        case client_action_type::movement: {
+            client_action_movement* m = static_cast<client_action_movement*>(a.ptr);
+            m->p->xdir = m->xdir;
+            m->p->ydir = m->ydir;
         } break;
 
         default:
@@ -89,9 +96,17 @@ void game::handle_client_actions()
 }
 
 
-
 void game::step()
 {
+    for(auto && o : players) {
+        ball* b = o->b;
+        if(b && b->is_alive) {
+            if(o->xdir || o->ydir) {
+                b->move(o->xdir, o->ydir);
+            }
+        }
+    }
+
     for(auto && o : m->balls) {
         if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
@@ -296,6 +311,6 @@ player* game::get_player_from_con(websocketpp::connection_hdl con)
 
 void game::add_client_action(client_action a)
 {
-    // todo use locks and crap
+    std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
     client_actions_queue.emplace(a);
 }

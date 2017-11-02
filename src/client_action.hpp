@@ -20,6 +20,11 @@ struct client_action
     : type(client_action_type::player_joined)
     , ptr(new client_action_player_joined(e))
     {}
+
+    client_action(client_action_movement e)
+    : type(client_action_type::movement)
+    , ptr(new client_action_movement(e))
+    {}
 };
 
 #endif

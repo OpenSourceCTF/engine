@@ -23,6 +23,9 @@ struct player
     std::string name;
     int degree;
 
+    int xdir;
+    int ydir;
+
     player(
         const websocketpp::connection_hdl con,
         server* srv,
@@ -42,6 +45,8 @@ struct player
     , is_registered(is_registered)
     , name(name)
     , degree(degree)
+    , xdir(0)
+    , ydir(0)
     {}
 
     // for "bots"
@@ -62,6 +67,8 @@ struct player
     , is_registered(is_registered)
     , name(name)
     , degree(degree)
+    , xdir(0)
+    , ydir(0)
     {}
 };
 
