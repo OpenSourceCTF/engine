@@ -37,6 +37,7 @@ struct game
     std::thread spawn_thread();
     void run();
     void step();
+    void handle_client_actions();
 
     b2World* init_world();
     ball* add_ball(ball b);

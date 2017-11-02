@@ -32,19 +32,6 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        while(! client_actions_queue.empty()) {
-            std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
-            const client_action a = std::move(client_actions_queue.front());
-
-            // todo: handle all actions
-            if(a.type == client_action_type::chat) {
-                client_action_chat* m = static_cast<client_action_chat*>(a.ptr);
-                try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
-            }
-
-            client_actions_queue.pop();
-        }
-
         this->step();
         world->Step(
             1.0f/config.WORLD_FRAMERATE,
@@ -73,6 +60,34 @@ void game::run()
         std::this_thread::sleep_for(t_sleep);
     }
 }
+
+void game::handle_client_actions()
+{
+    while(! client_actions_queue.empty()) {
+        std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
+        const client_action a = std::move(client_actions_queue.front());
+
+        // todo: handle all actions
+        switch(a.type) {
+        case client_action_type::player_joined: {
+            client_action_player_joined* m = static_cast<client_action_player_joined*>(a.ptr);
+            try_broadcast(this, game_event(game_event_player_joined(m->p)));
+        } break;
+
+        case client_action_type::chat: {
+            client_action_chat* m = static_cast<client_action_chat*>(a.ptr);
+            try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
+        } break;
+
+        default:
+            spdlog::get("game")->error("client_action_type ", to_string(a.type), " not enumerated in handle_client_actions");
+            break;
+        }
+
+        client_actions_queue.pop();
+    }
+}
+
 
 
 void game::step()

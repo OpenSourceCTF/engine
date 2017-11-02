@@ -133,6 +133,6 @@ void on_game_sync(
     player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
 
-    try_broadcast(&g, game_event(game_event_player_joined(p)));
+    g.add_client_action(client_action(client_action_player_joined(p)));
 }
 
