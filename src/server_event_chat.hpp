@@ -1,17 +1,17 @@
-#ifndef ML_CLIENT_ACTION_CHAT_HPP
-#define ML_CLIENT_ACTION_CHAT_HPP
+#ifndef ML_SERVER_EVENT_CHAT_HPP
+#define ML_SERVER_EVENT_CHAT_HPP
 
 #include <string>
 #include "player.hpp"
 
 struct player;
 
-struct client_action_chat
+struct server_event_chat
 {
     player* p;
     std::string msg;
 
-    client_action_chat(
+    server_event_chat(
         player* p,
         std::string msg
     )

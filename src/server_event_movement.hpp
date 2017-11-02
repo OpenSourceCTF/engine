@@ -1,18 +1,18 @@
-#ifndef ML_CLIENT_ACTION_MOVEMENT_HPP
-#define ML_CLIENT_ACTION_MOVEMENT_HPP
+#ifndef ML_SERVER_EVENT_MOVEMENT_HPP
+#define ML_SERVER_EVENT_MOVEMENT_HPP
 
 #include <string>
 #include "player.hpp"
 
 struct player;
 
-struct client_action_movement
+struct server_event_movement
 {
     player* p;
     int xdir;
     int ydir;
 
-    client_action_movement(
+    server_event_movement(
         player* p,
         int xdir,
         int ydir

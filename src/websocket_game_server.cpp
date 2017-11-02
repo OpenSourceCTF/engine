@@ -83,7 +83,7 @@ void on_game_chat(
     player* p = g.get_player_from_con(hdl);
 
     if(p) {
-        g.add_client_action(client_action(client_action_chat(p, chat_msg)));
+        g.add_server_event(server_event(server_event_chat(p, chat_msg)));
     } else {
         spdlog::get("game")->debug("player chatted but hasnt joined yet");
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
@@ -105,7 +105,7 @@ void on_game_movement(
     player* p = g.get_player_from_con(hdl);
 
     if(p) {
-        g.add_client_action(client_action(client_action_movement(p, xdir, ydir)));
+        g.add_server_event(server_event(server_event_movement(p, xdir, ydir)));
     } else {
         spdlog::get("game")->debug("player movement but hasnt joined yet");
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
@@ -125,7 +125,7 @@ void on_game_honk(
     player* p = g.get_player_from_con(hdl);
 
     if(p) {
-        g.add_client_action(client_action(client_action_honk(p)));
+        g.add_server_event(server_event(server_event_honk(p)));
     } else {
         spdlog::get("game")->debug("player honked but hasnt joined yet");
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
@@ -188,6 +188,6 @@ void on_game_sync(
     player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
 
-    g.add_client_action(client_action(client_action_player_joined(p)));
+    g.add_server_event(server_event(server_event_player_joined(p)));
 }
 

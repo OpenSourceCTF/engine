@@ -32,7 +32,7 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        handle_client_actions();
+        handle_server_events();
 
         this->step();
         world->Step(
@@ -63,40 +63,40 @@ void game::run()
     }
 }
 
-void game::handle_client_actions()
+void game::handle_server_events()
 {
-    while(! client_actions_queue.empty()) {
-        std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
-        const client_action a = std::move(client_actions_queue.front());
+    while(! server_events_queue.empty()) {
+        std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+        const server_event a = std::move(server_events_queue.front());
 
         switch(a.type) {
-        case client_action_type::player_joined: {
-            client_action_player_joined* m = static_cast<client_action_player_joined*>(a.ptr);
+        case server_event_type::player_joined: {
+            server_event_player_joined* m = static_cast<server_event_player_joined*>(a.ptr);
             try_broadcast(this, game_event(game_event_player_joined(m->p)));
         } break;
 
-        case client_action_type::chat: {
-            client_action_chat* m = static_cast<client_action_chat*>(a.ptr);
+        case server_event_type::chat: {
+            server_event_chat* m = static_cast<server_event_chat*>(a.ptr);
             try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
         } break;
 
-        case client_action_type::movement: {
-            client_action_movement* m = static_cast<client_action_movement*>(a.ptr);
+        case server_event_type::movement: {
+            server_event_movement* m = static_cast<server_event_movement*>(a.ptr);
             m->p->xdir = m->xdir;
             m->p->ydir = m->ydir;
         } break;
 
-        case client_action_type::honk: {
-            client_action_honk* m = static_cast<client_action_honk*>(a.ptr);
+        case server_event_type::honk: {
+            server_event_honk* m = static_cast<server_event_honk*>(a.ptr);
             try_broadcast(this, game_event(game_event_honk(m->p)));
         } break;
 
         default:
-            spdlog::get("game")->error("client_action_type ", to_string(a.type), " not enumerated in handle_client_actions");
+            spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;
         }
 
-        client_actions_queue.pop();
+        server_events_queue.pop();
     }
 }
 
@@ -314,8 +314,8 @@ player* game::get_player_from_con(websocketpp::connection_hdl con)
     return nullptr;
 }
 
-void game::add_client_action(client_action a)
+void game::add_server_event(server_event a)
 {
-    std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
-    client_actions_queue.emplace(a);
+    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+    server_events_queue.emplace(a);
 }
