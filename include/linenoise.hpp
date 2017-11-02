@@ -1806,7 +1806,7 @@ inline int completeLine(struct linenoiseState *ls, char *cbuf, int *c) {
             switch(*c) {
                 case 9: /* tab */
                     i = (i+1) % (lc.size()+1);
-                    if (i == lc.size()) linenoiseBeep();
+                    if (i == static_cast<int>(lc.size())) linenoiseBeep();
                     break;
                 case 27: /* escape */
                     /* Re-show original buffer */
