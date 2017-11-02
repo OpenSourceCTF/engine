@@ -23,29 +23,12 @@ run these to look for bugs
 
 
 ## NETWORK
-
-(idea of how network will work)
-(current code very "exploratory" (read shitty))
-
-start server-->
-
-load list of maps in maplist.txt
-    ensure all exist in folder
-
-connect to database
-
-lobby server starts
-    starts X games
-        2 threads - 1 for network, 1 for gameloop
-
-(bootup is now complete)
-
 client connects to lobby
-    selects game it wants to join
-        loads map from webserver over http
-            (ensure maps are gzipped (if using nginx this is easy))
+selects game it wants to join
+loads map from webserver over http
+    (ensure maps are gzipped (if using nginx this is easy))
 
-client says ready with login_token (so server can get user_id, name, degrees)
+client says gamesync with login_token (so server can get user_id, name, degrees)
     server checks user and gets name, degrees, etc
     server responds with current state of map (all positions, players, etc)
     server adds clients ball (respawn)
