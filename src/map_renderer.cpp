@@ -136,6 +136,7 @@ int map_renderer::render() const
         << std::endl;
     return 0;
 #else
+    const settings& config = settings::get_instance();
     window->clear(sf::Color::Black);
     window->setView(view);
 
@@ -244,7 +245,7 @@ int map_renderer::render() const
     for(auto && o : m.toggles) {
         sf::CircleShape s;
         s.setRadius(scaler / 4);
-        s.setPosition((o->x + 0.25) * scaler, (o->y + 0.25)  * scaler);
+        s.setPosition((o->x) * scaler, (o->y)  * scaler);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setFillColor(sf::Color(230, 200, 100));
         window->draw(s);
@@ -284,7 +285,7 @@ int map_renderer::render() const
         if(! o->is_alive) continue;
         b2Vec2 pos = o->body->GetPosition();
         sf::CircleShape s;
-        s.setRadius(scaler / 2);
+        s.setRadius(config.BALL_RADIUS * scaler);
         s.setOrigin(s.getRadius(), s.getRadius());
         s.setPosition(pos.x * scaler, pos.y  * scaler);
         switch(o->type) {
@@ -295,8 +296,8 @@ int map_renderer::render() const
         if(! o->powerups.empty()) {
             s.setOutlineThickness(2);
             s.setOutlineColor(sf::Color(
-                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
                 (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
+                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
                 (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
                 255
             ));
