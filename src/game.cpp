@@ -35,7 +35,13 @@ void game::run()
         while(! client_actions_queue.empty()) {
             std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
             const client_action a = std::move(client_actions_queue.front());
-            // todo: handle actions
+
+            // todo: handle all actions
+            if(a.type == client_action_type::chat) {
+                client_action_chat* m = static_cast<client_action_chat*>(a.ptr);
+                try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
+            }
+
             client_actions_queue.pop();
         }
 
@@ -262,3 +268,19 @@ void game::score(ball* b)
     }
 }
 
+player* game::get_player_from_con(websocketpp::connection_hdl con)
+{
+    for(auto && o : players) {
+        if(o->con.lock() == con.lock()) {
+            return o.get();
+        }
+    }
+
+    return nullptr;
+}
+
+void game::add_client_action(client_action a)
+{
+    // todo use locks and crap
+    client_actions_queue.emplace(a);
+}

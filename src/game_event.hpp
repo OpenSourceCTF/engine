@@ -5,6 +5,7 @@
 #include <json.hpp>
 #include "game_event_type.hpp"
 #include "game_event_player_joined.hpp"
+#include "game_event_chat.hpp"
 #include "game_event_ball_respawn.hpp"
 #include "game_event_ball_popped.hpp"
 #include "game_event_ball_boosted.hpp"
@@ -18,6 +19,9 @@
 #include "game_event_toggle_on.hpp"
 #include "game_event_toggle_off.hpp"
 
+struct game_event_player_joined;
+struct game_event_chat;
+
 // this is used for relaying game events over network
 struct game_event
 {
@@ -25,10 +29,8 @@ struct game_event
     void* ptr;
 
     // todo -- fill these out for other types
-    game_event(const game_event_player_joined e)
-    : type(game_event_type::player_joined)
-    , ptr(new game_event_player_joined(e))
-    {}
+    game_event(const game_event_player_joined e);
+    game_event(const game_event_chat e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);

@@ -68,8 +68,16 @@ void on_game_chat(
     server_lobby& lobby = server_lobby::get_instance();
 
     game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
 
-    // broadcast chat_msg
+    if(p) {
+        g.add_client_action(client_action(client_action_chat(p, chat_msg)));
+    } else {
+        spdlog::get("game")->debug("player chatted but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+    }
 }
 
 void on_game_sync(
@@ -92,7 +100,7 @@ void on_game_sync(
     // check game still has open slot
     if(g.m->balls.size() >= 8) {
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
-            {"sync", {"error", "game_full"}}
+            {"error", "game_full"}
         });
         return;
     }

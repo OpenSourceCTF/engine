@@ -9,6 +9,7 @@
 enum class game_event_type
 {
     player_joined,
+    chat,
     ball_respawn,
     ball_popped,
     powerup_respawn,

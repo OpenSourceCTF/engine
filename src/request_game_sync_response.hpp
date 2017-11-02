@@ -7,6 +7,8 @@
 #include "game.hpp"
 #include "ball_type.hpp"
 
+struct game;
+
 struct request_game_sync_response
 {
     const game& g;

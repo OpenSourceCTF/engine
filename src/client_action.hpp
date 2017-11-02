@@ -9,12 +9,11 @@
 struct client_action
 {
     client_action_type type;
+    void* ptr;
 
-    client_action(){}
-    client_action(
-        const client_action_type type
-    )
-    : type(type)
+    client_action(client_action_chat e)
+    : type(client_action_type::chat)
+    , ptr(new client_action_chat(e))
     {}
 };
 

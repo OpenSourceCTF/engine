@@ -11,6 +11,8 @@
 #include "websocket_server.hpp"
 #include "settings.hpp"
 
+struct game;
+
 struct server_lobby
 {
     std::vector<std::unique_ptr<game>> games;

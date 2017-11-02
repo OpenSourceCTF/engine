@@ -11,6 +11,7 @@
 #include "map.hpp"
 #include "client_action.hpp"
 #include "player.hpp"
+#include "websocket_server.hpp"
 
 struct player;
 struct map;
@@ -42,6 +43,8 @@ struct game
     void respawn_ball(ball* b);
     player* add_player(player p);
     void score(ball* b);
+    player* get_player_from_con(websocketpp::connection_hdl con);
+    void add_client_action(client_action a);
 };
 
 #endif
