@@ -8,8 +8,10 @@
 
 enum class game_event_type
 {
+    gamesync,
     player_joined,
     chat,
+    /*
     ball_respawn,
     ball_popped,
     powerup_respawn,
@@ -19,7 +21,7 @@ enum class game_event_type
     flag_transferred, // neutral flag
     team_score,
     toggle_on,
-    toggle_off
+    toggle_off*/
 };
 
 std::string to_string(const game_event_type m);

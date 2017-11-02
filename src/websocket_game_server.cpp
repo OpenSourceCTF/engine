@@ -106,9 +106,9 @@ void on_game_sync(
     }
 
     // we send all map data here to sync user
-    try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
-        {"sync", request_game_sync_response(g)} 
-    });
+    try_send(srv, hdl, websocketpp::frame::opcode::value::text, 
+        game_event(game_event_gamesync(g))
+    );
 
     // add ball & player to game
     // select ball color

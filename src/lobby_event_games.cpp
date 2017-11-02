@@ -1,6 +1,6 @@
-#include "request_lobby_games_response.hpp"
+#include "lobby_event_games.hpp"
 
-void to_json(nlohmann::json& j, const request_lobby_games_response& p)
+void to_json(nlohmann::json& j, const lobby_event_games_game& p)
 {
     j = nlohmann::json{
         {"port",         p.port},
@@ -10,5 +10,10 @@ void to_json(nlohmann::json& j, const request_lobby_games_response& p)
         {"map_author",   p.map_author},
         {"player_count", p.player_count}
     };
+}
+
+void to_json(nlohmann::json& j, const lobby_event_games& p)
+{
+    j = nlohmann::json{{"games", p.games}};
 }
 

@@ -7,7 +7,7 @@ void on_lobby_request_games(
 ) {
     const server_lobby& lobby = server_lobby::get_instance();
 
-    std::vector<request_lobby_games_response> games;
+    std::vector<lobby_event_games_game> games;
     games.reserve(lobby.games.size());
 
     for(auto && o : lobby.games) {
@@ -22,9 +22,9 @@ void on_lobby_request_games(
         );
     }
 
-    try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
-        {"games", games}
-    });
+    try_send(srv, hdl, websocketpp::frame::opcode::TEXT,
+        lobby_event(lobby_event_games(games))
+    );
 
 }
 

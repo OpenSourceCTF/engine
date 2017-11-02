@@ -1,11 +1,11 @@
-#ifndef ML_REQUEST_LOBBY_GAMES_RESPONSE_HPP
-#define ML_REQUEST_LOBBY_GAMES_RESPONSE_HPP
+#ifndef ML_LOBBY_EVENT_GAMES_HPP
+#define ML_LOBBY_EVENT_GAMES_HPP
 
 #include <cstdint>
 #include <string>
 #include <json.hpp>
 
-struct request_lobby_games_response
+struct lobby_event_games_game
 {
     std::uint16_t port;
     std::uint32_t max_points;
@@ -15,7 +15,7 @@ struct request_lobby_games_response
     std::string   map_author;
     std::size_t   player_count;
 
-    request_lobby_games_response(
+    lobby_event_games_game(
         std::uint16_t port,
         std::uint32_t max_points,
         std::uint32_t max_length,
@@ -34,7 +34,19 @@ struct request_lobby_games_response
     {}
 };
 
-void to_json(nlohmann::json& j, const request_lobby_games_response& p);
+struct lobby_event_games
+{
+    std::vector<lobby_event_games_game> games;
+
+    lobby_event_games(
+        std::vector<lobby_event_games_game> games
+    )
+    : games(games)
+    {}
+};
+
+void to_json(nlohmann::json& j, const lobby_event_games_game& p);
+void to_json(nlohmann::json& j, const lobby_event_games& p);
 
 #endif
 
