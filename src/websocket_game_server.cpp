@@ -112,7 +112,7 @@ void on_game_sync(
 
     // add ball & player to game
     // select ball color
-    const ball_type color = [](const game& g){
+    const ball_type selected_team_color = [](const game& g){
         std::size_t red_cnt  = 0;
         std::size_t blue_cnt = 0;
 
@@ -129,7 +129,7 @@ void on_game_sync(
             : ball_type::blue;
     }(g);
 
-    ball* b = g.add_ball(ball(ball_type::red));
+    ball* b = g.add_ball(ball(selected_team_color));
     player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
 
