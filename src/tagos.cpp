@@ -257,9 +257,9 @@ int main(int argc, char ** argv)
 
     try {
         spdlog::stdout_logger_mt("game"); // initialize game log
-        /*spdlog::set_error_handler([](const std::string& msg) {
+        spdlog::set_error_handler([](const std::string& msg) {
             std::cerr << "error: spdlog handler: " << msg << std::endl;
-        });*/
+        });
     } catch (const spdlog::spdlog_ex& ex) {
         std::cerr << "error: log init failed: " << ex.what() << std::endl;
         return EXIT_FAILURE;
