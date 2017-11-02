@@ -6,6 +6,7 @@ std::string to_string(const client_action_type m)
         case client_action_type::player_joined: return "player_joined"; break;
         case client_action_type::chat:          return "chat";          break;
         case client_action_type::movement:      return "movement";      break;
+        case client_action_type::honk:          return "honk";          break;
         default:
             spdlog::get("game")->error("client_action_type not enumerated in to_string");
             return "";

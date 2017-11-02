@@ -8,7 +8,8 @@ enum class client_action_type
 {
     player_joined,
     chat,
-    movement
+    movement,
+    honk
 };
 
 std::string to_string(const client_action_type m);

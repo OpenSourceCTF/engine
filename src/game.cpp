@@ -86,6 +86,11 @@ void game::handle_client_actions()
             m->p->ydir = m->ydir;
         } break;
 
+        case client_action_type::honk: {
+            client_action_honk* m = static_cast<client_action_honk*>(a.ptr);
+            try_broadcast(this, game_event(game_event_honk(m->p)));
+        } break;
+
         default:
             spdlog::get("game")->error("client_action_type ", to_string(a.type), " not enumerated in handle_client_actions");
             break;

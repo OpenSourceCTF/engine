@@ -5,6 +5,7 @@
 #include "client_action_player_joined.hpp"
 #include "client_action_chat.hpp"
 #include "client_action_movement.hpp"
+#include "client_action_honk.hpp"
 
 struct client_action
 {
@@ -24,6 +25,11 @@ struct client_action
     client_action(client_action_movement e)
     : type(client_action_type::movement)
     , ptr(new client_action_movement(e))
+    {}
+
+    client_action(client_action_honk e)
+    : type(client_action_type::honk)
+    , ptr(new client_action_honk(e))
     {}
 };
 

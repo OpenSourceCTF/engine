@@ -51,6 +51,9 @@ void handle_game_message(
                 const int ydir = j.at("ydir").get<int>();
                 return on_game_movement(srv, hdl, msg, xdir, ydir);
 
+            } else if(req == "honk") {
+                return on_game_honk(srv, hdl, msg);
+
             } else {
                 try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
                     {"error", "unknown_request"}
@@ -110,6 +113,27 @@ void on_game_movement(
         });
     }
 }
+
+void on_game_honk(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
+
+    if(p) {
+        g.add_client_action(client_action(client_action_honk(p)));
+    } else {
+        spdlog::get("game")->debug("player honked but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+    }
+}
+
 
 void on_game_sync(
     websocketpp::server<websocketpp::config::asio>* srv,
