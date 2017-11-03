@@ -2,6 +2,7 @@
 
 cd tp_textures || exit
 for dir in */; do
+  dir=$(echo "${dir}" | sed 's:/::g')
 
   #boosts
   mkdir ttmp
