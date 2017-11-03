@@ -15,6 +15,7 @@ enum class server_event_type
     ballsync,
     ball_respawn,
     ball_popped,
+    ball_boosted,
     booster_respawn,
     powerup_respawn,
     portal_respawn,

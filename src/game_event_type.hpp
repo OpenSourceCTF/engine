@@ -17,6 +17,7 @@ enum class game_event_type
     honk,
     ball_respawn,
     ball_popped,
+    ball_boosted,
     booster_respawn,
     powerup_respawn,
     portal_respawn,

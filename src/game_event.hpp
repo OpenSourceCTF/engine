@@ -17,10 +17,10 @@
 #include "game_event_booster_respawn.hpp"
 #include "game_event_portal_respawn.hpp"
 #include "game_event_ball_popped.hpp"
+#include "game_event_ball_boosted.hpp"
 
 // todo implement these
 /*
-#include "game_event_ball_boosted.hpp"
 #include "game_event_portal_ball.hpp"
 #include "game_event_bomb_explosion.hpp"
 #include "game_event_flag_grabbed.hpp"
@@ -65,6 +65,7 @@ struct game_event
     game_event(const game_event_booster_respawn e);
     game_event(const game_event_portal_respawn e);
     game_event(const game_event_ball_popped e);
+    game_event(const game_event_ball_boosted e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);

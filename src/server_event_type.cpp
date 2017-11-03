@@ -12,6 +12,7 @@ std::string to_string(const server_event_type m)
         case server_event_type::ballsync:         return "ballsync";         break;
         case server_event_type::ball_respawn:     return "ball_respawn";     break;
         case server_event_type::ball_popped:      return "ball_popped";      break;
+        case server_event_type::ball_boosted:     return "ball_boosted";     break;
         case server_event_type::booster_respawn:  return "booster_respawn";  break;
         case server_event_type::powerup_respawn:  return "powerup_respawn";  break;
         case server_event_type::bomb_respawn:     return "bomb_respawn";     break;

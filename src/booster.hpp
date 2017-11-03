@@ -45,6 +45,7 @@ struct booster
 
     void add_to_world(b2World* world);
     void step_on(ball* m);
+    void boost_ball(ball* m);
 };
 
 void to_json(nlohmann::json& j, const booster& p);

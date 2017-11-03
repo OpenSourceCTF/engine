@@ -172,6 +172,14 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::ball_boosted: {
+            server_event_ball_boosted* m = static_cast<server_event_ball_boosted*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_boosted(
+                m->m_ball->id,
+                m->m_booster->id
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;
