@@ -147,7 +147,7 @@ int serve()
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
                 << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
-                << "\tmap GAME_ID MAP(opens sfml debug window for game)\n"
+                << "\tmap GAME_ID MAP(change map)\n"
                 << std::endl;
         } else if(cmd == "render") {
             if(iparts.size() != 2) {
