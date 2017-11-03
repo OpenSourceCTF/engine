@@ -32,7 +32,7 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        if(timestep % 10 == 0) {
+        if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
             add_server_event(server_event(server_event_ballsync(this)));
         }
 
