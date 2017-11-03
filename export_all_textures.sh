@@ -39,6 +39,29 @@ for dir in */; do
   #toggle
   convert "${dir}/tiles.png" -crop 40x40+520+240 ttmp/20.png
 
+  #get color and fill rectangle
+  p2rect () {
+    a=$(convert "${dir}/tiles.png[1x1+${1}+${2}]"\
+        -format "%[fx:int(255*r)],%[fx:int(255*g)],%[fx:int(255*b)]"\
+        info:)
+    convert -size 40x40 xc:transparent\
+            -fill "rgba(${a},${3})"\
+            -draw "rectangle 0,0 40,40"\
+            "ttmp/${4}.png"
+  }
+
+  #gates
+  p2rect 480 120 0.6 21
+  p2rect 520 120 0.6 22
+  p2rect 560 120 0.6 23
+  p2rect 600 120 0.6 24
+
+  #walls
+  p2rect 10 10 1 25
+
+  #tiles
+  p2rect 540 168 1 26
+
   if [ ! -d "../textures/${dir}" ]; then
     mkdir "../textures/${dir}"
   fi
