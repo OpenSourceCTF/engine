@@ -186,6 +186,7 @@ void on_game_sync(
     }
 
     // we send all map data here to sync user
+    // todo: should this be moved to a server_event ?
     try_send(srv, hdl, websocketpp::frame::opcode::value::text, 
         game_event(game_event_gamesync(g))
     );

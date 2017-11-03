@@ -7,6 +7,7 @@
 #include "server_event_teamchat.hpp"
 #include "server_event_movement.hpp"
 #include "server_event_honk.hpp"
+#include "server_event_ballsync.hpp"
 
 struct server_event
 {
@@ -36,6 +37,11 @@ struct server_event
     server_event(server_event_honk e)
     : type(server_event_type::honk)
     , ptr(new server_event_honk(e))
+    {}
+
+    server_event(server_event_ballsync e)
+    : type(server_event_type::ballsync)
+    , ptr(new server_event_ballsync(e))
     {}
 };
 

@@ -10,7 +10,8 @@ enum class server_event_type
     chat,
     teamchat,
     movement,
-    honk
+    honk,
+    ballsync
 };
 
 std::string to_string(const server_event_type m);

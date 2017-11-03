@@ -9,6 +9,7 @@
 enum class game_event_type
 {
     gamesync,
+    ballsync,
     player_joined,
     chat,
     teamchat,

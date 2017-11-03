@@ -9,6 +9,7 @@
 #include "game_event_chat.hpp"
 #include "game_event_teamchat.hpp"
 #include "game_event_honk.hpp"
+#include "game_event_ballsync.hpp"
 /*
 #include "game_event_ball_respawn.hpp"
 #include "game_event_ball_popped.hpp"
@@ -25,6 +26,7 @@
 */
 
 struct game_event_gamesync;
+struct game_event_ballsync;
 struct game_event_player_joined;
 struct game_event_chat;
 struct game_event_teamchat;
@@ -36,8 +38,8 @@ struct game_event
     game_event_type type;
     void* ptr;
 
-    // todo -- fill these out for other types
     game_event(const game_event_gamesync e);
+    game_event(const game_event_ballsync e);
     game_event(const game_event_player_joined e);
     game_event(const game_event_chat e);
     game_event(const game_event_teamchat e);

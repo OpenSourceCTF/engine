@@ -32,6 +32,10 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
+        if(timestep % 10 == 0) {
+            add_server_event(server_event(server_event_ballsync(this)));
+        }
+
         handle_server_events();
 
         this->step();
@@ -57,7 +61,7 @@ void game::run()
 
         const std::chrono::microseconds t_sleep(tic_duration - step_duration);
 
-        // spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
+        spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
 
         std::this_thread::sleep_for(t_sleep);
     }
@@ -94,6 +98,11 @@ void game::handle_server_events()
         case server_event_type::honk: {
             server_event_honk* m = static_cast<server_event_honk*>(a.ptr);
             try_broadcast(this, game_event(game_event_honk(m->p)));
+        } break;
+
+        case server_event_type::ballsync: {
+            server_event_ballsync* m = static_cast<server_event_ballsync*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ballsync(m->g)));
         } break;
 
         default:

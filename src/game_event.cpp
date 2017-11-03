@@ -5,6 +5,11 @@ game_event::game_event(const game_event_gamesync e)
 , ptr(new game_event_gamesync(e))
 {}
 
+game_event::game_event(const game_event_ballsync e)
+: type(game_event_type::ballsync)
+, ptr(new game_event_ballsync(e))
+{}
+
 game_event::game_event(const game_event_player_joined e)
 : type(game_event_type::player_joined)
 , ptr(new game_event_player_joined(e))
@@ -32,6 +37,9 @@ void to_json(nlohmann::json& j, const game_event& p)
     switch(p.type) {
         case game_event_type::gamesync:
             to_json(data, *static_cast<game_event_gamesync*>(p.ptr));
+            break;
+        case game_event_type::ballsync:
+            to_json(data, *static_cast<game_event_ballsync*>(p.ptr));
             break;
         case game_event_type::player_joined:
             to_json(data, *static_cast<game_event_player_joined*>(p.ptr));
