@@ -11,14 +11,21 @@ game::game(const std::uint16_t port, map* m)
 , timestep(0)
 {}
 
-std::thread game::spawn_thread()
+void game::spawn_srv_thread()
 {
-    std::thread thread(
+    srv_thread = std::thread(
+        start_game_server,
+        port
+    );
+    srv_thread.detach();
+}
+
+void game::spawn_phys_thread()
+{
+    phys_thread = std::thread(
         &game::run, std::ref(*this)
     );
-    thread.detach();
-
-    return thread;
+    phys_thread.detach();
 }
 
 void game::run()

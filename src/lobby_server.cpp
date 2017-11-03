@@ -45,11 +45,9 @@ void lobby_server::start_server()
         }
 
         games.emplace_back(new game(port, m));
-
-        std::thread srv_game_thread(start_game_server, port);
-        srv_game_thread.detach();
-
-        std::thread phys_game_thread = games.back().get()->spawn_thread();
+        game* g = games.back().get();
+        g->spawn_srv_thread();
+        g->spawn_phys_thread();
     }
 }
 

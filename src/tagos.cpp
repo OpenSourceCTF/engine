@@ -76,7 +76,7 @@ int render(const std::string & map_src)
 
     map m = nlohmann::json::parse(buf.str());
     game g(0, &m);
-    g.spawn_thread();
+    g.spawn_phys_thread();
 
     if(display_renderer(*(g.m)) != 0) {
         return EXIT_FAILURE;

@@ -19,6 +19,9 @@ struct map;
 
 struct game
 {
+    std::thread srv_thread;
+    std::thread phys_thread;
+
     std::uint16_t port;
     map* m;
     std::uint32_t max_points;
@@ -35,7 +38,8 @@ struct game
     game(const std::uint16_t port, map* m);
     game(const game&) = delete;
 
-    std::thread spawn_thread();
+    void spawn_srv_thread();
+    void spawn_phys_thread();
     void run();
     void step();
     void handle_server_events();
