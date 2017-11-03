@@ -43,6 +43,7 @@ struct game
     void run();
     void step();
     void handle_server_events();
+    void change_map(map* m);
 
     b2World* init_world();
     ball* add_ball(ball* b);

@@ -91,7 +91,7 @@ int serve()
         const char* ebuf,
         std::vector<std::string>& completions
     ) {
-        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log"};
+        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log", "map"};
         const std::string edit(ebuf);
 
         for(auto && o : cmds) {
@@ -147,6 +147,7 @@ int serve()
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
                 << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
+                << "\tmap GAME_ID MAP(opens sfml debug window for game)\n"
                 << std::endl;
         } else if(cmd == "render") {
             if(iparts.size() != 2) {
@@ -214,7 +215,7 @@ int serve()
         } else if(cmd == "log") {
             if(iparts.size() != 2) {
                 std::cout
-                    << "log requires two arguments"
+                    << "log requires LEVEL argument"
                     << std::endl;
                 continue;
             }
@@ -231,6 +232,57 @@ int serve()
             }
 
             std::cout << "log level set to: " << level << std::endl;
+        } else if(cmd == "map") {
+            if(iparts.size() != 3) {
+                std::cout
+                    << "map requires GAME_ID and MAP argument"
+                    << std::endl;
+                continue;
+            }
+
+            if(renderer_window_open) {
+                std::cout << "close existing render window first" << std::endl;
+                continue;
+            }
+
+            lobby_server& lobby = lobby_server::get_instance();
+
+            int game_id = 0;
+            try {
+                game_id = std::stoi(iparts[1]);
+            } catch(std::invalid_argument& e) {
+                std::cout
+                    << "render requires an integer argument"
+                    << std::endl;
+                continue;
+            }
+
+            if(game_id < 0
+            || static_cast<std::size_t>(game_id) >= lobby.games.size())
+            {
+                std::cout
+                    << "game_id invalid"
+                    << std::endl;
+                continue;
+            }
+
+            game* g = lobby.games[game_id].get();
+
+            const std::string map_src = iparts[2];
+            map* m;
+            try {
+                spdlog::get("game")->debug("lobby_server: loading: ", map_src);
+                std::ifstream t(map_src);
+                std::stringstream buf;
+                buf << t.rdbuf();
+
+                m = new map(nlohmann::json::parse(buf.str()));
+            } catch(nlohmann::detail::parse_error e) {
+                spdlog::get("game")->error("mapload: ", e.what());
+                continue;
+            }
+
+            g->change_map(m);
         } else {
             std::cout
                 << "unrecognized command (try help)"

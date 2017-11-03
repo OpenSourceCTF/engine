@@ -139,6 +139,29 @@ void game::handle_server_events()
     );
 }
 
+void game::change_map(map* m)
+{
+    std::map<player*, ball_type> player_balls;
+
+
+    if(this->m) {
+        for(auto && o : players) {
+            player_balls[o.get()] = o->b->type;
+        }
+
+        delete this->m;
+    }
+
+    this->m = m;
+    init_world();
+    for(auto && o : player_balls) {
+        player* p = o.first;
+        ball_type t = o.second;
+        ball* b = add_ball(new ball(t));
+        p->b = b;
+        b->set_player_ptr(p);
+    }
+}
 
 void game::step()
 {
