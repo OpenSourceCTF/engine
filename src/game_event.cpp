@@ -60,6 +60,11 @@ game_event::game_event(const game_event_portal_respawn e)
 , ptr(new game_event_portal_respawn(e))
 {}
 
+game_event::game_event(const game_event_ball_popped e)
+: type(game_event_type::ball_popped)
+, ptr(new game_event_ball_popped(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -100,6 +105,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::portal_respawn:
             to_json(data, *static_cast<game_event_portal_respawn*>(p.ptr));
+            break;
+        case game_event_type::ball_popped:
+            to_json(data, *static_cast<game_event_ball_popped*>(p.ptr));
             break;
         default:
             spdlog::get("game")->error("game_event_type not enumerated in to_json");

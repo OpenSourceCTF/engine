@@ -14,6 +14,7 @@
 #include "server_event_powerup_respawn.hpp"
 #include "server_event_booster_respawn.hpp"
 #include "server_event_portal_respawn.hpp"
+#include "server_event_ball_popped.hpp"
 
 struct server_event
 {
@@ -78,6 +79,11 @@ struct server_event
     server_event(server_event_portal_respawn e)
     : type(server_event_type::portal_respawn)
     , ptr(new server_event_portal_respawn(e))
+    {}
+
+    server_event(server_event_ball_popped e)
+    : type(server_event_type::ball_popped)
+    , ptr(new server_event_ball_popped(e))
     {}
 };
 

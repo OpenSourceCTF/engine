@@ -164,6 +164,14 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::ball_popped: {
+            server_event_ball_popped* m = static_cast<server_event_ball_popped*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_popped(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;

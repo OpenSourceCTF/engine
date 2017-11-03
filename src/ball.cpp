@@ -91,6 +91,7 @@ void ball::pop()
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
     reset_flags();
+    player_ptr->g->add_server_event(server_event(server_event_ball_popped(this)));
 }
 
 void ball::get_boosted()
