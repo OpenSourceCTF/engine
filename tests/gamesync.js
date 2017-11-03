@@ -9,7 +9,10 @@ ws.on('open', () => {
 });
 
 ws.on('message', (msg) => {
-    console.log('received: %s', msg);
+    let data = JSON.parse(msg);
+    if(data.event == "gamesync") {
+        console.log("gamesync", data);
+    }
 });
 
 

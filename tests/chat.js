@@ -10,7 +10,6 @@ ws.on('open', () => {
 });
 
 ws.on('message', (msg) => {
-    console.log('received: %s', msg);
     let data = JSON.parse(msg);
 
     if(data.event == "gamesync") {
@@ -21,7 +20,7 @@ ws.on('message', (msg) => {
     }
 
     if(data.event == "chat") {
-        console.log(data.data.player_id, data.data.msg);
+        console.log("chat", data);
     }
 });
 
