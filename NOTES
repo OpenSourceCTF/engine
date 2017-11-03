@@ -4,7 +4,6 @@ remove players if they havent moved in X seconds
     unless they're by themselves
 add game end conditions (time, score)
 serialize map data for server sync
-implement game clear/restart
 fix segfault on exit
 
 ---
