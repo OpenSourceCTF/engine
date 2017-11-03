@@ -13,6 +13,13 @@ bomb::bomb(
 {
 }
 
+bomb::~bomb()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void bomb::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();

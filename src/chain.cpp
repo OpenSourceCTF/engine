@@ -1,5 +1,12 @@
 #include "chain.hpp"
 
+chain::~chain()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void chain::add_vertex(const float x, const float y) {
     vertices.emplace_back(std::shared_ptr<coord>(new coord(x,y)));
 }

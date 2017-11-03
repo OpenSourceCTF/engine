@@ -38,6 +38,7 @@ struct toggle
     , body(nullptr)
     , col_data(nullptr)
     {}
+    ~toggle();
 
     void add_to_world(b2World * world);
 

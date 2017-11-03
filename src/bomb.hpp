@@ -29,6 +29,7 @@ struct bomb
         const float x,
         const float y
     );
+    ~bomb();
 
     void add_to_world(b2World* world);
     void explode();

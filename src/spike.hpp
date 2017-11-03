@@ -26,6 +26,7 @@ struct spike
     , body(nullptr)
     , col_data(nullptr)
     {}
+    ~spike();
 
     void add_to_world(b2World * world);
 };

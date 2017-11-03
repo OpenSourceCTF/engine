@@ -24,6 +24,13 @@ void booster::add_to_world(b2World * world)
     is_alive = true;
 }
 
+booster::~booster()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void booster::step_on(ball* m)
 {
     if(! is_alive) {

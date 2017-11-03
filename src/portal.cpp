@@ -1,5 +1,12 @@
 #include "portal.hpp"
 
+portal::~portal()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 
 void portal::set_cooldown(const std::uint32_t x)
 {
