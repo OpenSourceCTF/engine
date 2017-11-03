@@ -28,6 +28,13 @@ void on_game_chat(
     const std::string& chat_msg
 );
 
+void on_game_teamchat(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    const std::string& chat_msg
+);
+
 void on_game_movement(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,

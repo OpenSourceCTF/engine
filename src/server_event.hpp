@@ -4,6 +4,7 @@
 #include "server_event_type.hpp"
 #include "server_event_player_joined.hpp"
 #include "server_event_chat.hpp"
+#include "server_event_teamchat.hpp"
 #include "server_event_movement.hpp"
 #include "server_event_honk.hpp"
 
@@ -15,6 +16,11 @@ struct server_event
     server_event(server_event_chat e)
     : type(server_event_type::chat)
     , ptr(new server_event_chat(e))
+    {}
+
+    server_event(server_event_teamchat e)
+    : type(server_event_type::teamchat)
+    , ptr(new server_event_teamchat(e))
     {}
 
     server_event(server_event_player_joined e)

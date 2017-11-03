@@ -15,6 +15,11 @@ game_event::game_event(const game_event_chat e)
 , ptr(new game_event_chat(e))
 {}
 
+game_event::game_event(const game_event_teamchat e)
+: type(game_event_type::teamchat)
+, ptr(new game_event_teamchat(e))
+{}
+
 game_event::game_event(const game_event_honk e)
 : type(game_event_type::honk)
 , ptr(new game_event_honk(e))
@@ -33,6 +38,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::chat:
             to_json(data, *static_cast<game_event_chat*>(p.ptr));
+            break;
+        case game_event_type::teamchat:
+            to_json(data, *static_cast<game_event_teamchat*>(p.ptr));
             break;
         case game_event_type::honk:
             to_json(data, *static_cast<game_event_honk*>(p.ptr));

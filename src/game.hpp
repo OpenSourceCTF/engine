@@ -12,6 +12,7 @@
 #include "server_event.hpp"
 #include "player.hpp"
 #include "websocket_game_server.hpp"
+#include "ball_type.hpp"
 
 struct player;
 struct map;

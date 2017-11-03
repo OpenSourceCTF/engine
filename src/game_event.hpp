@@ -7,6 +7,7 @@
 #include "game_event_gamesync.hpp"
 #include "game_event_player_joined.hpp"
 #include "game_event_chat.hpp"
+#include "game_event_teamchat.hpp"
 #include "game_event_honk.hpp"
 /*
 #include "game_event_ball_respawn.hpp"
@@ -26,6 +27,7 @@
 struct game_event_gamesync;
 struct game_event_player_joined;
 struct game_event_chat;
+struct game_event_teamchat;
 struct game_event_honk;
 
 // this is used for relaying game events over network
@@ -38,6 +40,7 @@ struct game_event
     game_event(const game_event_gamesync e);
     game_event(const game_event_player_joined e);
     game_event(const game_event_chat e);
+    game_event(const game_event_teamchat e);
     game_event(const game_event_honk e);
 };
 

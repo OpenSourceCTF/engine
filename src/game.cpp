@@ -80,6 +80,11 @@ void game::handle_server_events()
             try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
         } break;
 
+        case server_event_type::teamchat: {
+            server_event_teamchat* m = static_cast<server_event_teamchat*>(a.ptr);
+            try_broadcast_team(this, m->p->b->type, game_event(game_event_teamchat(m->p, m->msg)));
+        } break;
+
         case server_event_type::movement: {
             server_event_movement* m = static_cast<server_event_movement*>(a.ptr);
             m->p->xdir = m->xdir;

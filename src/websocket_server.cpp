@@ -49,3 +49,24 @@ bool try_broadcast(
 
     return ret;
 }
+
+bool try_broadcast_team(
+    game* g,
+    ball_type team,
+    nlohmann::json try_msg
+) {
+    bool ret = true;
+
+    for(auto && o : g->players) {
+        if(! o->local && o->b->type == team) {
+            if(! try_send(
+                o->srv,
+                o->con,
+                websocketpp::frame::opcode::value::text,
+                try_msg
+            )) ret = false;
+        }
+    }
+
+    return ret;
+}

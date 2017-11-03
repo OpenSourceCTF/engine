@@ -11,6 +11,7 @@ enum class game_event_type
     gamesync,
     player_joined,
     chat,
+    teamchat,
     honk
     /*
     ball_respawn,

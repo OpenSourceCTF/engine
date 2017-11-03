@@ -46,6 +46,10 @@ void handle_game_message(
                 const std::string chat_msg = j.at("msg").get<std::string>();
                 return on_game_chat(srv, hdl, msg, chat_msg);
 
+            } else if(req == "teamchat") {
+                const std::string chat_msg = j.at("msg").get<std::string>();
+                return on_game_teamchat(srv, hdl, msg, chat_msg);
+
             } else if(req == "movement") {
                 const int xdir = j.at("xdir").get<int>();
                 const int ydir = j.at("ydir").get<int>();
@@ -86,6 +90,27 @@ void on_game_chat(
         g.add_server_event(server_event(server_event_chat(p, chat_msg)));
     } else {
         spdlog::get("game")->debug("player chatted but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+    }
+}
+
+void on_game_teamchat(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    const std::string& chat_msg
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
+
+    if(p) {
+        g.add_server_event(server_event(server_event_teamchat(p, chat_msg)));
+    } else {
+        spdlog::get("game")->debug("player team chatted but hasnt joined yet");
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
             {"error", "not_joined"}
         });

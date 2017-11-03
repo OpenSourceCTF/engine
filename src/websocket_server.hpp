@@ -7,6 +7,7 @@
 #include <websocketpp/server.hpp>
 
 #include "game.hpp"
+#include "ball_type.hpp"
 
 struct game;
 
@@ -28,6 +29,12 @@ bool try_send(
 
 bool try_broadcast(
     game* g,
+    nlohmann::json try_msg
+);
+
+bool try_broadcast_team(
+    game* g,
+    ball_type team,
     nlohmann::json try_msg
 );
 
