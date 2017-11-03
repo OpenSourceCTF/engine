@@ -69,14 +69,20 @@ void game::run()
 
 void game::handle_server_events()
 {
+    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+
     while(! server_events_queue.empty()) {
-        std::lock_guard<std::mutex> lock(server_events_queue_mutex);
         const server_event a = std::move(server_events_queue.front());
 
         switch(a.type) {
         case server_event_type::player_joined: {
             server_event_player_joined* m = static_cast<server_event_player_joined*>(a.ptr);
             try_broadcast(this, game_event(game_event_player_joined(m->p)));
+        } break;
+
+        case server_event_type::player_left: {
+            server_event_player_left* m = static_cast<server_event_player_left*>(a.ptr);
+            try_broadcast(this, game_event(game_event_player_left(m->p)));
         } break;
 
         case server_event_type::chat: {
@@ -112,6 +118,18 @@ void game::handle_server_events()
 
         server_events_queue.pop();
     }
+
+    // remove all players marked for removal
+    players.erase(
+        std::remove_if(
+            players.begin(),
+            players.end(),
+            [](std::unique_ptr<player> & p) {
+                return p->remove;
+            }
+        ),
+        players.end()
+    );
 }
 
 
@@ -235,9 +253,9 @@ void game::respawn_ball(ball* b)
     );
 }
 
-ball* game::add_ball(ball b)
+ball* game::add_ball(ball* b)
 {
-    m->balls.emplace_back(new ball(b));
+    m->balls.emplace_back(b);
 
     ball* B = m->balls.back().get();
 
@@ -258,8 +276,8 @@ b2World * game::init_world()
     world->SetContactListener(&contact_listener_instance);
 
     for(std::size_t i=0; i<4; ++i) {
-        ball* b = add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
-        player* p = add_player(player(this, b, "player_id", true, "name", 100));
+        ball* b = add_ball(new ball(i % 2 ? ball_type::red : ball_type::blue));
+        player* p = add_player(new player(this, b, "player_id", true, "name", 100));
         b->set_player_ptr(p);
     }
 
@@ -298,9 +316,9 @@ b2World * game::init_world()
     return world;
 }
 
-player* game::add_player(player p)
+player* game::add_player(player* p)
 {
-    players.emplace_back(new player(p));
+    players.emplace_back(p);
     return players.back().get();
 }
 

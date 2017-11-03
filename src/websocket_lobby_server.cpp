@@ -54,7 +54,7 @@ int start_lobby_server(
     const std::uint16_t port
 ) {
     spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);
-    server srv;
+    websocketpp::server<websocketpp::config::asio> srv;
 
     try {
         srv.set_access_channels(websocketpp::log::alevel::all);

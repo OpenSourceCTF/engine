@@ -7,6 +7,7 @@
 enum class server_event_type
 {
     player_joined,
+    player_left,
     chat,
     teamchat,
     movement,

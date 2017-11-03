@@ -3,14 +3,15 @@
 int start_game_server(const std::uint16_t port) 
 {
     spdlog::get("game")->info("starting tagos game server on port: {0:d}", port);
-    server srv;
+    websocketpp::server<websocketpp::config::asio> srv;
 
     try {
         srv.set_access_channels(websocketpp::log::alevel::all);
         srv.clear_access_channels(websocketpp::log::alevel::frame_payload);
 
         srv.init_asio();
-        srv.set_message_handler(bind(&handle_game_message,&srv,::_1,::_2));
+        srv.set_message_handler(bind(&handle_game_message, &srv, ::_1, ::_2));
+        srv.set_close_handler(bind(&handle_game_close, &srv, ::_1));
         srv.listen(port);
 
         srv.start_accept();
@@ -74,6 +75,26 @@ void handle_game_message(
         });
     }
 } 
+
+void handle_game_close(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+
+    player* p = g.get_player_from_con(hdl);
+
+    if(p && ! p->remove) {
+        p->local = true;
+        p->remove = true;
+
+        g.add_server_event(server_event(server_event_player_left(p)));
+    } else {
+        spdlog::get("game")->debug("player left but already left?");
+    }
+}
 
 void on_game_chat(
     websocketpp::server<websocketpp::config::asio>* srv,
@@ -210,8 +231,8 @@ void on_game_sync(
             : ball_type::blue;
     }(g);
 
-    ball* b = g.add_ball(ball(selected_team_color));
-    player* p = g.add_player(player(hdl, srv, &g, b, "player_id", true, "name", 100));
+    ball* b = g.add_ball(new ball(selected_team_color));
+    player* p = g.add_player(new player(hdl, srv, &g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
 
     g.add_server_event(server_event(server_event_player_joined(p)));

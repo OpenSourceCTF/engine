@@ -1,11 +1,11 @@
 ## TODO
 
-remove players from game on disconnect
-    or if they havent moved in X seconds
-        unless they're by themselves
+remove players if they havent moved in X seconds
+    unless they're by themselves
 add game end conditions (time, score)
 serialize map data for server sync
 destroy box2d bodies on destruct
+    look at balls/players for how to
 implement game clear/restart
 fix segfault on exit
 

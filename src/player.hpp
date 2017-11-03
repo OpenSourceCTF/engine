@@ -7,15 +7,14 @@
 #include "game.hpp"
 #include "ball.hpp"
 
-typedef websocketpp::server<websocketpp::config::asio> server;
-
 struct game;
 
 struct player
 {
     bool local;
+    bool remove;
     websocketpp::connection_hdl con;
-    server* srv;
+    websocketpp::server<websocketpp::config::asio>* srv;
     game* g;
     ball* b;
     std::string player_id;
@@ -26,28 +25,17 @@ struct player
     int xdir;
     int ydir;
 
+
     player(
         const websocketpp::connection_hdl con,
-        server* srv,
+        websocketpp::server<websocketpp::config::asio>* srv,
         game* g,
         ball* b,
         const std::string player_id,
         const bool is_registered,
         const std::string name,
         const int degree
-    )
-    : local(false)
-    , con(con)
-    , srv(srv)
-    , g(g)
-    , b(b)
-    , player_id(player_id)
-    , is_registered(is_registered)
-    , name(name)
-    , degree(degree)
-    , xdir(0)
-    , ydir(0)
-    {}
+    );
 
     // for "bots"
     player(
@@ -57,20 +45,9 @@ struct player
         const bool is_registered,
         const std::string name,
         const int degree
-    )
-    : local(true)
-    , con()
-    , srv(nullptr)
-    , g(g)
-    , b(b)
-    , player_id(player_id)
-    , is_registered(is_registered)
-    , name(name)
-    , degree(degree)
-    , xdir(0)
-    , ydir(0)
-    {}
+    );
+
+    ~player();
 };
 
 #endif
-

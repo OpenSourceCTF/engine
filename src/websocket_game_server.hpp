@@ -19,6 +19,12 @@ void handle_game_message(
     websocketpp::connection_hdl hdl,
     websocketpp::server<websocketpp::config::asio>::message_ptr msg
 );
+
+void handle_game_close(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+);
+
 int start_game_server(const std::uint16_t port);
 
 void on_game_chat(

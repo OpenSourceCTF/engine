@@ -11,6 +11,7 @@ enum class game_event_type
     gamesync,
     ballsync,
     player_joined,
+    player_left,
     chat,
     teamchat,
     honk

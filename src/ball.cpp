@@ -7,8 +7,15 @@ ball::ball(const ball_type type)
 , portal_transport_ptr(nullptr)
 , is_alive(true)
 , player_ptr(nullptr)
+{}
+
+ball::~ball()
 {
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
 }
+
 void ball::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();

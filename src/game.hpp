@@ -41,9 +41,9 @@ struct game
     void handle_server_events();
 
     b2World* init_world();
-    ball* add_ball(ball b);
+    ball* add_ball(ball* b);
     void respawn_ball(ball* b);
-    player* add_player(player p);
+    player* add_player(player* p);
     void score(ball* b);
     player* get_player_from_con(websocketpp::connection_hdl con);
     void add_server_event(server_event a);

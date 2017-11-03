@@ -36,6 +36,7 @@ struct ball
     player* player_ptr;
 
     ball(const ball_type type);
+    ~ball();
 
     void set_player_ptr(player* p);
     void set_portal_transport(portal* p);

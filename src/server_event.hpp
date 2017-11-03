@@ -3,6 +3,7 @@
 
 #include "server_event_type.hpp"
 #include "server_event_player_joined.hpp"
+#include "server_event_player_left.hpp"
 #include "server_event_chat.hpp"
 #include "server_event_teamchat.hpp"
 #include "server_event_movement.hpp"
@@ -27,6 +28,11 @@ struct server_event
     server_event(server_event_player_joined e)
     : type(server_event_type::player_joined)
     , ptr(new server_event_player_joined(e))
+    {}
+
+    server_event(server_event_player_left e)
+    : type(server_event_type::player_left)
+    , ptr(new server_event_player_left(e))
     {}
 
     server_event(server_event_movement e)
