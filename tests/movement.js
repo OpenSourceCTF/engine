@@ -11,17 +11,19 @@ ws.on('open', () => {
 
 const set_random_dir_every_second = () => {
     const rdir = () => Math.random() < 0.25 ? -1 : Math.random() < 0.75 ? 0 : 1
-    ws.send(JSON.stringify({
+    const wsdata = {
         "request": "movement",
         "xdir": rdir(),
         "ydir": rdir()
-    }));
+    };
+
+    console.log('sending: ', wsdata);
+    ws.send(JSON.stringify(wsdata));
 
     setTimeout(set_random_dir_every_second, 1000);
 };
 
 ws.on('message', (msg) => {
-    console.log('received: %s', msg);
     let data = JSON.parse(msg);
 
     if(data.event == "gamesync") {

@@ -8,6 +8,7 @@ ws.on('open', () => {
 
 ws.on('message', (msg) => {
     console.log('received: %s', msg);
+    process.exit();
 });
 
 
