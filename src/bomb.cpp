@@ -65,6 +65,8 @@ void to_json(nlohmann::json& j, const bomb& p)
 
 void from_json(const nlohmann::json& j, bomb& p)
 {
-    p.x = j.at("x").get<float>();
-    p.y = j.at("y").get<float>();
+    p = bomb(
+        j.at("x").get<float>(),
+        j.at("y").get<float>()
+    );
 }

@@ -52,6 +52,7 @@ struct portal
     ~portal();
 
     void set_cooldown(const std::uint32_t x);
+    void set_destination(const std::size_t id);
     void add_to_world(b2World * world);
     void step_on(ball* m);
     void step_off(ball* m);

@@ -8,7 +8,7 @@ chain::~chain()
 }
 
 void chain::add_vertex(const float x, const float y) {
-    vertices.emplace_back(std::shared_ptr<coord>(new coord(x,y)));
+    vertices.emplace_back(x,y);
 }
 
 void chain::add_to_world(b2World * world)
@@ -24,7 +24,7 @@ void chain::add_to_world(b2World * world)
     std::vector<b2Vec2> vs(vertices.size());
     int i = 0;
     for(auto& v : vertices) {
-        vs[i].Set(v->x,v->y);
+        vs[i].Set(v.x,v.y);
         ++i;
     }
     b2ChainShape ch;
@@ -36,13 +36,14 @@ void chain::add_to_world(b2World * world)
     body->CreateFixture(&fdef);
 }
 
-void to_json(nlohmann::json& j, const chain& p) {
-    std::vector<coord> verts; for(auto& v : p.vertices) verts.emplace_back(*v);
+void to_json(nlohmann::json& j, const chain& p)
+{
     j = nlohmann::json {
-        {"vertices", verts}
+        {"vertices", p.vertices}
     };
 }
 
-void from_json(const nlohmann::json& j, chain& p) {
-    p.vertices = vec_to_smart_ptr_vec<std::shared_ptr<coord>>(j.at("vertices").get<std::vector<coord>>());
+void from_json(const nlohmann::json& j, chain& p)
+{
+    p = chain(j.at("vertices").get<std::vector<coord>>());
 }

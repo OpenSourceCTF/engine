@@ -3,13 +3,20 @@
 
 #include <json.hpp>
 
-struct coord {
+struct coord
+{
 
     float x,y;
     
-    coord() : x(0), y(0) {}
+    coord() {}
     
-    coord(const float x, const float y) : x(x), y(y) {}
+    coord(
+        const float x,
+        const float y
+    )
+    : x(x)
+    , y(y)
+    {}
 };
 
 void to_json(nlohmann::json& j, const coord& p);

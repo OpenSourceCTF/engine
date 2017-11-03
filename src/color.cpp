@@ -23,8 +23,10 @@ void to_json(nlohmann::json& j, const color& p)
 
 void from_json(const nlohmann::json& j, color& p)
 {
-    p.r = j.at("r").get<int>();
-    p.g = j.at("g").get<int>();
-    p.b = j.at("b").get<int>();
-    p.a = j.at("a").get<int>();
+    p = color(
+        j.at("r").get<int>(),
+        j.at("g").get<int>(),
+        j.at("b").get<int>(),
+        j.at("a").get<int>()
+    );
 }

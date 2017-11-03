@@ -26,10 +26,12 @@ void to_json(nlohmann::json& j, const polygon& p)
 
 void from_json(const nlohmann::json& j, polygon& p)
 {
-    p.x1 = j.at("x1").get<float>();
-    p.y1 = j.at("y1").get<float>();
-    p.x2 = j.at("x2").get<float>();
-    p.y2 = j.at("y2").get<float>();
-    p.x3 = j.at("x3").get<float>();
-    p.y3 = j.at("y3").get<float>();
+    p = polygon(
+        j.at("x1").get<float>(),
+        j.at("y1").get<float>(),
+        j.at("x2").get<float>(),
+        j.at("y2").get<float>(),
+        j.at("x3").get<float>(),
+        j.at("y3").get<float>()
+    );
 }
