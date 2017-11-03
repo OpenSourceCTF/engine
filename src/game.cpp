@@ -310,12 +310,6 @@ b2World * game::init_world()
     thread_local static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
 
-    for(std::size_t i=0; i<4; ++i) {
-        ball* b = add_ball(new ball(i % 2 ? ball_type::red : ball_type::blue));
-        player* p = add_player(new player(this, b, "player_id", true, "name", 100));
-        b->set_player_ptr(p);
-    }
-
     for(auto && o : m->spikes) {
         o->add_to_world(world);
     }

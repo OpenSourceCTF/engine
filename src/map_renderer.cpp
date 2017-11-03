@@ -5,9 +5,10 @@ void map_renderer::display_help() const
     std::cout
         << "gui instructions: " << std::endl
         << std::endl
-        << "movement: arrow keys" << std::endl
-        << "wireframe toggle: p" << std::endl
-        << "zoom: mousewheel" << std::endl;
+        << "movement:          arrow keys" << std::endl
+        << "select ball:       j/k" << std::endl
+        << "wireframe toggle:  p" << std::endl
+        << "zoom:              mousewheel" << std::endl;
 }
 
 int map_renderer::close_window()
@@ -64,6 +65,7 @@ int map_renderer::get_input()
     return 0;
 #else
     const settings& config = settings::get_instance();
+    static std::size_t selected_ball_id = 0; // which to move
     sf::Event event;
 
     while(window->pollEvent(event)) {
@@ -88,17 +90,41 @@ int map_renderer::get_input()
             if(event.key.code == sf::Keyboard::Key::P) {
                 wireframe = !wireframe;
             }
+
+            if(event.key.code == sf::Keyboard::Key::K) {
+                selected_ball_id = selected_ball_id == 0 ? m.balls.size() - 1 : selected_ball_id - 1;
+            }
+
+            if(event.key.code == sf::Keyboard::Key::J) {
+                selected_ball_id = m.balls.empty()
+                    ? 0
+                    : (selected_ball_id == 0
+                        ? m.balls.size() - 1
+                        : selected_ball_id - 1);
+            }
+
+            if(event.key.code == sf::Keyboard::Key::K) {
+                selected_ball_id = m.balls.empty()
+                    ? 0
+                    : (selected_ball_id == m.balls.size() - 1
+                        ? 0
+                        : selected_ball_id + 1);
+            }
         }
     }
 
-    {
+    if(! m.balls.empty()) {
         // CONTROL
+        if(selected_ball_id >= m.balls.size()) {
+            selected_ball_id = 0;
+        }
+
         int move_x = 0, move_y = 0;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) move_y--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[0]->move(move_x, move_y);
+        if(move_x || move_y) m.balls[selected_ball_id]->move(move_x, move_y);
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
