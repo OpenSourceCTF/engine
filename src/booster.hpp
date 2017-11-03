@@ -16,6 +16,8 @@ struct ball;
 
 struct booster
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     float x;
     float y;
     booster_type type;
@@ -30,7 +32,8 @@ struct booster
         const float y,
         const booster_type type
     )
-    : x(x)
+    : id(id_counter++)
+    , x(x)
     , y(y)
     , type(type)
     , body(nullptr)

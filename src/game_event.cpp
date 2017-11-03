@@ -35,6 +35,31 @@ game_event::game_event(const game_event_honk e)
 , ptr(new game_event_honk(e))
 {}
 
+game_event::game_event(const game_event_ball_respawn e)
+: type(game_event_type::ball_respawn)
+, ptr(new game_event_ball_respawn(e))
+{}
+
+game_event::game_event(const game_event_bomb_respawn e)
+: type(game_event_type::bomb_respawn)
+, ptr(new game_event_bomb_respawn(e))
+{}
+
+game_event::game_event(const game_event_powerup_respawn e)
+: type(game_event_type::powerup_respawn)
+, ptr(new game_event_powerup_respawn(e))
+{}
+
+game_event::game_event(const game_event_booster_respawn e)
+: type(game_event_type::booster_respawn)
+, ptr(new game_event_booster_respawn(e))
+{}
+
+game_event::game_event(const game_event_portal_respawn e)
+: type(game_event_type::portal_respawn)
+, ptr(new game_event_portal_respawn(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -60,6 +85,21 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::honk:
             to_json(data, *static_cast<game_event_honk*>(p.ptr));
+            break;
+        case game_event_type::ball_respawn:
+            to_json(data, *static_cast<game_event_ball_respawn*>(p.ptr));
+            break;
+        case game_event_type::bomb_respawn:
+            to_json(data, *static_cast<game_event_bomb_respawn*>(p.ptr));
+            break;
+        case game_event_type::powerup_respawn:
+            to_json(data, *static_cast<game_event_powerup_respawn*>(p.ptr));
+            break;
+        case game_event_type::booster_respawn:
+            to_json(data, *static_cast<game_event_booster_respawn*>(p.ptr));
+            break;
+        case game_event_type::portal_respawn:
+            to_json(data, *static_cast<game_event_portal_respawn*>(p.ptr));
             break;
         default:
             spdlog::get("game")->error("game_event_type not enumerated in to_json");

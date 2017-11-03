@@ -1,10 +1,13 @@
 #include "bomb.hpp"
 
+thread_local std::size_t bomb::id_counter = 0;
+
 bomb::bomb(
     const float x,
     const float y
 )
-: x(x)
+: id(id_counter++)
+, x(x)
 , y(y)
 , body(nullptr)
 , col_data(nullptr)

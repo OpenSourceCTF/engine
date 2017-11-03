@@ -1,5 +1,7 @@
 #include "portal.hpp"
 
+thread_local std::size_t portal::id_counter = 0;
+
 portal::~portal()
 {
     if(body) {

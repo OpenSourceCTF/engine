@@ -15,6 +15,8 @@ struct ball;
 
 struct portal
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     float x;
     float y;
 
@@ -37,7 +39,8 @@ struct portal
         const float x,
         const float y
     )
-    : x(x)
+    : id(id_counter++)
+    , x(x)
     , y(y)
     , has_cooldown(false)
     , is_cooling_down(false)

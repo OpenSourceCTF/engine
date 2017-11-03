@@ -1,16 +1,16 @@
-#ifndef ML_GAME_EVENT_BALL_RESPAWN_HPP
-#define ML_GAME_EVENT_BALL_RESPAWN_HPP
+#ifndef ML_GAME_EVENT_BOMB_RESPAWN_HPP
+#define ML_GAME_EVENT_BOMB_RESPAWN_HPP
 
 #include <cstdint>
 #include <json.hpp>
 #include <Box2D/Box2D.h>
 
-struct game_event_ball_respawn
+struct game_event_bomb_respawn
 {
     const std::size_t id;
     const b2Vec2 pos;
 
-    game_event_ball_respawn(
+    game_event_bomb_respawn(
         const std::size_t id,
         const b2Vec2 pos
     )
@@ -19,7 +19,7 @@ struct game_event_ball_respawn
     {}
 };
 
-void to_json(nlohmann::json& j, const game_event_ball_respawn& p);
+void to_json(nlohmann::json& j, const game_event_bomb_respawn& p);
 
 #endif
 

@@ -14,18 +14,20 @@ enum class game_event_type
     player_left,
     chat,
     teamchat,
-    honk
-    /*
+    honk,
     ball_respawn,
     ball_popped,
+    booster_respawn,
     powerup_respawn,
+    portal_respawn,
+    bomb_respawn,
     bomb_explosion,
     flag_grabbed,
     flag_dropped,
     flag_transferred, // neutral flag
     team_score,
     toggle_on,
-    toggle_off*/
+    toggle_off
 };
 
 std::string to_string(const game_event_type m);

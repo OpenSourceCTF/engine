@@ -9,6 +9,11 @@
 #include "server_event_movement.hpp"
 #include "server_event_honk.hpp"
 #include "server_event_ballsync.hpp"
+#include "server_event_ball_respawn.hpp"
+#include "server_event_bomb_respawn.hpp"
+#include "server_event_powerup_respawn.hpp"
+#include "server_event_booster_respawn.hpp"
+#include "server_event_portal_respawn.hpp"
 
 struct server_event
 {
@@ -48,6 +53,31 @@ struct server_event
     server_event(server_event_ballsync e)
     : type(server_event_type::ballsync)
     , ptr(new server_event_ballsync(e))
+    {}
+
+    server_event(server_event_ball_respawn e)
+    : type(server_event_type::ball_respawn)
+    , ptr(new server_event_ball_respawn(e))
+    {}
+
+    server_event(server_event_bomb_respawn e)
+    : type(server_event_type::bomb_respawn)
+    , ptr(new server_event_bomb_respawn(e))
+    {}
+
+    server_event(server_event_powerup_respawn e)
+    : type(server_event_type::powerup_respawn)
+    , ptr(new server_event_powerup_respawn(e))
+    {}
+
+    server_event(server_event_booster_respawn e)
+    : type(server_event_type::booster_respawn)
+    , ptr(new server_event_booster_respawn(e))
+    {}
+
+    server_event(server_event_portal_respawn e)
+    : type(server_event_type::portal_respawn)
+    , ptr(new server_event_portal_respawn(e))
     {}
 };
 

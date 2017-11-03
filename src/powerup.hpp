@@ -16,6 +16,8 @@ struct collision_user_data;
 
 struct powerup
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     float x;
     float y;
     b2Body * body;

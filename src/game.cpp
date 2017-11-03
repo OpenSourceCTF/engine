@@ -123,6 +123,47 @@ void game::handle_server_events()
             try_broadcast(this, game_event(game_event_ballsync(m->g)));
         } break;
 
+        case server_event_type::ball_respawn: {
+            server_event_ball_respawn* m = static_cast<server_event_ball_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::bomb_respawn: {
+            server_event_bomb_respawn* m = static_cast<server_event_bomb_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_bomb_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::powerup_respawn: {
+            server_event_powerup_respawn* m = static_cast<server_event_powerup_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_powerup_respawn(
+                m->m->id,
+                m->m->body->GetPosition(),
+                m->m->type
+            )));
+        } break;
+
+        case server_event_type::booster_respawn: {
+            server_event_booster_respawn* m = static_cast<server_event_booster_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_booster_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::portal_respawn: {
+            server_event_portal_respawn* m = static_cast<server_event_portal_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_portal_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;
@@ -183,6 +224,7 @@ void game::step()
         if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
             o->is_alive = true;
+            add_server_event(server_event(server_event_ball_respawn(o.get())));
         }
 
         for(auto & p : o->powerups) {
@@ -210,6 +252,7 @@ void game::step()
     for(auto && o : m->bombs) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->is_alive = true;
+            add_server_event(server_event(server_event_bomb_respawn(o.get())));
         }
     }
 
@@ -217,12 +260,14 @@ void game::step()
         if(! o->is_alive && ! --o->respawn_counter) {
             o->type = o->get_random_type();
             o->is_alive = true;
+            add_server_event(server_event(server_event_powerup_respawn(o.get())));
         }
     }
 
     for(auto && o : m->boosters) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->is_alive = true;
+            add_server_event(server_event(server_event_booster_respawn(o.get())));
         }
     }
 
@@ -232,9 +277,11 @@ void game::step()
                 if(o->is_cooling_down && --(o->cooldown_counter) == 0) {
                     o->is_alive = true;
                     o->is_cooling_down = false;
+                    add_server_event(server_event(server_event_portal_respawn(o.get())));
                 }
             } else {
                 o->is_alive = true;
+                add_server_event(server_event(server_event_portal_respawn(o.get())));
             }
         }
     }

@@ -1,5 +1,7 @@
 #include "booster.hpp"
 
+thread_local std::size_t booster::id_counter = 0;
+
 void booster::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();

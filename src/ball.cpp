@@ -1,7 +1,10 @@
 #include "ball.hpp"
 
+thread_local std::size_t ball::id_counter = 0;
+
 ball::ball(const ball_type type)
-: type(type)
+: id(id_counter++)
+, type(type)
 , body(nullptr)
 , col_data(nullptr)
 , portal_transport_ptr(nullptr)

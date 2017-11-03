@@ -25,6 +25,8 @@ struct player;
 
 struct ball
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     ball_type type;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
