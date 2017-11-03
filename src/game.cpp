@@ -35,6 +35,11 @@ void game::run()
 
     // consider std::sleep_until here
     while(true) {
+        if(players.empty()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            continue;
+        }
+
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
