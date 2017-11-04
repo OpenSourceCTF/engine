@@ -23,7 +23,7 @@ std::string to_string(const game_event_type m)
         case game_event_type::bomb_respawn:     return "bomb_respawn";     break;
         case game_event_type::bomb_explosion:   return "bomb_explosion";   break;
         case game_event_type::flag_grabbed:     return "flag_grabbed";     break;
-        case game_event_type::flag_transferred: return "flag_transferred"; break;
+        // case game_event_type::flag_transferred: return "flag_transferred"; break;
         case game_event_type::toggle_on:        return "toggle_on";        break;
         case game_event_type::toggle_off:       return "toggle_off";       break;
     }
