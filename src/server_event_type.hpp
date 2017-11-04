@@ -30,7 +30,7 @@ enum class server_event_type
     toggle_off,
 
 
-    flag_transferred // neutral flag
+    // flag_transferred // neutral flag
 };
 
 std::string to_string(const server_event_type m);

@@ -5,9 +5,6 @@ std::string to_string(const spawn_type m)
     switch(m) {
         case spawn_type::blue: return "blue"; break;
         case spawn_type::red:  return "red";  break;
-        default:
-            spdlog::get("game")->error("spawn_type not enumerated in to_string");
-            return "";
     }
 }
 

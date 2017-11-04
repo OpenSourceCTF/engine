@@ -23,13 +23,9 @@ std::string to_string(const server_event_type m)
         case server_event_type::bomb_explosion:   return "bomb_explosion";   break;
         case server_event_type::portal_respawn:   return "portal_respawn";   break;
         case server_event_type::flag_grabbed:     return "flag_grabbed";     break;
-        case server_event_type::flag_transferred: return "flag_transferred"; break;
+        // case server_event_type::flag_transferred: return "flag_transferred"; break;
         case server_event_type::toggle_on:        return "toggle_on";        break;
         case server_event_type::toggle_off:       return "toggle_off";       break;
-
-        default:
-            spdlog::get("game")->error("server_event_type not enumerated in to_string");
-            return "";
     }
 }
 

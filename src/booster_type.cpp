@@ -6,9 +6,6 @@ std::string to_string(const booster_type m)
         case booster_type::all:  return "all";  break;
         case booster_type::blue: return "blue"; break;
         case booster_type::red:  return "red";  break;
-        default:
-            spdlog::get("game")->error("booster_type not enumerated in to_string");
-            return "";
     }
 }
 

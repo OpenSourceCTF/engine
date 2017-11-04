@@ -64,10 +64,6 @@ T corresponding_color(const U a)
     switch(a) {
         case U::red:  return T::red;
         case U::blue: return T::blue;
-        default:
-            spdlog::get("game")->error("corresponding_color doesn't exist");
-            std::terminate();
-            return T::red; // error suppressor
     }
 }
 
@@ -81,10 +77,6 @@ T inv_corresponding_color(const U a)
     switch(a) {
         case U::red:  return T::blue;
         case U::blue: return T::red;
-        default:
-            spdlog::get("game")->error("inv_corresponding_color doesn't exist");
-            std::terminate();
-            return T::red; // error suppressor
     }
 }
 

@@ -57,9 +57,8 @@ int start_lobby_server(
     websocketpp::server<websocketpp::config::asio> srv;
 
     try {
-        srv.set_access_channels(websocketpp::log::alevel::all);
-        srv.clear_access_channels(websocketpp::log::alevel::frame_payload);
-
+        srv.clear_access_channels(websocketpp::log::alevel::all);
+        srv.set_access_channels(websocketpp::log::elevel::info);
         srv.init_asio();
         srv.set_message_handler(bind(&handle_lobby_message,&srv,::_1,::_2));
         srv.listen(port);
