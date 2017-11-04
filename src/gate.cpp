@@ -1,11 +1,14 @@
 #include "gate.hpp"
 
+thread_local std::size_t gate::id_counter = 0;
+
 gate::gate(){}
 gate::gate(
     const polygon poly,
     const gate_type type
 )
-: poly(poly)
+: id(id_counter++)
+, poly(poly)
 , type(type)
 , current(type)
 {}

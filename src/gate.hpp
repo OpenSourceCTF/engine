@@ -13,6 +13,8 @@
 
 struct gate
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     polygon poly;
     gate_type type;
 

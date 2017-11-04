@@ -6,7 +6,6 @@ id_counters must be reset on map load
 remove players if they havent moved in X seconds
     unless they're by themselves
 add game end conditions (time, score)
-serialize map data for server sync
 fix segfault on exit
 
 ---
