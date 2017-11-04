@@ -13,6 +13,7 @@
 #include "game_event_ballsync.hpp"
 #include "game_event_ball_respawn.hpp"
 #include "game_event_bomb_respawn.hpp"
+#include "game_event_bomb_explosion.hpp"
 #include "game_event_powerup_respawn.hpp"
 #include "game_event_booster_respawn.hpp"
 #include "game_event_portal_respawn.hpp"
@@ -31,8 +32,8 @@
 #include "game_event_toggle_off.hpp"
 */
 
-struct game_event_gamesync;
 struct game_event_ballsync;
+struct game_event_gamesync;
 struct game_event_player_joined;
 struct game_event_player_left;
 struct game_event_chat;
@@ -40,6 +41,7 @@ struct game_event_teamchat;
 struct game_event_honk;
 struct game_event_ball_respawn;
 struct game_event_bomb_respawn;
+struct game_event_bomb_explosion;
 struct game_event_powerup_respawn;
 struct game_event_booster_respawn;
 struct game_event_portal_respawn;
@@ -61,6 +63,7 @@ struct game_event
     game_event(const game_event_honk e);
     game_event(const game_event_ball_respawn e);
     game_event(const game_event_bomb_respawn e);
+    game_event(const game_event_bomb_explosion e);
     game_event(const game_event_powerup_respawn e);
     game_event(const game_event_booster_respawn e);
     game_event(const game_event_portal_respawn e);

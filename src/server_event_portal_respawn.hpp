@@ -9,11 +9,7 @@ struct server_event_portal_respawn
 {
     portal* m;
 
-    server_event_portal_respawn(
-        portal* m
-    )
-    : m(m)
-    {}
+    server_event_portal_respawn(portal* m);
 };
 
 #endif

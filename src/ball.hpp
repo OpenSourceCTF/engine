@@ -13,6 +13,7 @@
 #include "ball_powerup.hpp"
 #include "powerup_type.hpp"
 #include "flag.hpp"
+#include "flag_type.hpp"
 #include "ball_flag.hpp"
 #include "portal.hpp"
 #include "explosion.hpp"
@@ -22,6 +23,7 @@ struct collision_user_data;
 struct flag;
 struct portal;
 struct player;
+struct ball_flag;
 
 struct ball
 {

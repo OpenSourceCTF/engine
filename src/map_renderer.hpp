@@ -21,11 +21,7 @@ struct map_renderer
     float scaler;
     bool wireframe;
 
-    map_renderer(map& m)
-    : m(m)
-    , scaler(13.0f)
-    , wireframe(false)
-    {}
+    map_renderer(map& m);
 
     void display_help() const;
     int get_input();

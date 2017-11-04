@@ -1,5 +1,9 @@
 #include "game_event_gamesync.hpp"
 
+game_event_gamesync::game_event_gamesync(const game& g)
+: g(g)
+{}
+
 void to_json(nlohmann::json& j, const game_event_gamesync& p)
 {
     std::vector<nlohmann::json> players;

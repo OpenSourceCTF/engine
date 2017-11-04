@@ -3,15 +3,13 @@
 
 #include "ball.hpp"
 
+struct ball;
+
 struct server_event_ball_respawn
 {
     ball* m;
 
-    server_event_ball_respawn(
-        ball* m
-    )
-    : m(m)
-    {}
+    server_event_ball_respawn(ball* m);
 };
 
 #endif

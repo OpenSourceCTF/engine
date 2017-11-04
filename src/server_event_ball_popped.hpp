@@ -7,11 +7,7 @@ struct server_event_ball_popped
 {
     ball* m;
 
-    server_event_ball_popped(
-        ball* m
-    )
-    : m(m)
-    {}
+    server_event_ball_popped(ball* m);
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include "ball.hpp"
 
 struct game;
+struct ball;
 
 struct player
 {

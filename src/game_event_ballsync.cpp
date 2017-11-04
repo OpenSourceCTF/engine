@@ -1,5 +1,9 @@
 #include "game_event_ballsync.hpp"
 
+game_event_ballsync::game_event_ballsync(game* g)
+: g(g)
+{}
+
 void to_json(nlohmann::json& j, const game_event_ballsync& p)
 {
     std::vector<nlohmann::json> balls;

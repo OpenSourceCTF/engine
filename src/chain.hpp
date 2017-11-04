@@ -11,11 +11,8 @@ struct chain
     std::vector<coord> vertices;
     b2Body* body;
 
-    chain() {}
-    chain(const std::vector<coord> & vertices)
-    : vertices(vertices)
-    , body(nullptr)
-    {}
+    chain();
+    chain(const std::vector<coord> & vertices);
     ~chain();
 
     void add_vertex(const float x, const float y);

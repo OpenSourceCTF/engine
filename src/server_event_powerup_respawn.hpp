@@ -3,15 +3,13 @@
 
 #include "powerup.hpp"
 
+struct powerup;
+
 struct server_event_powerup_respawn
 {
     powerup* m;
 
-    server_event_powerup_respawn(
-        powerup* m
-    )
-    : m(m)
-    {}
+    server_event_powerup_respawn(powerup* m);
 };
 
 #endif

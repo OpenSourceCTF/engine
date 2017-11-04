@@ -3,15 +3,13 @@
 
 #include "booster.hpp"
 
+struct booster;
+
 struct server_event_booster_respawn
 {
     booster* m;
 
-    server_event_booster_respawn(
-        booster* m
-    )
-    : m(m)
-    {}
+    server_event_booster_respawn(booster* m);
 };
 
 #endif

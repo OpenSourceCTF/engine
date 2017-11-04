@@ -2,6 +2,23 @@
 
 thread_local std::size_t booster::id_counter = 0;
 
+booster::booster() {}
+
+booster::booster(
+    const float x,
+    const float y,
+    const booster_type type
+)
+: id(id_counter++)
+, x(x)
+, y(y)
+, type(type)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+, respawn_counter(0)
+{}
+
 void booster::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();

@@ -1,5 +1,9 @@
 #include "game_event_player_joined.hpp"
 
+game_event_player_joined::game_event_player_joined(player* p)
+: p(p)
+{}
+
 void to_json(nlohmann::json& j, const game_event_player_joined& p)
 {
     j = nlohmann::json{

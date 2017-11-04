@@ -1,5 +1,24 @@
 #include "toggle.hpp"
 
+thread_local std::size_t toggle::id_counter = 0;
+
+toggle::toggle(){}
+
+toggle::toggle(
+    const float x,
+    const float y,
+    const std::uint32_t timer,
+    const std::vector<toggle_tag> tags
+)
+: id(id_counter++)
+, x(x)
+, y(y)
+, timer(timer)
+, tags(tags)
+, body(nullptr)
+, col_data(nullptr)
+{}
+
 toggle::~toggle()
 {
     if(body) {

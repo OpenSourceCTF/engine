@@ -9,11 +9,7 @@ struct game_event_player_left
 {
     player* p;
 
-    game_event_player_left(
-        player* p
-    )
-    : p(p)
-    {}
+    game_event_player_left(player* p);
 };
 
 void to_json(nlohmann::json& j, const game_event_player_left& p);

@@ -15,16 +15,12 @@ struct tile
     color col;
     tile_type type;
 
-    tile(){}
+    tile();
     tile(
         const polygon poly,
         const color col,
         const tile_type type
-    )
-    : poly(poly)
-    , col(col)
-    , type(type)
-    {}
+    );
 };
 
 void to_json(nlohmann::json& j, const tile& p);

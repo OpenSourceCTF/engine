@@ -3,15 +3,13 @@
 
 #include "bomb.hpp"
 
+struct bomb;
+
 struct server_event_bomb_respawn
 {
     bomb* m;
 
-    server_event_bomb_respawn(
-        bomb* m
-    )
-    : m(m)
-    {}
+    server_event_bomb_respawn(bomb* m);
 };
 
 #endif

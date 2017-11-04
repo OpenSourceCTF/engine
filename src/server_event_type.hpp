@@ -20,9 +20,9 @@ enum class server_event_type
     powerup_respawn,
     portal_respawn,
     bomb_respawn,
-
-
     bomb_explosion,
+
+
     flag_grabbed,
     flag_dropped,
     flag_transferred, // neutral flag

@@ -10,11 +10,7 @@ struct server_event_player_left
 {
     player* p;
 
-    server_event_player_left(
-        player* p
-    )
-    : p(p)
-    {}
+    server_event_player_left(player* p);
 };
 
 #endif

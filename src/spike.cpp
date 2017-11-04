@@ -1,5 +1,16 @@
 #include "spike.hpp"
 
+spike::spike(){}
+spike::spike(
+    const float x,
+    const float y
+)
+: x(x)
+, y(y)
+, body(nullptr)
+, col_data(nullptr)
+{}
+
 spike::~spike()
 {
     if(body) {

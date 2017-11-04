@@ -45,6 +45,11 @@ game_event::game_event(const game_event_bomb_respawn e)
 , ptr(new game_event_bomb_respawn(e))
 {}
 
+game_event::game_event(const game_event_bomb_explosion e)
+: type(game_event_type::bomb_explosion)
+, ptr(new game_event_bomb_explosion(e))
+{}
+
 game_event::game_event(const game_event_powerup_respawn e)
 : type(game_event_type::powerup_respawn)
 , ptr(new game_event_powerup_respawn(e))
@@ -101,6 +106,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::bomb_respawn:
             to_json(data, *static_cast<game_event_bomb_respawn*>(p.ptr));
+            break;
+        case game_event_type::bomb_explosion:
+            to_json(data, *static_cast<game_event_bomb_explosion*>(p.ptr));
             break;
         case game_event_type::powerup_respawn:
             to_json(data, *static_cast<game_event_powerup_respawn*>(p.ptr));

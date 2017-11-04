@@ -11,9 +11,8 @@ struct game;
 struct game_event_gamesync
 {
     const game& g;
-    game_event_gamesync(const game& g)
-    : g(g)
-    {}
+
+    game_event_gamesync(const game& g);
 };
 
 void to_json(nlohmann::json& j, const game_event_gamesync& p);

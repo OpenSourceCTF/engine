@@ -11,6 +11,7 @@
 #include "collision_user_data.hpp"
 #include "booster_type.hpp"
 #include "ball.hpp"
+#include "game_accessor.hpp"
 
 struct ball;
 
@@ -18,6 +19,7 @@ struct booster
 {
     static thread_local std::size_t id_counter;
     std::size_t id;
+    game_accessor game;
     float x;
     float y;
     booster_type type;
@@ -26,21 +28,12 @@ struct booster
     bool is_alive;
     int respawn_counter;
 
-    booster(){}
+    booster();
     booster(
         const float x,
         const float y,
         const booster_type type
-    )
-    : id(id_counter++)
-    , x(x)
-    , y(y)
-    , type(type)
-    , body(nullptr)
-    , col_data(nullptr)
-    , is_alive(true)
-    , respawn_counter(0)
-    {}
+    );
     ~booster();
 
     void add_to_world(b2World* world);

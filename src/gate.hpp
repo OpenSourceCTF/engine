@@ -18,15 +18,11 @@ struct gate
 
     gate_type current;
 
-    gate(){}
+    gate();
     gate(
         const polygon poly,
         const gate_type type
-    )
-    : poly(poly)
-    , type(type)
-    , current(type)
-    {}
+    );
 
     void mark_on(ball* b);
     void mark_off(ball* b);

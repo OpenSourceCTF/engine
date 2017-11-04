@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+game::game(){}
+
 game::game(const std::uint16_t port, map* m)
 : port(port)
 , m(m)
@@ -375,30 +377,37 @@ b2World * game::init_world()
 
     for(auto && o : m->spikes) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->bombs) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->toggles) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->boosters) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->powerups) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->flags) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->portals) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->chains) {

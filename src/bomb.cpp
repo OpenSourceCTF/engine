@@ -2,6 +2,7 @@
 
 thread_local std::size_t bomb::id_counter = 0;
 
+bomb::bomb() {}
 bomb::bomb(
     const float x,
     const float y

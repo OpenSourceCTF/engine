@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include "util.hpp"
+#include "explode_aabb_callback.hpp"
 
 struct explosion
 {
@@ -13,10 +14,7 @@ struct explosion
     explosion(
         const float radius,
         const float force
-    )
-    : radius(radius)
-    , force(force)
-    {}
+    );
 
     void explode(
         const b2Vec2 pos,

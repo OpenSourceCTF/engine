@@ -11,6 +11,7 @@
 #include "ball.hpp"
 #include "util.hpp"
 #include "explosion.hpp"
+#include "game_accessor.hpp"
 
 struct ball;
 struct collision_user_data;
@@ -19,6 +20,7 @@ struct bomb
 {
     static thread_local std::size_t id_counter;
     std::size_t id;
+    game_accessor game;
     float x;
     float y;
     b2Body * body;
@@ -26,7 +28,7 @@ struct bomb
     bool is_alive;
     int respawn_counter;
 
-    bomb() {}
+    bomb();
     bomb(
         const float x,
         const float y

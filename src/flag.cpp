@@ -1,4 +1,17 @@
 #include "flag.hpp"
+flag::flag() {}
+flag::flag(
+    const float x,
+    const float y,
+    const flag_type type
+)
+: x(x)
+, y(y)
+, type(type)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+{}
 
 flag::~flag()
 {

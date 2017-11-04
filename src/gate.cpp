@@ -1,5 +1,15 @@
 #include "gate.hpp"
 
+gate::gate(){}
+gate::gate(
+    const polygon poly,
+    const gate_type type
+)
+: poly(poly)
+, type(type)
+, current(type)
+{}
+
 void gate::mark_on(ball* b)
 {
     // todo -- this needs work

@@ -19,15 +19,11 @@ struct toggle_tag
     void* ptr;
     toggle_tag_type type;
 
-    toggle_tag(){}
+    toggle_tag();
     toggle_tag(
         const std::uint32_t id,
         const toggle_tag_type type
-    )
-    : id(id)
-    , ptr(nullptr)
-    , type(type)
-    {}
+    );
 
     void step_on(ball* o);
     void step_off(ball* o);
