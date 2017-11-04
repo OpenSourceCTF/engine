@@ -45,7 +45,6 @@ bool game::spawn_phys_thread()
 void game::run()
 {
     const settings& config = settings::get_instance();
-    world = init_world();
 
     // consider std::sleep_until here
     while(true) {
@@ -281,8 +280,6 @@ void game::handle_server_events()
 
 bool game::load_map(const std::string map_src)
 {
-    map* m;
-
     // reset these otherwise we'll keep increasing ids for next load
     gate::id_counter    = 0;
     booster::id_counter = 0;
@@ -294,32 +291,83 @@ bool game::load_map(const std::string map_src)
     toggle::id_counter  = 0;
 
 
+    // cache player balls so we can add them again after loading map
+    std::map<player*, ball_type> player_balls;
+    for(auto && o : players) {
+        player_balls[o.get()] = o->b->type;
+    }
+
+
+    // attempt to load new map
     try {
-        spdlog::get("game")->debug("loading: ", map_src);
         std::ifstream t(map_src);
         std::stringstream buf;
         buf << t.rdbuf();
+        nlohmann::json map_j = nlohmann::json::parse(buf.str());
 
-        m = new map(nlohmann::json::parse(buf.str()));
+        // clear old map
+        if(m) {
+            delete m;
+        }
+
+        m = new map(map_j);
     } catch(nlohmann::detail::parse_error e) {
-        spdlog::get("game")->error("mapload: ", e.what());
+        spdlog::get("game")->error("loading map failed:", e.what());
         return false;
     }
 
-
-    std::map<player*, ball_type> player_balls;
-
-    if(this->m) {
-        for(auto && o : players) {
-            player_balls[o.get()] = o->b->type;
-        }
-
-        delete this->m;
+    // reset world
+    // note: this must be called only after deleting map
+    if(world) {
+        delete world;
     }
 
-    this->m = m;
+    world = new b2World(b2Vec2(0, 0));
 
-    init_world();
+    // todo: does this need to be thread_local
+    thread_local static contact_listener contact_listener_instance;
+    world->SetContactListener(&contact_listener_instance);
+
+    for(auto && o : m->spikes) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->bombs) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->toggles) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->boosters) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->powerups) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->flags) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->portals) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
+    for(auto && o : m->chains) {
+        o->add_to_world(world);
+    }
+
+    // use our cache we made above to add balls to existing players
     for(auto && o : player_balls) {
         player* p = o.first;
         ball_type t = o.second;
@@ -411,6 +459,7 @@ void game::step()
     ++timestep;
 }
 
+// this is separated out because it is much more complex than the other respawns
 void game::respawn_ball(ball* b)
 {
     spdlog::get("game")->debug("respawning");
@@ -467,58 +516,6 @@ ball* game::add_ball(ball* b)
     respawn_ball(B);
 
     return B;
-}
-
-
-// this maybe should be broken up
-b2World * game::init_world()
-{
-    world = new b2World(b2Vec2(0, 0));
-
-    // todo: does this need to be thread_local
-    thread_local static contact_listener contact_listener_instance;
-    world->SetContactListener(&contact_listener_instance);
-
-    for(auto && o : m->spikes) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->bombs) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->toggles) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->boosters) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->powerups) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->flags) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->portals) {
-        o->add_to_world(world);
-        o->game.set_game(this);
-    }
-
-    for(auto && o : m->chains) {
-        o->add_to_world(world);
-    }
-
-    return world;
 }
 
 player* game::add_player(player* p)

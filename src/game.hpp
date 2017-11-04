@@ -45,7 +45,6 @@ struct game
     void step();
     void handle_server_events();
 
-    b2World* init_world();
     ball* add_ball(ball* b);
     void respawn_ball(ball* b);
     player* add_player(player* p);
