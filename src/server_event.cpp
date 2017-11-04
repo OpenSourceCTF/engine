@@ -80,6 +80,16 @@ server_event::server_event(server_event_ball_score e)
 , ptr(new server_event_ball_score(e))
 {}
 
+server_event::server_event(server_event_ball_portal e)
+: type(server_event_type::ball_portal)
+, ptr(new server_event_ball_portal(e))
+{}
+
+server_event::server_event(server_event_ball_powerup e)
+: type(server_event_type::ball_powerup)
+, ptr(new server_event_ball_powerup(e))
+{}
+
 server_event::server_event(server_event_flag_grabbed e)
 : type(server_event_type::flag_grabbed)
 , ptr(new server_event_flag_grabbed(e))

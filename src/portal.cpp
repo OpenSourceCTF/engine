@@ -93,6 +93,8 @@ void portal::step_on(ball* m)
         disable_portal(dest);
 
         p = dest;
+
+        game.add_server_event(server_event(server_event_ball_portal(m, p)));
     }
 }
 

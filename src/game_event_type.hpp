@@ -19,6 +19,8 @@ enum class game_event_type
     ball_popped,
     ball_boosted,
     ball_score,
+    ball_portal,
+    ball_powerup,
     booster_respawn,
     powerup_respawn,
     portal_respawn,

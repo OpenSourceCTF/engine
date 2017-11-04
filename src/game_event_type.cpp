@@ -14,6 +14,8 @@ std::string to_string(const game_event_type m)
         case game_event_type::ball_popped:      return "ball_popped";      break;
         case game_event_type::ball_boosted:     return "ball_boosted";     break;
         case game_event_type::ball_score:       return "ball_score";       break;
+        case game_event_type::ball_portal:      return "ball_portal";      break;
+        case game_event_type::ball_powerup:     return "ball_powerup";     break;
         case game_event_type::booster_respawn:  return "booster_respawn";  break;
         case game_event_type::powerup_respawn:  return "powerup_respawn";  break;
         case game_event_type::bomb_respawn:     return "bomb_respawn";     break;

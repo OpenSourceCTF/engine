@@ -69,6 +69,7 @@ void powerup::step_on(ball* m)
 
     respawn_counter = config.POWERUP_RESPAWN_TIME;
     is_alive = false;
+    game.add_server_event(server_event(server_event_ball_powerup(m, this)));
 }
 
 powerup_type powerup::get_random_type()

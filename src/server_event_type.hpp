@@ -17,17 +17,19 @@ enum class server_event_type
     ball_popped,
     ball_boosted,
     ball_score,
+    ball_portal,
+    ball_powerup,
     booster_respawn,
     powerup_respawn,
     portal_respawn,
     bomb_respawn,
     bomb_explosion,
     flag_grabbed,
-
-
-    flag_transferred, // neutral flag
     toggle_on,
-    toggle_off
+    toggle_off,
+
+
+    flag_transferred // neutral flag
 };
 
 std::string to_string(const server_event_type m);

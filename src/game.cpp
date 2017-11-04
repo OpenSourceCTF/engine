@@ -196,6 +196,22 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::ball_portal: {
+            server_event_ball_portal* m = static_cast<server_event_ball_portal*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_portal(
+                m->m_ball->id,
+                m->m_portal->id
+            )));
+        } break;
+
+        case server_event_type::ball_powerup: {
+            server_event_ball_powerup* m = static_cast<server_event_ball_powerup*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_powerup(
+                m->m_ball->id,
+                m->m_powerup->id
+            )));
+        } break;
+
         case server_event_type::flag_grabbed: {
             server_event_flag_grabbed* m = static_cast<server_event_flag_grabbed*>(a.ptr);
             try_broadcast(this, game_event(game_event_flag_grabbed(
