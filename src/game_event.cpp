@@ -85,6 +85,16 @@ game_event::game_event(const game_event_flag_grabbed e)
 , ptr(new game_event_flag_grabbed(e))
 {}
 
+game_event::game_event(const game_event_toggle_on e)
+: type(game_event_type::toggle_on)
+, ptr(new game_event_toggle_on(e))
+{}
+
+game_event::game_event(const game_event_toggle_off e)
+: type(game_event_type::toggle_off)
+, ptr(new game_event_toggle_off(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -140,6 +150,12 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::flag_grabbed:
             to_json(data, *static_cast<game_event_flag_grabbed*>(p.ptr));
+            break;
+        case game_event_type::toggle_on:
+            to_json(data, *static_cast<game_event_toggle_on*>(p.ptr));
+            break;
+        case game_event_type::toggle_off:
+            to_json(data, *static_cast<game_event_toggle_off*>(p.ptr));
             break;
         default:
             spdlog::get("game")->error("game_event_type not enumerated in to_json");

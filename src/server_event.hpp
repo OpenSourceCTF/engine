@@ -19,6 +19,8 @@
 #include "server_event_ball_boosted.hpp"
 #include "server_event_ball_score.hpp"
 #include "server_event_flag_grabbed.hpp"
+#include "server_event_toggle_on.hpp"
+#include "server_event_toggle_off.hpp"
 
 struct server_event_chat;
 struct server_event_teamchat;
@@ -37,6 +39,8 @@ struct server_event_ball_popped;
 struct server_event_ball_boosted;
 struct server_event_ball_score;
 struct server_event_flag_grabbed;
+struct server_event_toggle_on;
+struct server_event_toggle_off;
 
 struct server_event
 {
@@ -60,6 +64,8 @@ struct server_event
     server_event(server_event_ball_boosted e);
     server_event(server_event_ball_score e);
     server_event(server_event_flag_grabbed e);
+    server_event(server_event_toggle_on e);
+    server_event(server_event_toggle_off e);
 };
 
 #endif

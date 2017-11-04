@@ -21,13 +21,13 @@
 #include "game_event_ball_boosted.hpp"
 #include "game_event_ball_score.hpp"
 #include "game_event_flag_grabbed.hpp"
+#include "game_event_toggle_on.hpp"
+#include "game_event_toggle_off.hpp"
 
 // todo implement these
 /*
 #include "game_event_portal_ball.hpp"
 #include "game_event_flag_transferred.hpp"
-#include "game_event_toggle_on.hpp"
-#include "game_event_toggle_off.hpp"
 */
 
 struct game_event_ballsync;
@@ -47,6 +47,8 @@ struct game_event_ball_popped;
 struct game_event_ball_boosted;
 struct game_event_ball_score;
 struct game_event_flag_grabbed;
+struct game_event_toggle_on;
+struct game_event_toggle_off;
 
 
 // this is used for relaying game events over network
@@ -72,6 +74,8 @@ struct game_event
     game_event(const game_event_ball_boosted e);
     game_event(const game_event_ball_score e);
     game_event(const game_event_flag_grabbed e);
+    game_event(const game_event_toggle_on e);
+    game_event(const game_event_toggle_off e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);

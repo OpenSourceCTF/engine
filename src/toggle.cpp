@@ -55,6 +55,8 @@ void toggle::step_on(ball* b)
     for(auto & o : tags) {
         o.step_on(b);
     }
+
+    game.add_server_event(server_event(server_event_toggle_on(b, this)));
 }
 
 void toggle::step_off(ball* b)
@@ -62,6 +64,8 @@ void toggle::step_off(ball* b)
     for(auto & o : tags) {
         o.step_off(b);
     }
+
+    game.add_server_event(server_event(server_event_toggle_off(b, this)));
 }
 
 void to_json(nlohmann::json& j, const toggle& p)

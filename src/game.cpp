@@ -204,6 +204,22 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::toggle_on: {
+            server_event_toggle_on* m = static_cast<server_event_toggle_on*>(a.ptr);
+            try_broadcast(this, game_event(game_event_toggle_on(
+                m->m_ball->id,
+                m->m_toggle->id
+            )));
+        } break;
+
+        case server_event_type::toggle_off: {
+            server_event_toggle_off* m = static_cast<server_event_toggle_off*>(a.ptr);
+            try_broadcast(this, game_event(game_event_toggle_off(
+                m->m_ball->id,
+                m->m_toggle->id
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;

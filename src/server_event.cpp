@@ -85,3 +85,13 @@ server_event::server_event(server_event_flag_grabbed e)
 , ptr(new server_event_flag_grabbed(e))
 {}
 
+server_event::server_event(server_event_toggle_on e)
+: type(server_event_type::toggle_on)
+, ptr(new server_event_toggle_on(e))
+{}
+
+server_event::server_event(server_event_toggle_off e)
+: type(server_event_type::toggle_off)
+, ptr(new server_event_toggle_off(e))
+{}
+
