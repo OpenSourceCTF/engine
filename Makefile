@@ -1,4 +1,4 @@
-override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic
+override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic -Werror=switch
 override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
 
 BUILD := build
