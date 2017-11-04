@@ -1,6 +1,7 @@
 #ifndef ML_SERVER_EVENT_HPP
 #define ML_SERVER_EVENT_HPP
 
+#include <memory>
 #include "server_event_type.hpp"
 #include "server_event_player_joined.hpp"
 #include "server_event_player_left.hpp"
@@ -51,7 +52,7 @@ struct server_event_toggle_off;
 struct server_event
 {
     server_event_type type;
-    void* ptr;
+    std::shared_ptr<void> ptr;
 
     server_event(server_event_chat e);
     server_event(server_event_teamchat e);

@@ -90,43 +90,43 @@ void game::handle_server_events()
 
         switch(a.type) {
         case server_event_type::player_joined: {
-            server_event_player_joined* m = static_cast<server_event_player_joined*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_player_joined>(a.ptr);
             try_broadcast(this, game_event(game_event_player_joined(m->p)));
         } break;
 
         case server_event_type::player_left: {
-            server_event_player_left* m = static_cast<server_event_player_left*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_player_left>(a.ptr);
             try_broadcast(this, game_event(game_event_player_left(m->p)));
         } break;
 
         case server_event_type::chat: {
-            server_event_chat* m = static_cast<server_event_chat*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_chat>(a.ptr);
             try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
         } break;
 
         case server_event_type::teamchat: {
-            server_event_teamchat* m = static_cast<server_event_teamchat*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_teamchat>(a.ptr);
             try_broadcast_team(this, m->p->b->type, game_event(game_event_teamchat(m->p, m->msg)));
         } break;
 
         case server_event_type::movement: {
-            server_event_movement* m = static_cast<server_event_movement*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_movement>(a.ptr);
             m->p->xdir = m->xdir;
             m->p->ydir = m->ydir;
         } break;
 
         case server_event_type::honk: {
-            server_event_honk* m = static_cast<server_event_honk*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_honk>(a.ptr);
             try_broadcast(this, game_event(game_event_honk(m->p)));
         } break;
 
         case server_event_type::ballsync: {
-            server_event_ballsync* m = static_cast<server_event_ballsync*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ballsync>(a.ptr);
             try_broadcast(this, game_event(game_event_ballsync(m->g)));
         } break;
 
         case server_event_type::ball_respawn: {
-            server_event_ball_respawn* m = static_cast<server_event_ball_respawn*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_respawn>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_respawn(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -134,7 +134,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::bomb_respawn: {
-            server_event_bomb_respawn* m = static_cast<server_event_bomb_respawn*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_bomb_respawn>(a.ptr);
             try_broadcast(this, game_event(game_event_bomb_respawn(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -142,14 +142,14 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::bomb_explosion: {
-            server_event_bomb_explosion* m = static_cast<server_event_bomb_explosion*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_bomb_explosion>(a.ptr);
             try_broadcast(this, game_event(game_event_bomb_explosion(
                 m->m->id
             )));
         } break;
 
         case server_event_type::powerup_respawn: {
-            server_event_powerup_respawn* m = static_cast<server_event_powerup_respawn*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_powerup_respawn>(a.ptr);
             try_broadcast(this, game_event(game_event_powerup_respawn(
                 m->m->id,
                 m->m->body->GetPosition(),
@@ -158,7 +158,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::booster_respawn: {
-            server_event_booster_respawn* m = static_cast<server_event_booster_respawn*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_booster_respawn>(a.ptr);
             try_broadcast(this, game_event(game_event_booster_respawn(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -166,7 +166,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::portal_respawn: {
-            server_event_portal_respawn* m = static_cast<server_event_portal_respawn*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_portal_respawn>(a.ptr);
             try_broadcast(this, game_event(game_event_portal_respawn(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -174,7 +174,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::ball_popped: {
-            server_event_ball_popped* m = static_cast<server_event_ball_popped*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_popped>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_popped(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -182,7 +182,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::ball_boosted: {
-            server_event_ball_boosted* m = static_cast<server_event_ball_boosted*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_boosted>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_boosted(
                 m->m_ball->id,
                 m->m_booster->id
@@ -190,14 +190,14 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::ball_score: {
-            server_event_ball_score* m = static_cast<server_event_ball_score*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_score>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_score(
                 m->m->id
             )));
         } break;
 
         case server_event_type::ball_portal: {
-            server_event_ball_portal* m = static_cast<server_event_ball_portal*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_portal>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_portal(
                 m->m_ball->id,
                 m->m_portal->id
@@ -205,7 +205,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::ball_powerup: {
-            server_event_ball_powerup* m = static_cast<server_event_ball_powerup*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_powerup>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_powerup(
                 m->m_ball->id,
                 m->m_powerup->id
@@ -213,14 +213,14 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::ball_rb_explode: {
-            server_event_ball_rb_explode* m = static_cast<server_event_ball_rb_explode*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_ball_rb_explode>(a.ptr);
             try_broadcast(this, game_event(game_event_ball_rb_explode(
                 m->m->id
             )));
         } break;
 
         case server_event_type::flag_grabbed: {
-            server_event_flag_grabbed* m = static_cast<server_event_flag_grabbed*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_flag_grabbed>(a.ptr);
             try_broadcast(this, game_event(game_event_flag_grabbed(
                 m->m_ball->id,
                 m->m_flag->id
@@ -228,7 +228,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::toggle_on: {
-            server_event_toggle_on* m = static_cast<server_event_toggle_on*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_toggle_on>(a.ptr);
             try_broadcast(this, game_event(game_event_toggle_on(
                 m->m_ball->id,
                 m->m_toggle->id
@@ -236,7 +236,7 @@ void game::handle_server_events()
         } break;
 
         case server_event_type::toggle_off: {
-            server_event_toggle_off* m = static_cast<server_event_toggle_off*>(a.ptr);
+            auto m = std::static_pointer_cast<server_event_toggle_off>(a.ptr);
             try_broadcast(this, game_event(game_event_toggle_off(
                 m->m_ball->id,
                 m->m_toggle->id
