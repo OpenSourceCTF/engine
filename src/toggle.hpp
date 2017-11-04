@@ -10,12 +10,16 @@
 #include "toggle_tag.hpp"
 #include "collision_user_data.hpp"
 #include "ball.hpp"
+#include "game_accessor.hpp"
 
 struct toggle_tag;
 struct ball;
 
 struct toggle
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
+    game_accessor game;
     float x;
     float y;
     std::uint32_t timer;
@@ -23,21 +27,13 @@ struct toggle
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
 
-    toggle(){}
-
+    toggle();
     toggle(
         const float x,
         const float y,
         const std::uint32_t timer,
         const std::vector<toggle_tag> tags
-    )
-    : x(x)
-    , y(y)
-    , timer(timer)
-    , tags(tags)
-    , body(nullptr)
-    , col_data(nullptr)
-    {}
+    );
     ~toggle();
 
     void add_to_world(b2World * world);

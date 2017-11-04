@@ -14,10 +14,7 @@ struct server_event_chat
     server_event_chat(
         player* p,
         std::string msg
-    )
-    : p(p)
-    , msg(msg)
-    {}
+    );
 };
 
 #endif

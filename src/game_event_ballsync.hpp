@@ -11,9 +11,8 @@ struct game;
 struct game_event_ballsync
 {
     game* g;
-    game_event_ballsync(game* g)
-    : g(g)
-    {}
+
+    game_event_ballsync(game* g);
 };
 
 void to_json(nlohmann::json& j, const game_event_ballsync& p);

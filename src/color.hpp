@@ -16,19 +16,14 @@ struct color
     std::uint8_t b;
     std::uint8_t a;
 
-    color() : r(0), g(0), b(0), a(0) {}
+    color();
 
     color(
         const std::uint8_t r,
         const std::uint8_t g,
         const std::uint8_t b,
         const std::uint8_t a
-    )
-    : r(r)
-    , g(g)
-    , b(b)
-    , a(a)
-    {}
+    );
 
     // from rgba hex like ffaabb or ffaabbff
     color(const std::string & hex);

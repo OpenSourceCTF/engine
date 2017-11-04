@@ -52,6 +52,7 @@ struct wall;
 struct spike;
 struct bomb;
 struct powerup;
+struct flag;
 
 struct map
 {

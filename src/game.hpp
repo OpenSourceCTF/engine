@@ -34,7 +34,7 @@ struct game
     std::mutex server_events_queue_mutex;
     std::queue<server_event> server_events_queue;
 
-    game(){}
+    game();
     game(const std::uint16_t port, map* m);
     game(const game&) = delete;
 

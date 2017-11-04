@@ -66,6 +66,9 @@ std::vector<polygon> make_square_poly(
     };
 }
 
+tp_map_importer::tp_map_importer(map& m)
+: m(m)
+{}
 
 int tp_map_importer::tp_import(
     const std::string & json_src,

@@ -9,6 +9,7 @@
 #include <spdlog/spdlog.h>
 
 #include <json.hpp>
+#include "game_accessor.hpp"
 #include "flag_type.hpp"
 #include "collision_user_data.hpp"
 #include "settings.hpp"
@@ -19,6 +20,9 @@ struct ball;
 
 struct flag
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
+    game_accessor game;
     float x;
     float y;
     flag_type type;
@@ -26,19 +30,12 @@ struct flag
     std::shared_ptr<collision_user_data> col_data;
     bool is_alive;
 
-    flag() {}
+    flag();
     flag(
         const float x,
         const float y,
         const flag_type type
-    )
-    : x(x)
-    , y(y)
-    , type(type)
-    , body(nullptr)
-    , col_data(nullptr)
-    , is_alive(true)
-    {}
+    );
     ~flag();
 
     void add_to_world(b2World * world);

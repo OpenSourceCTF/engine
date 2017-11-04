@@ -1,5 +1,27 @@
 #include "portal.hpp"
 
+thread_local std::size_t portal::id_counter = 0;
+
+
+portal::portal() {}
+portal::portal(
+    const float x,
+    const float y
+)
+: id(id_counter++)
+, x(x)
+, y(y)
+, has_cooldown(false)
+, is_cooling_down(false)
+, cooldown_counter(0)
+, has_destination(false)
+, destination_id(0)
+, destination_ptr(nullptr)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+{}
+
 portal::~portal()
 {
     if(body) {
@@ -71,6 +93,8 @@ void portal::step_on(ball* m)
         disable_portal(dest);
 
         p = dest;
+
+        game.add_server_event(server_event(server_event_ball_portal(m, p)));
     }
 }
 

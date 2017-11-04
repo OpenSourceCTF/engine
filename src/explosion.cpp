@@ -1,16 +1,12 @@
 #include "explosion.hpp"
 
-struct ExplodeAABBCallback : public b2QueryCallback
-{
-    std::vector<b2Body*> bodies;
-  
-    bool ReportFixture(b2Fixture* fixture)
-	{
-        if(fixture->GetBody()->GetMass() > 0)
-        bodies.push_back(fixture->GetBody()); 
-        return true; // continue
-    }
-};
+explosion::explosion(
+    const float radius,
+    const float force
+)
+: radius(radius)
+, force(force)
+{}
 
 void explosion::explode(
     const b2Vec2 pos,

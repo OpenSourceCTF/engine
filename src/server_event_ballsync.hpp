@@ -11,9 +11,8 @@ struct game;
 struct server_event_ballsync
 {
     game* g;
-    server_event_ballsync(game* g)
-    : g(g)
-    {}
+
+    server_event_ballsync(game* g);
 };
 
 #endif

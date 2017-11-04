@@ -13,6 +13,8 @@
 
 struct gate
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
     polygon poly;
     gate_type type;
     gate_type current;
@@ -20,16 +22,11 @@ struct gate
     int red_minus_blue = 0;
     b2Body* body;
 
-    gate(){}
+    gate();
     gate(
         const polygon poly,
         const gate_type type
-    )
-    : poly(poly)
-    , type(type)
-    , current(type)
-    , body(nullptr)
-    {}
+    );
 
     void mark_on(ball* b);
     void mark_off(ball* b);

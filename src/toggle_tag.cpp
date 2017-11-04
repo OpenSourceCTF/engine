@@ -1,5 +1,15 @@
 #include "toggle_tag.hpp"
 
+toggle_tag::toggle_tag(){}
+toggle_tag::toggle_tag(
+    const std::uint32_t id,
+    const toggle_tag_type type
+)
+: id(id)
+, ptr(nullptr)
+, type(type)
+{}
+
 void toggle_tag::step_on(ball* o)
 {
     switch(type) {

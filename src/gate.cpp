@@ -1,5 +1,19 @@
 #include "gate.hpp"
 
+thread_local std::size_t gate::id_counter = 0;
+
+gate::gate(){}
+gate::gate(
+    const polygon poly,
+    const gate_type type
+)
+: id(id_counter++)
+, poly(poly)
+, type(type)
+, current(type)
+, body(nullptr)
+{}
+
 void gate::mark_on(ball* b)
 {
     if(b->type == ball_type::blue) --red_minus_blue;

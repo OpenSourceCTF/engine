@@ -16,11 +16,7 @@ struct server_event_movement
         player* p,
         int xdir,
         int ydir
-    )
-    : p(p)
-    , xdir(xdir)
-    , ydir(ydir)
-    {}
+    );
 };
 
 #endif

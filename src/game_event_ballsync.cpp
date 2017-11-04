@@ -1,17 +1,21 @@
 #include "game_event_ballsync.hpp"
 
+game_event_ballsync::game_event_ballsync(game* g)
+: g(g)
+{}
+
 void to_json(nlohmann::json& j, const game_event_ballsync& p)
 {
-    std::vector<nlohmann::json> players;
-    players.reserve(p.g->players.size());
+    std::vector<nlohmann::json> balls;
+    balls.reserve(p.g->m->balls.size());
 
-    for(auto & o : p.g->players) {
-        const b2Vec2 pos  = o->b->body->GetPosition();
-        const b2Vec2 velo = o->b->body->GetLinearVelocity();
-        const float spin  = o->b->body->GetAngularVelocity();
+    for(auto & o : p.g->m->balls) {
+        const b2Vec2 pos  = o->body->GetPosition();
+        const b2Vec2 velo = o->body->GetLinearVelocity();
+        const float spin  = o->body->GetAngularVelocity();
 
-        players.emplace_back(nlohmann::json{
-            {"player_id", o->player_id},
+        balls.emplace_back(nlohmann::json{
+            {"id", o->id},
             {"px", pos.x},
             {"py", pos.y},
             {"vx", velo.x},
@@ -21,7 +25,8 @@ void to_json(nlohmann::json& j, const game_event_ballsync& p)
     }
 
     j = nlohmann::json{
-        {"players", players}
+        {"timestep", p.g->timestep},
+        {"balls", balls}
     };
 }
 
