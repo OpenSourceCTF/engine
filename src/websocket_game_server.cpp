@@ -190,6 +190,7 @@ void on_game_sync(
 
     game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
 
+    // todo
     /* get login_token
      * so we can get user_id, name, degrees
      * respond with map id
@@ -205,14 +206,6 @@ void on_game_sync(
         return;
     }
 
-    // we send all map data here to sync user
-    // todo: should this be moved to a server_event ?
-    try_send(srv, hdl, websocketpp::frame::opcode::value::text, 
-        game_event(game_event_gamesync(g))
-    );
-
-    // add ball & player to game
-    // select ball color
     const ball_type selected_team_color = [](const game& g){
         std::size_t red_cnt  = 0;
         std::size_t blue_cnt = 0;
@@ -230,10 +223,15 @@ void on_game_sync(
             : ball_type::blue;
     }(g);
 
+    // add ball & player to game
     ball* b = g.add_ball(new ball(selected_team_color));
     player* p = g.add_player(new player(hdl, srv, &g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
 
+    // we send all map data here to sync user
+    g.add_server_event(server_event(server_event_gamesync(p)));
+
+    // and let everyone know a new player has joined
     g.add_server_event(server_event(server_event_player_joined(p)));
 }
 

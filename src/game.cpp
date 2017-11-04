@@ -89,6 +89,13 @@ void game::handle_server_events()
         const server_event a = std::move(server_events_queue.front());
 
         switch(a.type) {
+        case server_event_type::gamesync: {
+            auto m = std::static_pointer_cast<server_event_gamesync>(a.ptr);
+            try_send(m->p->srv, m->p->con, websocketpp::frame::opcode::value::text, 
+                game_event(game_event_gamesync(this))
+            );
+        } break;
+
         case server_event_type::player_joined: {
             auto m = std::static_pointer_cast<server_event_player_joined>(a.ptr);
             try_broadcast(this, game_event(game_event_player_joined(m->p)));

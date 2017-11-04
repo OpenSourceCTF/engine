@@ -1,6 +1,6 @@
 #include "game_event_gamesync.hpp"
 
-game_event_gamesync::game_event_gamesync(const game& g)
+game_event_gamesync::game_event_gamesync(const game* g)
 : g(g)
 {}
 
@@ -16,7 +16,7 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
     std::vector<nlohmann::json> flags;
     std::vector<nlohmann::json> balls;
 
-    for(auto & o : p.g.players) {
+    for(auto & o : p.g->players) {
         players.emplace_back(nlohmann::json{
             {"name", o->name},
             {"is_registered", o->is_registered},
@@ -25,7 +25,7 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
         });
     }
 
-    for(auto & o : p.g.m->portals) {
+    for(auto & o : p.g->m->portals) {
         portals.emplace_back(nlohmann::json{
             {"id", o->id},
             {"cooldown_counter", o->cooldown_counter},
@@ -33,20 +33,20 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
         });
     }
 
-    for(auto & o : p.g.m->toggles) {
+    for(auto & o : p.g->m->toggles) {
         toggles.emplace_back(nlohmann::json{
             {"id", o->id}
         });
     }
 
-    for(auto & o : p.g.m->bombs) {
+    for(auto & o : p.g->m->bombs) {
         bombs.emplace_back(nlohmann::json{
             {"id", o->id},
             {"is_alive", o->is_alive}
         });
     }
 
-    for(auto & o : p.g.m->powerups) {
+    for(auto & o : p.g->m->powerups) {
         powerups.emplace_back(nlohmann::json{
             {"id", o->id},
             {"is_alive", o->is_alive},
@@ -54,28 +54,28 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
         });
     }
 
-    for(auto & o : p.g.m->boosters) {
+    for(auto & o : p.g->m->boosters) {
         boosters.emplace_back(nlohmann::json{
             {"id", o->id},
             {"is_alive", o->is_alive}
         });
     }
 
-    for(auto & o : p.g.m->gates) {
+    for(auto & o : p.g->m->gates) {
         gates.emplace_back(nlohmann::json{
             {"id", o->id},
             {"current", to_string(o->current)}
         });
     }
 
-    for(auto & o : p.g.m->flags) {
+    for(auto & o : p.g->m->flags) {
         flags.emplace_back(nlohmann::json{
             {"id", o->id},
             {"is_alive", o->is_alive}
         });
     }
 
-    for(auto & o : p.g.m->balls) {
+    for(auto & o : p.g->m->balls) {
         std::vector<nlohmann::json> b_powerups;
         for(auto & j : o->powerups) {
             b_powerups.emplace_back(nlohmann::json{
@@ -102,11 +102,11 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
 
     j = nlohmann::json{
         {"game", {
-            {"max_points", p.g.max_points},
-            {"max_length", p.g.max_length},
-            {"red_points", p.g.red_points},
-            {"blue_points", p.g.blue_points},
-            {"timestep", p.g.timestep}
+            {"max_points", p.g->max_points},
+            {"max_length", p.g->max_length},
+            {"red_points", p.g->red_points},
+            {"blue_points", p.g->blue_points},
+            {"timestep", p.g->timestep}
         }},
         {"players", players},
         {"portals", portals},
