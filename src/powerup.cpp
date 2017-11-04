@@ -1,5 +1,7 @@
 #include "powerup.hpp"
 
+thread_local std::size_t powerup::id_counter = 0;
+
 powerup::powerup()
 : possible_types({
     powerup_type::tagpro,
@@ -13,7 +15,8 @@ powerup::powerup(
     const float y,
     const std::vector<powerup_type> possible_types
 )
-: x(x)
+: id(id_counter++)
+, x(x)
 , y(y)
 , body(nullptr)
 , col_data(nullptr)
@@ -66,6 +69,7 @@ void powerup::step_on(ball* m)
 
     respawn_counter = config.POWERUP_RESPAWN_TIME;
     is_alive = false;
+    game.add_server_event(server_event(server_event_ball_powerup(m, this)));
 }
 
 powerup_type powerup::get_random_type()

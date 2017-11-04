@@ -10,11 +10,7 @@ struct server_event_player_joined
 {
     player* p;
 
-    server_event_player_joined(
-        player* p
-    )
-    : p(p)
-    {}
+    server_event_player_joined(player* p);
 };
 
 #endif

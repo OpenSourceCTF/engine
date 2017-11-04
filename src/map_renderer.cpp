@@ -1,5 +1,11 @@
 #include "map_renderer.hpp"
 
+map_renderer::map_renderer(map& m)
+: m(m)
+, scaler(13.0f)
+, wireframe(false)
+{}
+
 void map_renderer::display_help() const
 {
     std::cout

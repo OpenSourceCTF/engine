@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+game::game(){}
+
 game::game(const std::uint16_t port, map* m)
 : port(port)
 , m(m)
@@ -123,6 +125,124 @@ void game::handle_server_events()
             try_broadcast(this, game_event(game_event_ballsync(m->g)));
         } break;
 
+        case server_event_type::ball_respawn: {
+            server_event_ball_respawn* m = static_cast<server_event_ball_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::bomb_respawn: {
+            server_event_bomb_respawn* m = static_cast<server_event_bomb_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_bomb_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::bomb_explosion: {
+            server_event_bomb_explosion* m = static_cast<server_event_bomb_explosion*>(a.ptr);
+            try_broadcast(this, game_event(game_event_bomb_explosion(
+                m->m->id
+            )));
+        } break;
+
+        case server_event_type::powerup_respawn: {
+            server_event_powerup_respawn* m = static_cast<server_event_powerup_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_powerup_respawn(
+                m->m->id,
+                m->m->body->GetPosition(),
+                m->m->type
+            )));
+        } break;
+
+        case server_event_type::booster_respawn: {
+            server_event_booster_respawn* m = static_cast<server_event_booster_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_booster_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::portal_respawn: {
+            server_event_portal_respawn* m = static_cast<server_event_portal_respawn*>(a.ptr);
+            try_broadcast(this, game_event(game_event_portal_respawn(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::ball_popped: {
+            server_event_ball_popped* m = static_cast<server_event_ball_popped*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_popped(
+                m->m->id,
+                m->m->body->GetPosition()
+            )));
+        } break;
+
+        case server_event_type::ball_boosted: {
+            server_event_ball_boosted* m = static_cast<server_event_ball_boosted*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_boosted(
+                m->m_ball->id,
+                m->m_booster->id
+            )));
+        } break;
+
+        case server_event_type::ball_score: {
+            server_event_ball_score* m = static_cast<server_event_ball_score*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_score(
+                m->m->id
+            )));
+        } break;
+
+        case server_event_type::ball_portal: {
+            server_event_ball_portal* m = static_cast<server_event_ball_portal*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_portal(
+                m->m_ball->id,
+                m->m_portal->id
+            )));
+        } break;
+
+        case server_event_type::ball_powerup: {
+            server_event_ball_powerup* m = static_cast<server_event_ball_powerup*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_powerup(
+                m->m_ball->id,
+                m->m_powerup->id
+            )));
+        } break;
+
+        case server_event_type::ball_rb_explode: {
+            server_event_ball_rb_explode* m = static_cast<server_event_ball_rb_explode*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_rb_explode(
+                m->m->id
+            )));
+        } break;
+
+        case server_event_type::flag_grabbed: {
+            server_event_flag_grabbed* m = static_cast<server_event_flag_grabbed*>(a.ptr);
+            try_broadcast(this, game_event(game_event_flag_grabbed(
+                m->m_ball->id,
+                m->m_flag->id
+            )));
+        } break;
+
+        case server_event_type::toggle_on: {
+            server_event_toggle_on* m = static_cast<server_event_toggle_on*>(a.ptr);
+            try_broadcast(this, game_event(game_event_toggle_on(
+                m->m_ball->id,
+                m->m_toggle->id
+            )));
+        } break;
+
+        case server_event_type::toggle_off: {
+            server_event_toggle_off* m = static_cast<server_event_toggle_off*>(a.ptr);
+            try_broadcast(this, game_event(game_event_toggle_off(
+                m->m_ball->id,
+                m->m_toggle->id
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;
@@ -183,6 +303,7 @@ void game::step()
         if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
             o->is_alive = true;
+            add_server_event(server_event(server_event_ball_respawn(o.get())));
         }
 
         for(auto & p : o->powerups) {
@@ -216,6 +337,7 @@ void game::step()
     for(auto && o : m->bombs) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->is_alive = true;
+            add_server_event(server_event(server_event_bomb_respawn(o.get())));
         }
     }
 
@@ -223,12 +345,14 @@ void game::step()
         if(! o->is_alive && ! --o->respawn_counter) {
             o->type = o->get_random_type();
             o->is_alive = true;
+            add_server_event(server_event(server_event_powerup_respawn(o.get())));
         }
     }
 
     for(auto && o : m->boosters) {
         if(! o->is_alive && ! --o->respawn_counter) {
             o->is_alive = true;
+            add_server_event(server_event(server_event_booster_respawn(o.get())));
         }
     }
 
@@ -238,9 +362,11 @@ void game::step()
                 if(o->is_cooling_down && --(o->cooldown_counter) == 0) {
                     o->is_alive = true;
                     o->is_cooling_down = false;
+                    add_server_event(server_event(server_event_portal_respawn(o.get())));
                 }
             } else {
                 o->is_alive = true;
+                add_server_event(server_event(server_event_portal_respawn(o.get())));
             }
         }
     }
@@ -318,6 +444,7 @@ b2World * game::init_world()
 
     for(auto && o : m->spikes) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->gates) {
@@ -326,26 +453,32 @@ b2World * game::init_world()
 
     for(auto && o : m->bombs) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->toggles) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->boosters) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->powerups) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->flags) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->portals) {
         o->add_to_world(world);
+        o->game.set_game(this);
     }
 
     for(auto && o : m->chains) {
@@ -372,6 +505,8 @@ void game::score(ball* b)
     if(b->type == ball_type::blue) {
         ++blue_points;
     }
+
+    add_server_event(server_event(server_event_ball_score(b)));
 }
 
 player* game::get_player_from_con(websocketpp::connection_hdl con)

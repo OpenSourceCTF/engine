@@ -1,10 +1,14 @@
 #include "bomb.hpp"
 
+thread_local std::size_t bomb::id_counter = 0;
+
+bomb::bomb() {}
 bomb::bomb(
     const float x,
     const float y
 )
-: x(x)
+: id(id_counter++)
+, x(x)
 , y(y)
 , body(nullptr)
 , col_data(nullptr)
@@ -56,6 +60,7 @@ void bomb::explode()
         .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
+    game.add_server_event(server_event(server_event_bomb_explosion(this)));
 }
 
 void to_json(nlohmann::json& j, const bomb& p)

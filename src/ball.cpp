@@ -1,7 +1,10 @@
 #include "ball.hpp"
 
+thread_local std::size_t ball::id_counter = 0;
+
 ball::ball(const ball_type type)
-: type(type)
+: id(id_counter++)
+, type(type)
 , body(nullptr)
 , col_data(nullptr)
 , portal_transport_ptr(nullptr)
@@ -89,6 +92,7 @@ void ball::pop()
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
     reset_flags();
+    player_ptr->g->add_server_event(server_event(server_event_ball_popped(this)));
 }
 
 void ball::get_boosted()
@@ -159,6 +163,7 @@ void ball::rb_explode()
         .explode(body->GetPosition(), body->GetWorld());
 
     remove_powerup(powerup_type::rollingbomb);
+    player_ptr->g->add_server_event(server_event(server_event_ball_rb_explode(this)));
 }
 
 bool ball::has_flag(const flag_type type)
@@ -176,6 +181,7 @@ void ball::add_flag(flag* f)
 {
     spdlog::get("game")->debug("add new flag");
     flags.emplace_back(f);
+    player_ptr->g->add_server_event(server_event(server_event_flag_grabbed(this, f)));
 }
 
 void ball::reset_flags()

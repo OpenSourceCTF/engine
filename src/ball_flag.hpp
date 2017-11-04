@@ -6,14 +6,11 @@
 
 struct flag;
 
-
 struct ball_flag
 {
     flag* f;
 
-    ball_flag(flag* f)
-    : f(f)
-    {}
+    ball_flag(flag* f);
 };
 
 #endif

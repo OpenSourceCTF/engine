@@ -1,4 +1,10 @@
 #include "chain.hpp"
+chain::chain() {}
+
+chain::chain(const std::vector<coord> & vertices)
+: vertices(vertices)
+, body(nullptr)
+{}
 
 chain::~chain()
 {

@@ -1,5 +1,24 @@
 #include "toggle.hpp"
 
+thread_local std::size_t toggle::id_counter = 0;
+
+toggle::toggle(){}
+
+toggle::toggle(
+    const float x,
+    const float y,
+    const std::uint32_t timer,
+    const std::vector<toggle_tag> tags
+)
+: id(id_counter++)
+, x(x)
+, y(y)
+, timer(timer)
+, tags(tags)
+, body(nullptr)
+, col_data(nullptr)
+{}
+
 toggle::~toggle()
 {
     if(body) {
@@ -36,6 +55,8 @@ void toggle::step_on(ball* b)
     for(auto & o : tags) {
         o.step_on(b);
     }
+
+    game.add_server_event(server_event(server_event_toggle_on(b, this)));
 }
 
 void toggle::step_off(ball* b)
@@ -43,6 +64,8 @@ void toggle::step_off(ball* b)
     for(auto & o : tags) {
         o.step_off(b);
     }
+
+    game.add_server_event(server_event(server_event_toggle_off(b, this)));
 }
 
 void to_json(nlohmann::json& j, const toggle& p)

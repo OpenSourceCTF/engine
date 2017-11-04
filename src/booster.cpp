@@ -1,5 +1,24 @@
 #include "booster.hpp"
 
+thread_local std::size_t booster::id_counter = 0;
+
+booster::booster() {}
+
+booster::booster(
+    const float x,
+    const float y,
+    const booster_type type
+)
+: id(id_counter++)
+, x(x)
+, y(y)
+, type(type)
+, body(nullptr)
+, col_data(nullptr)
+, is_alive(true)
+, respawn_counter(0)
+{}
+
 void booster::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -42,15 +61,21 @@ void booster::step_on(ball* m)
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
     switch(type) {
-        case booster_type::all:  m->get_boosted(); break;
+        case booster_type::all: boost_ball(m); break;
         case booster_type::red:  
         case booster_type::blue:
-           if(same_color(type, m->type)) m->get_boosted();
+           if(same_color(type, m->type)) boost_ball(m);
            else return; // prevents is_alive from being switched
            break;
     }
 
     is_alive = false;
+}
+
+void booster::boost_ball(ball* m)
+{
+    m->player_ptr->g->add_server_event(server_event(server_event_ball_boosted(m, this)));
+    m->get_boosted();
 }
 
 void to_json(nlohmann::json& j, const booster& p)

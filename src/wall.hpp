@@ -17,15 +17,11 @@ struct wall
     color col;
     std::shared_ptr<collision_user_data> col_data;
 
-    wall(){}
+    wall();
     wall(
         const polygon poly,
         const color col
-    )
-    : poly(poly)
-    , col(col)
-    , col_data(nullptr)
-    {}
+    );
 };
 
 void to_json(nlohmann::json& j, const wall& p);

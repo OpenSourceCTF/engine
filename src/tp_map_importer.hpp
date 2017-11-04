@@ -10,9 +10,7 @@ struct tp_map_importer
 {
     map& m;
 
-    tp_map_importer(map& m)
-    : m(m)
-    {}
+    tp_map_importer(map& m);
 
     int tp_import(
         const std::string & json_src,

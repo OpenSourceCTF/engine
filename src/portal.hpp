@@ -6,6 +6,7 @@
 #include <Box2D/Box2D.h>
 #include <json.hpp>
 
+#include "game_accessor.hpp"
 #include "collision_user_data.hpp"
 #include "settings.hpp"
 #include "ball.hpp"
@@ -15,6 +16,9 @@ struct ball;
 
 struct portal
 {
+    static thread_local std::size_t id_counter;
+    game_accessor game;
+    std::size_t id;
     float x;
     float y;
 
@@ -32,23 +36,11 @@ struct portal
     bool is_alive;
 
 
-    portal() {}
+    portal();
     portal(
         const float x,
         const float y
-    )
-    : x(x)
-    , y(y)
-    , has_cooldown(false)
-    , is_cooling_down(false)
-    , cooldown_counter(0)
-    , has_destination(false)
-    , destination_id(0)
-    , destination_ptr(nullptr)
-    , body(nullptr)
-    , col_data(nullptr)
-    , is_alive(true)
-    {}
+    );
     ~portal();
 
     void set_cooldown(const std::uint32_t x);

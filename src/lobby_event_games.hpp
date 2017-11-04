@@ -23,15 +23,7 @@ struct lobby_event_games_game
         std::string   map_name,
         std::string   map_author,
         std::size_t   player_count
-    )
-    : port(port)
-    , max_points(max_points)
-    , max_length(max_length)
-    , timestep(timestep)
-    , map_name(map_name)
-    , map_author(map_author)
-    , player_count(player_count)
-    {}
+    );
 };
 
 struct lobby_event_games
@@ -40,9 +32,7 @@ struct lobby_event_games
 
     lobby_event_games(
         std::vector<lobby_event_games_game> games
-    )
-    : games(games)
-    {}
+    );
 };
 
 void to_json(nlohmann::json& j, const lobby_event_games_game& p);

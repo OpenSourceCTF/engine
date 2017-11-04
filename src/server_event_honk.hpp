@@ -9,11 +9,7 @@ struct server_event_honk
 {
     player* p;
 
-    server_event_honk(
-        player* p
-    )
-    : p(p)
-    {}
+    server_event_honk(player* p);
 };
 
 #endif

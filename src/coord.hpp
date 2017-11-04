@@ -8,15 +8,12 @@ struct coord
 
     float x,y;
     
-    coord() {}
+    coord();
     
     coord(
         const float x,
         const float y
-    )
-    : x(x)
-    , y(y)
-    {}
+    );
 };
 
 void to_json(nlohmann::json& j, const coord& p);
