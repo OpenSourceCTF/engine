@@ -1,6 +1,7 @@
 #ifndef ML_GAME_EVENT_HPP
 #define ML_GAME_EVENT_HPP
 
+#include <memory>
 #include <spdlog/spdlog.h>
 #include <json.hpp>
 #include "game_event_type.hpp"
@@ -61,30 +62,30 @@ struct game_event_toggle_off;
 struct game_event
 {
     game_event_type type;
-    void* ptr;
+    std::shared_ptr<void> ptr;
 
-    game_event(const game_event_gamesync e);
-    game_event(const game_event_ballsync e);
-    game_event(const game_event_player_joined e);
-    game_event(const game_event_player_left e);
-    game_event(const game_event_chat e);
-    game_event(const game_event_teamchat e);
-    game_event(const game_event_honk e);
-    game_event(const game_event_bomb_respawn e);
-    game_event(const game_event_bomb_explosion e);
-    game_event(const game_event_powerup_respawn e);
-    game_event(const game_event_booster_respawn e);
-    game_event(const game_event_portal_respawn e);
-    game_event(const game_event_ball_respawn e);
-    game_event(const game_event_ball_popped e);
-    game_event(const game_event_ball_boosted e);
-    game_event(const game_event_ball_score e);
-    game_event(const game_event_ball_portal e);
-    game_event(const game_event_ball_powerup e);
-    game_event(const game_event_ball_rb_explode e);
-    game_event(const game_event_flag_grabbed e);
-    game_event(const game_event_toggle_on e);
-    game_event(const game_event_toggle_off e);
+    game_event(game_event_gamesync e);
+    game_event(game_event_ballsync e);
+    game_event(game_event_player_joined e);
+    game_event(game_event_player_left e);
+    game_event(game_event_chat e);
+    game_event(game_event_teamchat e);
+    game_event(game_event_honk e);
+    game_event(game_event_bomb_respawn e);
+    game_event(game_event_bomb_explosion e);
+    game_event(game_event_powerup_respawn e);
+    game_event(game_event_booster_respawn e);
+    game_event(game_event_portal_respawn e);
+    game_event(game_event_ball_respawn e);
+    game_event(game_event_ball_popped e);
+    game_event(game_event_ball_boosted e);
+    game_event(game_event_ball_score e);
+    game_event(game_event_ball_portal e);
+    game_event(game_event_ball_powerup e);
+    game_event(game_event_ball_rb_explode e);
+    game_event(game_event_flag_grabbed e);
+    game_event(game_event_toggle_on e);
+    game_event(game_event_toggle_off e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);
