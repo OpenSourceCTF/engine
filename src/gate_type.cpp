@@ -7,9 +7,6 @@ std::string to_string(const gate_type m)
         case gate_type::on:   return "on";   break;
         case gate_type::blue: return "blue"; break;
         case gate_type::red:  return "red"; break;
-        default:
-            spdlog::get("game")->error("gate_type not enumerated in to_string");
-            return "";
     }
 }
 

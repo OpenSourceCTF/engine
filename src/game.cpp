@@ -242,10 +242,6 @@ void game::handle_server_events()
                 m->m_toggle->id
             )));
         } break;
-
-        default:
-            spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
-            break;
         }
 
         server_events_queue.pop();

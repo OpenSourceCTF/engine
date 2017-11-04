@@ -6,9 +6,8 @@ int start_game_server(const std::uint16_t port)
     websocketpp::server<websocketpp::config::asio> srv;
 
     try {
-        srv.set_access_channels(websocketpp::log::alevel::all);
-        srv.clear_access_channels(websocketpp::log::alevel::frame_payload);
-
+        srv.clear_access_channels(websocketpp::log::alevel::all);
+        srv.set_access_channels(websocketpp::log::elevel::info);
         srv.init_asio();
         srv.set_message_handler(bind(&handle_game_message, &srv, ::_1, ::_2));
         srv.set_close_handler(bind(&handle_game_close, &srv, ::_1));

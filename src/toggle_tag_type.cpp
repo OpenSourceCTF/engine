@@ -5,9 +5,6 @@ std::string to_string(const toggle_tag_type m)
     switch(m) {
         case toggle_tag_type::bomb: return "bomb"; break;
         case toggle_tag_type::gate: return "gate"; break;
-        default:
-            spdlog::get("game")->error("toggle_tag_type not enumerated in to_string");
-            return "";
     }
 }
 

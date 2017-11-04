@@ -6,9 +6,6 @@ std::string to_string(const flag_type m)
         case flag_type::neutral: return "neutral"; break;
         case flag_type::blue:    return "blue";    break;
         case flag_type::red:     return "red";     break;
-        default:
-            spdlog::get("game")->error("flag_type not enumerated in to_string");
-            return "";
     }
 }
 

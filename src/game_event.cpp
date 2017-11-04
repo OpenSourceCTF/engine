@@ -181,9 +181,6 @@ void to_json(nlohmann::json& j, const game_event& p)
         case game_event_type::toggle_off:
             to_json(data, *static_cast<game_event_toggle_off*>(p.ptr));
             break;
-        default:
-            spdlog::get("game")->error("game_event_type not enumerated in to_json");
-            break;
     }
 
     j = nlohmann::json{

@@ -5,9 +5,6 @@ std::string to_string(const map_type m)
     switch(m) {
         case map_type::normal:          return "normal";          break;
         case map_type::none_gravityCTF: return "none_gravityCTF"; break;
-        default:
-            spdlog::get("game")->error("map_type not enumerated in to_string");
-            return "";
     }
 }
 
