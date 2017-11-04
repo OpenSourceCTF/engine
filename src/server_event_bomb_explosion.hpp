@@ -3,6 +3,8 @@
 
 #include "bomb.hpp"
 
+struct bomb;
+
 struct server_event_bomb_explosion
 {
     bomb* m;

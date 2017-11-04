@@ -141,6 +141,13 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::bomb_explosion: {
+            server_event_bomb_explosion* m = static_cast<server_event_bomb_explosion*>(a.ptr);
+            try_broadcast(this, game_event(game_event_bomb_explosion(
+                m->m->id
+            )));
+        } break;
+
         case server_event_type::powerup_respawn: {
             server_event_powerup_respawn* m = static_cast<server_event_powerup_respawn*>(a.ptr);
             try_broadcast(this, game_event(game_event_powerup_respawn(

@@ -60,6 +60,7 @@ void bomb::explode()
         .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
+    game.add_server_event(server_event(server_event_bomb_explosion(this)));
 }
 
 void to_json(nlohmann::json& j, const bomb& p)

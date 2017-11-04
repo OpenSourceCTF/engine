@@ -12,6 +12,7 @@
 #include "util.hpp"
 #include "explosion.hpp"
 #include "game_accessor.hpp"
+#include "server_event_bomb_explosion.hpp"
 
 struct ball;
 struct collision_user_data;
