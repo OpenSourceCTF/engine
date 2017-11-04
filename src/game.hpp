@@ -35,15 +35,15 @@ struct game
     std::queue<server_event> server_events_queue;
 
     game();
-    game(const std::uint16_t port, map* m);
+    game(const std::uint16_t port);
     game(const game&) = delete;
 
-    void spawn_srv_thread();
-    void spawn_phys_thread();
+    bool load_map(const std::string map_src);
+    bool spawn_srv_thread();
+    bool spawn_phys_thread();
     void run();
     void step();
     void handle_server_events();
-    void change_map(map* m);
 
     b2World* init_world();
     ball* add_ball(ball* b);

@@ -29,23 +29,11 @@ void lobby_server::start_server()
 
     for(std::size_t i=0; i<config.SERVER_GAMES; ++i) {
         const std::uint16_t port = config.SERVER_GAME_PORT_START + i;
+        const std::string map_src = config.SERVER_MAPS[i % config.SERVER_MAPS.size()];
 
-        map * m = nullptr;
-        // todo we need to handle switching maps as time goes on
-        try {
-            const std::string map_src = config.SERVER_MAPS[i % config.SERVER_MAPS.size()];
-            spdlog::get("game")->debug("lobby_server: loading: ", map_src);
-            std::ifstream t(map_src);
-            std::stringstream buf;
-            buf << t.rdbuf();
-
-            m = new map(nlohmann::json::parse(buf.str()));
-        } catch(nlohmann::detail::parse_error e) {
-            spdlog::get("game")->error("mapload: ", e.what());
-        }
-
-        games.emplace_back(new game(port, m));
+        games.emplace_back(new game(port));
         game* g = games.back().get();
+        g->load_map(map_src);
         g->spawn_srv_thread();
         g->spawn_phys_thread();
     }

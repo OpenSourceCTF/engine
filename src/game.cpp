@@ -2,9 +2,9 @@
 
 game::game(){}
 
-game::game(const std::uint16_t port, map* m)
+game::game(const std::uint16_t port)
 : port(port)
-, m(m)
+, m(nullptr)
 , max_points(3)
 , max_length(15*60)
 , red_points(0)
@@ -13,21 +13,33 @@ game::game(const std::uint16_t port, map* m)
 , timestep(0)
 {}
 
-void game::spawn_srv_thread()
+bool game::spawn_srv_thread()
 {
+    if(! m) {
+        spdlog::get("game")->critical("map not loaded, cannot start srv thread");
+        return false;
+    }
+
     srv_thread = std::thread(
         start_game_server,
         port
     );
     srv_thread.detach();
+    return true;
 }
 
-void game::spawn_phys_thread()
+bool game::spawn_phys_thread()
 {
+    if(! m) {
+        spdlog::get("game")->critical("map not loaded, cannot start phys thread");
+        return false;
+    }
+
     phys_thread = std::thread(
         &game::run, std::ref(*this)
     );
     phys_thread.detach();
+    return true;
 }
 
 void game::run()
@@ -267,10 +279,35 @@ void game::handle_server_events()
     );
 }
 
-void game::change_map(map* m)
+bool game::load_map(const std::string map_src)
 {
-    std::map<player*, ball_type> player_balls;
+    map* m;
 
+    // reset these otherwise we'll keep increasing ids for next load
+    gate::id_counter    = 0;
+    booster::id_counter = 0;
+    portal::id_counter  = 0;
+    bomb::id_counter    = 0;
+    ball::id_counter    = 0;
+    powerup::id_counter = 0;
+    flag::id_counter    = 0;
+    toggle::id_counter  = 0;
+
+
+    try {
+        spdlog::get("game")->debug("loading: ", map_src);
+        std::ifstream t(map_src);
+        std::stringstream buf;
+        buf << t.rdbuf();
+
+        m = new map(nlohmann::json::parse(buf.str()));
+    } catch(nlohmann::detail::parse_error e) {
+        spdlog::get("game")->error("mapload: ", e.what());
+        return false;
+    }
+
+
+    std::map<player*, ball_type> player_balls;
 
     if(this->m) {
         for(auto && o : players) {
@@ -281,6 +318,7 @@ void game::change_map(map* m)
     }
 
     this->m = m;
+
     init_world();
     for(auto && o : player_balls) {
         player* p = o.first;
@@ -289,6 +327,8 @@ void game::change_map(map* m)
         p->b = b;
         b->set_player_ptr(p);
     }
+
+    return true;
 }
 
 void game::step()
