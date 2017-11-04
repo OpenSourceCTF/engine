@@ -23,17 +23,13 @@ struct bomb
     std::shared_ptr<collision_user_data> col_data;
     bool is_alive;
     int respawn_counter;
-    explosion ex;
 
-    bomb() {
-        const settings& config = settings::get_instance();
-        ex = explosion(config.BOMB_EXPLOSION_RADIUS,
-                       config.BOMB_EXPLOSION_FORCE);
-    }
+    bomb() {}
     bomb(
         const float x,
         const float y
     );
+    ~bomb();
 
     void add_to_world(b2World* world);
     void explode();

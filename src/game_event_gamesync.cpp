@@ -1,6 +1,6 @@
-#include "request_game_sync_response.hpp"
+#include "game_event_gamesync.hpp"
 
-void to_json(nlohmann::json& j, const request_game_sync_response& p)
+void to_json(nlohmann::json& j, const game_event_gamesync& p)
 {
     std::vector<nlohmann::json> players;
     players.reserve(p.g.players.size());
@@ -15,9 +15,13 @@ void to_json(nlohmann::json& j, const request_game_sync_response& p)
     }
 
     j = nlohmann::json{
-        {"game", 
+        {"game", {
+            {"max_points", p.g.max_points},
+            {"max_length", p.g.max_length},
+            {"red_points", p.g.red_points},
+            {"blue_points", p.g.blue_points},
             {"timestep", p.g.timestep}
-        },
+        }},
         {"players", players}
     };
 

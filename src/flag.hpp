@@ -39,6 +39,7 @@ struct flag
     , col_data(nullptr)
     , is_alive(true)
     {}
+    ~flag();
 
     void add_to_world(b2World * world);
     void step_on(ball* m);

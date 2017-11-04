@@ -1,5 +1,11 @@
 #include "flag.hpp"
 
+flag::~flag()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
 void flag::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -44,7 +50,9 @@ void to_json(nlohmann::json& j, const flag& p)
 
 void from_json(const nlohmann::json& j, flag& p)
 {
-    p.x    = j.at("x").get<float>();
-    p.y    = j.at("y").get<float>();
-    p.type = flag_type_from_string(j.at("type").get<std::string>());
+    p = flag(
+        j.at("x").get<float>(),
+        j.at("y").get<float>(),
+        flag_type_from_string(j.at("type").get<std::string>())
+    );
 }

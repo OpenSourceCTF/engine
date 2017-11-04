@@ -1,5 +1,12 @@
 #include "toggle.hpp"
 
+toggle::~toggle()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void toggle::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -50,9 +57,11 @@ void to_json(nlohmann::json& j, const toggle& p)
 
 void from_json(const nlohmann::json& j, toggle& p)
 {
-    p.x     = j.at("x").get<float>();
-    p.y     = j.at("y").get<float>();
-    p.timer = j.at("timer").get<int>();
-    p.tags  = j.at("tags").get<std::vector<toggle_tag>>();
+    p = toggle(
+        j.at("x").get<float>(),
+        j.at("y").get<float>(),
+        j.at("timer").get<int>(),
+        j.at("tags").get<std::vector<toggle_tag>>()
+    );
 }
 

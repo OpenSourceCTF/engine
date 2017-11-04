@@ -11,14 +11,21 @@ game::game(const std::uint16_t port, map* m)
 , timestep(0)
 {}
 
-std::thread game::spawn_thread()
+void game::spawn_srv_thread()
 {
-    std::thread thread(
+    srv_thread = std::thread(
+        start_game_server,
+        port
+    );
+    srv_thread.detach();
+}
+
+void game::spawn_phys_thread()
+{
+    phys_thread = std::thread(
         &game::run, std::ref(*this)
     );
-    thread.detach();
-
-    return thread;
+    phys_thread.detach();
 }
 
 void game::run()
@@ -28,16 +35,20 @@ void game::run()
 
     // consider std::sleep_until here
     while(true) {
+        if(players.empty()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            continue;
+        }
+
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
 
-        while(! client_actions_queue.empty()) {
-            std::lock_guard<std::mutex> lock(client_actions_queue_mutex);
-            const client_action a = std::move(client_actions_queue.front());
-            // todo: handle actions
-            client_actions_queue.pop();
+        if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
+            add_server_event(server_event(server_event_ballsync(this)));
         }
+
+        handle_server_events();
 
         this->step();
         world->Step(
@@ -62,15 +73,112 @@ void game::run()
 
         const std::chrono::microseconds t_sleep(tic_duration - step_duration);
 
-        // spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
+        spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
 
         std::this_thread::sleep_for(t_sleep);
     }
 }
 
+void game::handle_server_events()
+{
+    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+
+    while(! server_events_queue.empty()) {
+        const server_event a = std::move(server_events_queue.front());
+
+        switch(a.type) {
+        case server_event_type::player_joined: {
+            server_event_player_joined* m = static_cast<server_event_player_joined*>(a.ptr);
+            try_broadcast(this, game_event(game_event_player_joined(m->p)));
+        } break;
+
+        case server_event_type::player_left: {
+            server_event_player_left* m = static_cast<server_event_player_left*>(a.ptr);
+            try_broadcast(this, game_event(game_event_player_left(m->p)));
+        } break;
+
+        case server_event_type::chat: {
+            server_event_chat* m = static_cast<server_event_chat*>(a.ptr);
+            try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
+        } break;
+
+        case server_event_type::teamchat: {
+            server_event_teamchat* m = static_cast<server_event_teamchat*>(a.ptr);
+            try_broadcast_team(this, m->p->b->type, game_event(game_event_teamchat(m->p, m->msg)));
+        } break;
+
+        case server_event_type::movement: {
+            server_event_movement* m = static_cast<server_event_movement*>(a.ptr);
+            m->p->xdir = m->xdir;
+            m->p->ydir = m->ydir;
+        } break;
+
+        case server_event_type::honk: {
+            server_event_honk* m = static_cast<server_event_honk*>(a.ptr);
+            try_broadcast(this, game_event(game_event_honk(m->p)));
+        } break;
+
+        case server_event_type::ballsync: {
+            server_event_ballsync* m = static_cast<server_event_ballsync*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ballsync(m->g)));
+        } break;
+
+        default:
+            spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
+            break;
+        }
+
+        server_events_queue.pop();
+    }
+
+    // remove all players marked for removal
+    players.erase(
+        std::remove_if(
+            players.begin(),
+            players.end(),
+            [](std::unique_ptr<player> & p) {
+                return p->remove;
+            }
+        ),
+        players.end()
+    );
+}
+
+void game::change_map(map* m)
+{
+    std::map<player*, ball_type> player_balls;
+
+
+    if(this->m) {
+        for(auto && o : players) {
+            player_balls[o.get()] = o->b->type;
+        }
+
+        delete this->m;
+    }
+
+    this->m = m;
+    init_world();
+    for(auto && o : player_balls) {
+        player* p = o.first;
+        ball_type t = o.second;
+        ball* b = add_ball(new ball(t));
+        p->b = b;
+        b->set_player_ptr(p);
+    }
+}
 
 void game::step()
 {
+    for(auto && o : players) {
+        ball* b = o->b;
+        if(b && b->is_alive) {
+            if(o->xdir || o->ydir) {
+                b->move(o->xdir, o->ydir);
+            }
+        }
+    }
+
     for(auto && o : m->balls) {
         if(! o->is_alive && ! --(o->respawn_counter)) {
             respawn_ball(o.get());
@@ -186,9 +294,9 @@ void game::respawn_ball(ball* b)
     );
 }
 
-ball* game::add_ball(ball b)
+ball* game::add_ball(ball* b)
 {
-    m->balls.emplace_back(new ball(b));
+    m->balls.emplace_back(b);
 
     ball* B = m->balls.back().get();
 
@@ -207,12 +315,6 @@ b2World * game::init_world()
     // todo: does this need to be thread_local
     thread_local static contact_listener contact_listener_instance;
     world->SetContactListener(&contact_listener_instance);
-
-    for(std::size_t i=0; i<4; ++i) {
-        ball* b = add_ball(ball(i % 2 ? ball_type::red : ball_type::blue));
-        player* p = add_player(player(this, b, "player_id", true, "name", 100));
-        b->set_player_ptr(p);
-    }
 
     for(auto && o : m->spikes) {
         o->add_to_world(world);
@@ -253,9 +355,9 @@ b2World * game::init_world()
     return world;
 }
 
-player* game::add_player(player p)
+player* game::add_player(player* p)
 {
-    players.emplace_back(new player(p));
+    players.emplace_back(p);
     return players.back().get();
 }
 
@@ -272,3 +374,19 @@ void game::score(ball* b)
     }
 }
 
+player* game::get_player_from_con(websocketpp::connection_hdl con)
+{
+    for(auto && o : players) {
+        if(o->con.lock() == con.lock()) {
+            return o.get();
+        }
+    }
+
+    return nullptr;
+}
+
+void game::add_server_event(server_event a)
+{
+    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+    server_events_queue.emplace(a);
+}

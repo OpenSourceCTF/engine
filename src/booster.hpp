@@ -38,6 +38,7 @@ struct booster
     , is_alive(true)
     , respawn_counter(0)
     {}
+    ~booster();
 
     void add_to_world(b2World* world);
     void step_on(ball* m);

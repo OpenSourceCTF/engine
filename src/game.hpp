@@ -9,14 +9,19 @@
 #include <memory>
 #include <json.hpp>
 #include "map.hpp"
-#include "client_action.hpp"
+#include "server_event.hpp"
 #include "player.hpp"
+#include "websocket_game_server.hpp"
+#include "ball_type.hpp"
 
 struct player;
 struct map;
 
 struct game
 {
+    std::thread srv_thread;
+    std::thread phys_thread;
+
     std::uint16_t port;
     map* m;
     std::uint32_t max_points;
@@ -26,22 +31,27 @@ struct game
     b2World * world;
     std::size_t timestep;
     std::vector<std::unique_ptr<player>> players;
-    std::mutex client_actions_queue_mutex;
-    std::queue<client_action> client_actions_queue;
+    std::mutex server_events_queue_mutex;
+    std::queue<server_event> server_events_queue;
 
     game(){}
     game(const std::uint16_t port, map* m);
     game(const game&) = delete;
 
-    std::thread spawn_thread();
+    void spawn_srv_thread();
+    void spawn_phys_thread();
     void run();
     void step();
+    void handle_server_events();
+    void change_map(map* m);
 
     b2World* init_world();
-    ball* add_ball(ball b);
+    ball* add_ball(ball* b);
     void respawn_ball(ball* b);
-    player* add_player(player p);
+    player* add_player(player* p);
     void score(ball* b);
+    player* get_player_from_con(websocketpp::connection_hdl con);
+    void add_server_event(server_event a);
 };
 
 #endif

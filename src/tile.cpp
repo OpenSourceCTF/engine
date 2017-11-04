@@ -7,7 +7,9 @@ void to_json(nlohmann::json& j, const tile& p)
 
 void from_json(const nlohmann::json& j, tile& p)
 {
-    p.poly = j.at("poly").get<polygon>();
-    p.col  = j.at("col").get<color>();
-    p.type = tile_type_from_string(j.at("type").get<std::string>());
+    p = tile(
+        j.at("poly").get<polygon>(),
+        j.at("col").get<color>(),
+        tile_type_from_string(j.at("type").get<std::string>())
+    );
 }

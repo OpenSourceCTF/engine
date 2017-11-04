@@ -1,9 +1,9 @@
-#include "server_lobby.hpp"
+#include "lobby_server.hpp"
 
-server_lobby& server_lobby::get_instance()
+lobby_server& lobby_server::get_instance()
 {
     const settings& config = settings::get_instance();
-    static server_lobby instance;
+    static lobby_server instance;
 
     if(instance.is_initialized) {
         return instance;
@@ -16,7 +16,7 @@ server_lobby& server_lobby::get_instance()
     return instance;
 }
 
-void server_lobby::start_server()
+void lobby_server::start_server()
 {
     const settings& config = settings::get_instance();
 
@@ -34,7 +34,7 @@ void server_lobby::start_server()
         // todo we need to handle switching maps as time goes on
         try {
             const std::string map_src = config.SERVER_MAPS[i % config.SERVER_MAPS.size()];
-            spdlog::get("game")->debug("server_lobby: loading: ", map_src);
+            spdlog::get("game")->debug("lobby_server: loading: ", map_src);
             std::ifstream t(map_src);
             std::stringstream buf;
             buf << t.rdbuf();
@@ -45,15 +45,13 @@ void server_lobby::start_server()
         }
 
         games.emplace_back(new game(port, m));
-
-        std::thread srv_game_thread(start_game_server, port);
-        srv_game_thread.detach();
-
-        std::thread phys_game_thread = games.back().get()->spawn_thread();
+        game* g = games.back().get();
+        g->spawn_srv_thread();
+        g->spawn_phys_thread();
     }
 }
 
-game& server_lobby::get_game_from_port(const std::uint16_t port) const
+game& lobby_server::get_game_from_port(const std::uint16_t port) const
 {
     const settings& config = settings::get_instance();
     return *(games[(port - config.SERVER_GAME_PORT_START)].get());

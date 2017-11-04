@@ -6,17 +6,22 @@
 
 struct explosion
 {
-    float radius;
-    float force;
+    const float radius;
+    const float force;
 
-    explosion() { }
-    explosion(const float radius,
-              const float force) :
-        radius(radius),
-        force(force)
-    { }
+    explosion() = delete;
+    explosion(
+        const float radius,
+        const float force
+    )
+    : radius(radius)
+    , force(force)
+    {}
 
-    void explode(const b2Vec2 pos, b2World* world);
+    void explode(
+        const b2Vec2 pos,
+        b2World* world
+    );
 };
 
 #endif

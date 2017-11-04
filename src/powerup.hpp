@@ -31,6 +31,7 @@ struct powerup
         const float y,
         const std::vector<powerup_type> possible_types
     );
+    ~powerup();
 
     void add_to_world(b2World * world);
     void step_on(ball* m);

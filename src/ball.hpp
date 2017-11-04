@@ -34,12 +34,11 @@ struct ball
     int respawn_counter;
     std::vector<ball_powerup> powerups;
     std::vector<ball_flag> flags;
-    explosion rb_ex;
-    explosion pop_ex;
     player* player_ptr;
     std::unordered_set<gate*> in_gate_ptrs;
 
     ball(const ball_type type);
+    ~ball();
 
     void set_player_ptr(player* p);
     void set_portal_transport(portal* p);

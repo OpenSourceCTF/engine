@@ -1,19 +1,10 @@
 ## TODO
 
-track stepping on toggles by players
-    so we can tell when it is 2blue+1red or whatever
+remove players if they havent moved in X seconds
+    unless they're by themselves
 add game end conditions (time, score)
-make gates pop players
 serialize map data for server sync
-destroy box2d bodies on destruct
-implement game clear/restart
-add explosions to other events
-handle websocket movement input
-    (will require an action queue)
-send map deltas for server
-    (will require a queue for updates)
-handle chat
-fix segfault on quit
+fix segfault on exit
 
 ---
 
@@ -32,37 +23,24 @@ toggles render incorrectly
 
 
 ## NETWORK
-
-(idea of how network will work)
-(current code very "exploratory" (read shitty))
-
-start server-->
-
-load list of maps in maplist.txt
-    ensure all exist in folder
-
-connect to database
-
-lobby server starts
-    starts X games
-        2 threads - 1 for network, 1 for gameloop
-
-(bootup is now complete)
-
 client connects to lobby
-    selects game it wants to join
-        loads map from webserver over http
-            (ensure maps are gzipped (if using nginx this is easy))
+selects game it wants to join
+loads map from webserver over http
+    (ensure maps are gzipped (if using nginx this is easy))
 
-client says ready with login_token (so server can get user_id, name, degrees)
+client says gamesync with login_token (so server can get user_id, name, degrees)
     server checks user and gets name, degrees, etc
     server responds with current state of map (all positions, players, etc)
     server adds clients ball (respawn)
     server notifies all clients of new ball
 
---
+---
 
 in future we plan for move to webrtc
+
+---
+
+look in the `./tests` folder for examples
 
 ## BUILD
 

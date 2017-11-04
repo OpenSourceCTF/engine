@@ -101,7 +101,7 @@ int map_renderer::get_input()
         }
     }
 
-    {
+    if(! m.balls.empty()) {
         // CONTROL
         int move_x = 0, move_y = 0;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) move_y--;
@@ -165,11 +165,50 @@ int map_renderer::render() const
         s.setPoint(2, sf::Vector2f(poly.x3 * scaler, poly.y3 * scaler));
     };
 
-    for(auto && o : m.walls) {
-        sf::ConvexShape s;
-        add_points(s, o->poly);
-        color_mode(s, o->col);
-        window->draw(s);
+    auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
+    {
+        const sf::Vector2f pos(scaler * a.x, scaler * a.y);
+        const float w = std::pow(
+            std::pow(scaler * (a.x - b.x), 2) + std::pow(scaler * (a.y - b.y), 2),
+            0.5
+        );
+        const float angle = std::atan2(b.y - a.y, b.x - a.x);
+
+        sf::RectangleShape res(sf::Vector2f(w, 3));
+        res.setPosition(pos);
+        res.setRotation(angle * 180 / PI);
+        return res;
+    };
+
+    if(! wireframe) {
+        for(auto && o : m.walls) {
+            sf::ConvexShape s;
+            add_points(s, o->poly);
+            color_mode(s, o->col);
+            window->draw(s);
+        }
+    } else {
+        std::size_t i = 0;
+
+        for(const auto& ch : m.chains) {
+            sf::VertexArray lines(sf::Lines, ch->vertices.size());
+
+            for(auto it = ch->vertices.begin(); it != ch->vertices.end(); ++it) {
+                if(std::next(it) != ch->vertices.end()) {
+                    sf::RectangleShape rect(make_thick_line(*it, *std::next(it)));
+
+                    rect.setFillColor(sf::Color(
+                        DISTINCT_COLORS[i%63][0],
+                        DISTINCT_COLORS[i%63][1],
+                        DISTINCT_COLORS[i%63][2]
+                    ));
+
+                    window->draw(rect);
+                }
+            }
+
+            ++i;
+        }
     }
     
     for(auto && o : m.tiles) {
@@ -321,39 +360,6 @@ int map_renderer::render() const
         }
     }
 
-    auto thick_line = [&](const coord& a, const coord& b) {
-        //no idea why I have to do the subtraction
-        auto pos = sf::Vector2f(scaler * a.x - scaler / 2, scaler * a.y - scaler / 2);
-        auto w = std::pow(  std::pow(scaler * (a.x - b.x),2)
-                          + std::pow(scaler * (a.y - b.y),2),
-                          0.5);
-        auto angle = std::atan2(b.y - a.y, b.x - a.x);
-        sf::RectangleShape res(sf::Vector2f(w,3));
-        res.setPosition(pos);
-        res.setRotation(angle * 180 / PI);
-        return res;
-    };
-
-    /*
-    int i = 0;
-    for(const auto& ch : m.chains) {
-        int N = ch->vertices.size();
-        sf::VertexArray lines(sf::Lines, N);
-        for(auto it = ch->vertices.begin(); it != ch->vertices.end(); ++it) {
-            if(std::next(it) != ch->vertices.end()) {
-                auto rect(thick_line(**it,**std::next(it)));
-                rect.setFillColor(sf::Color(DISTINCT_COLORS[i%63][0],
-                                            DISTINCT_COLORS[i%63][1],
-                                            DISTINCT_COLORS[i%63][2]));
-                window->draw(rect);
-            }
-        }
-        ++i;
-    }
-    */
-
-    
-    
     window->display();
     return 1;
 #endif  
