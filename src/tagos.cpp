@@ -86,7 +86,7 @@ int serve()
         const char* ebuf,
         std::vector<std::string>& completions
     ) {
-        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log", "map"};
+        const std::vector<std::string> cmds = {"exit", "quit", "help", "render", "stats", "log", "map"};
         const std::string edit(ebuf);
 
         for(auto && o : cmds) {
@@ -131,14 +131,15 @@ int serve()
         const std::string cmd = iparts[0];
 
 
-        if(cmd == "quit") {
+        if(cmd == "exit" || cmd == "quit") {
             lobby.is_alive = false;
             std::cout << "quitting..." << std::endl;
         } else if(cmd == "help") {
             std::cout
                 << "available commands: \n\n"
-                << "\thelp           (show this help)\n" 
-                << "\tquit           (quits server)\n" 
+                << "\thelp           (show this help)\n"
+                << "\texit           (quits server)\n"
+                << "\tquit           (quits server)\n"
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
                 << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
