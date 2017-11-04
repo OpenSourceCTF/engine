@@ -222,7 +222,7 @@ void on_game_sync(
             if(o->b->type == ball_type::blue) ++blue_cnt;
         }
 
-        if(red_cnt > red_cnt)  return ball_type::blue;
+        if(red_cnt > blue_cnt) return ball_type::blue;
         if(red_cnt < blue_cnt) return ball_type::red;
 
         return std::uniform_int_distribution<int>(0, 1)(random_util::get_instance().eng) == 0
