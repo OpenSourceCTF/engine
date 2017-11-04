@@ -62,8 +62,9 @@ struct settings
     int WORLD_POS_ITERATIONS;
 
     std::uint16_t SERVER_LOBBY_PORT;
-    int SERVER_GAMES;
+    std::size_t SERVER_GAMES;
     int SERVER_GAME_PORT_START;
+    int SERVER_BALLSYNC_EVERY;
     std::vector<std::string> SERVER_MAPS;
 
 

@@ -23,7 +23,9 @@ void to_json(nlohmann::json& j, const toggle_tag& p)
 
 void from_json(const nlohmann::json& j, toggle_tag& p)
 {
-    p.id   = j.at("id").get<int>();
-    p.type = toggle_tag_type_from_string(j.at("type").get<std::string>());
+    p = toggle_tag(
+        j.at("id").get<int>(),
+        toggle_tag_type_from_string(j.at("type").get<std::string>())
+    );
 }
 

@@ -1,5 +1,12 @@
 #include "spike.hpp"
 
+spike::~spike()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void spike::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -29,6 +36,5 @@ void to_json(nlohmann::json& j, const spike& p)
 
 void from_json(const nlohmann::json& j, spike& p)
 {
-    p.x = j.at("x").get<float>();
-    p.y = j.at("y").get<float>();
+    p = spike(j.at("x").get<float>(), j.at("y").get<float>());
 }

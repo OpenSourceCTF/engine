@@ -7,6 +7,8 @@ void to_json(nlohmann::json& j, const coord& c) {
 }
 
 void from_json(const nlohmann::json& j, coord& c) {
-    c.x = j.at("x").get<float>();
-    c.y = j.at("y").get<float>();
+    c = coord(
+        j.at("x").get<float>(),
+        j.at("y").get<float>()
+    );
 }

@@ -1,13 +1,14 @@
 #include "websocket_server.hpp"
+#include "websocket_lobby_server.hpp"
 
 void on_lobby_request_games(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
 ) {
-    const server_lobby& lobby = server_lobby::get_instance();
+    const lobby_server& lobby = lobby_server::get_instance();
 
-    std::vector<request_lobby_games_response> games;
+    std::vector<lobby_event_games_game> games;
     games.reserve(lobby.games.size());
 
     for(auto && o : lobby.games) {
@@ -22,16 +23,16 @@ void on_lobby_request_games(
         );
     }
 
-    try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
-        {"games", games}
-    });
+    try_send(srv, hdl, websocketpp::frame::opcode::TEXT,
+        lobby_event(lobby_event_games(games))
+    );
 
 }
 
 void handle_lobby_message(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
-    message_ptr msg
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
 ) {
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
@@ -49,11 +50,11 @@ void handle_lobby_message(
 }
 
 int start_lobby_server(
-    server_lobby& lobby,
+    lobby_server& lobby,
     const std::uint16_t port
 ) {
     spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);
-    server srv;
+    websocketpp::server<websocketpp::config::asio> srv;
 
     try {
         srv.set_access_channels(websocketpp::log::alevel::all);

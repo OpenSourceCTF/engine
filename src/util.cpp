@@ -50,7 +50,9 @@ std::vector<std::string> split_on(const std::string & str, const char n)
  * which define the same regions as the input set
  * of polygons
  */
-std::vector<std::unique_ptr<chain>> poly2chain(std::vector<polygon> poly_set) {
+std::vector<std::unique_ptr<chain>> poly2chain(
+    const std::vector<polygon> & poly_set
+) {
 
     using edge = std::pair<std::pair<float,float>,std::pair<float,float>>;
 

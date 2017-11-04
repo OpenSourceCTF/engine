@@ -7,6 +7,8 @@ void to_json(nlohmann::json& j, const wall& p)
 
 void from_json(const nlohmann::json& j, wall& p)
 {
-    p.poly = j.at("poly").get<polygon>();
-    p.col = j.at("col").get<color>();
+    p = wall(
+        j.at("poly").get<polygon>(),
+        j.at("col").get<color>()
+    );
 }

@@ -56,7 +56,7 @@ std::vector<std::unique_ptr<T>> from_json_helper(
     const nlohmann::json& j,
     const std::string term
 ) {
-    return vec_to_uniq_ptr_vec(j.at(term).get<std::vector<T>>());
+    return vec_to_smart_ptr_vec<std::unique_ptr<T>>(j.at(term).get<std::vector<T>>());
 }
 
 void from_json(const nlohmann::json& j, map& p)

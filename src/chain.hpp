@@ -8,10 +8,15 @@
 
 struct chain
 {
-    std::vector<std::shared_ptr<coord>> vertices;
+    std::vector<coord> vertices;
     b2Body* body;
 
-    chain() : vertices(0), body(nullptr) {}
+    chain() {}
+    chain(const std::vector<coord> & vertices)
+    : vertices(vertices)
+    , body(nullptr)
+    {}
+    ~chain();
 
     void add_vertex(const float x, const float y);
     void add_to_world(b2World * world);

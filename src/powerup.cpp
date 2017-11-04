@@ -23,6 +23,13 @@ powerup::powerup(
 , type(get_random_type())
 {}
 
+powerup::~powerup()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
+}
+
 void powerup::add_to_world(b2World * world)
 {
     const settings& config = settings::get_instance();
@@ -91,11 +98,16 @@ void to_json(nlohmann::json& j, const powerup& p)
 
 void from_json(const nlohmann::json& j, powerup& p)
 {
-    p.x = j.at("x").get<float>();
-    p.y = j.at("y").get<float>();
-
+    std::vector<powerup_type> possible_types;
     const std::vector<std::string> types = j.at("types").get<std::vector<std::string>>();
     for(auto & o : types) {
-        p.possible_types.emplace_back(powerup_type_from_string(o));
+        possible_types.emplace_back(powerup_type_from_string(o));
     }
+
+    p = powerup(
+        j.at("x").get<float>(),
+        j.at("y").get<float>(),
+        possible_types
+    );
+
 }

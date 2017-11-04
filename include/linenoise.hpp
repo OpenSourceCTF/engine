@@ -1607,7 +1607,10 @@ inline bool enableRawMode(int fd) {
      * no start/stop output control. */
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     /* output modes - disable post processing */
-    raw.c_oflag &= ~(OPOST);
+	/* FIX: do not disable post processing, or there will be some problem 
+      when using one thread to run linenoise, and another thread to write 
+      something to stdout. */
+    // raw.c_oflag &= ~(OPOST);
     /* control modes - set 8 bit chars */
     raw.c_cflag |= (CS8);
     /* local modes - choing off, canonical off, no extended functions,
@@ -1803,7 +1806,7 @@ inline int completeLine(struct linenoiseState *ls, char *cbuf, int *c) {
             switch(*c) {
                 case 9: /* tab */
                     i = (i+1) % (lc.size()+1);
-                    if (i == lc.size()) linenoiseBeep();
+                    if (i == static_cast<int>(lc.size())) linenoiseBeep();
                     break;
                 case 27: /* escape */
                     /* Re-show original buffer */

@@ -11,9 +11,13 @@ bomb::bomb(
 , is_alive(true)
 , respawn_counter(0)
 {
-    const settings& config = settings::get_instance();
-    ex = explosion(config.BOMB_EXPLOSION_RADIUS,
-                   config.BOMB_EXPLOSION_FORCE);
+}
+
+bomb::~bomb()
+{
+    if(body) {
+        body->GetWorld()->DestroyBody(body);
+    }
 }
 
 void bomb::add_to_world(b2World * world)
@@ -48,7 +52,8 @@ void bomb::explode()
 
     const settings& config = settings::get_instance();
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
-    ex.explode(body->GetPosition(), body->GetWorld());
+    explosion(config.BOMB_EXPLOSION_RADIUS, config.BOMB_EXPLOSION_FORCE)
+        .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
 }
@@ -60,6 +65,8 @@ void to_json(nlohmann::json& j, const bomb& p)
 
 void from_json(const nlohmann::json& j, bomb& p)
 {
-    p.x = j.at("x").get<float>();
-    p.y = j.at("y").get<float>();
+    p = bomb(
+        j.at("x").get<float>(),
+        j.at("y").get<float>()
+    );
 }

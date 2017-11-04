@@ -1,17 +1,17 @@
 #include "websocket_server.hpp"
 
 std::uint16_t get_local_port(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
 ) {
-    server::connection_ptr connection = srv->get_con_from_hdl(hdl);
+    websocketpp::server<websocketpp::config::asio>::connection_ptr connection = srv->get_con_from_hdl(hdl);
     auto local_endpoint = connection->get_raw_socket().local_endpoint();
 
     return local_endpoint.port();
 }
 
 bool try_send(
-    server* srv,
+    websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
     websocketpp::frame::opcode::value opcode,
     nlohmann::json try_msg
@@ -37,12 +37,35 @@ bool try_broadcast(
     bool ret = true;
 
     for(auto && o : g->players) {
-        if(! try_send(
-            o->srv,
-            o->con,
-            websocketpp::frame::opcode::value::text,
-            try_msg
-        )) ret = false;
+        if(! o->local) {
+            if(! try_send(
+                o->srv,
+                o->con,
+                websocketpp::frame::opcode::value::text,
+                try_msg
+            )) ret = false;
+        }
+    }
+
+    return ret;
+}
+
+bool try_broadcast_team(
+    game* g,
+    ball_type team,
+    nlohmann::json try_msg
+) {
+    bool ret = true;
+
+    for(auto && o : g->players) {
+        if(! o->local && o->b->type == team) {
+            if(! try_send(
+                o->srv,
+                o->con,
+                websocketpp::frame::opcode::value::text,
+                try_msg
+            )) ret = false;
+        }
     }
 
     return ret;

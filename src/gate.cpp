@@ -47,13 +47,16 @@ void gate::add_to_world(b2World* world) {
     body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
-void from_json(const nlohmann::json& j, gate& p)
-{
-    p.poly = j.at("poly").get<polygon>();
-    p.type = gate_type_from_string(j.at("type").get<std::string>());
-}
-
 void to_json(nlohmann::json& j, const gate& p)
 {
     j = nlohmann::json{{"poly", p.poly}, {"type", to_string(p.type)}};
 }
+
+void from_json(const nlohmann::json& j, gate& p)
+{
+    p = gate(
+        j.at("poly").get<polygon>(),
+        gate_type_from_string(j.at("type").get<std::string>())
+    );
+}
+

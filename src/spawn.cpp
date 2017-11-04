@@ -13,10 +13,12 @@ void to_json(nlohmann::json& j, const spawn& p)
 
 void from_json(const nlohmann::json& j, spawn& p)
 {
-    p.x      = j.at("x").get<float>();
-    p.y      = j.at("y").get<float>();
-    p.radius = j.at("radius").get<float>();
-    p.weight = j.at("weight").get<float>();
-    p.type   = spawn_type_from_string(j.at("type").get<std::string>());
+    p = spawn(
+        j.at("x").get<float>(),
+        j.at("y").get<float>(),
+        j.at("radius").get<float>(),
+        j.at("weight").get<float>(),
+        spawn_type_from_string(j.at("type").get<std::string>())
+    );
 }
 
