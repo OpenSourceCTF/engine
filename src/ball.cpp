@@ -162,6 +162,7 @@ void ball::rb_explode()
         .explode(body->GetPosition(), body->GetWorld());
 
     remove_powerup(powerup_type::rollingbomb);
+    player_ptr->g->add_server_event(server_event(server_event_ball_rb_explode(this)));
 }
 
 bool ball::has_flag(const flag_type type)

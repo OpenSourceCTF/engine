@@ -35,11 +35,6 @@ game_event::game_event(const game_event_honk e)
 , ptr(new game_event_honk(e))
 {}
 
-game_event::game_event(const game_event_ball_respawn e)
-: type(game_event_type::ball_respawn)
-, ptr(new game_event_ball_respawn(e))
-{}
-
 game_event::game_event(const game_event_bomb_respawn e)
 : type(game_event_type::bomb_respawn)
 , ptr(new game_event_bomb_respawn(e))
@@ -65,6 +60,11 @@ game_event::game_event(const game_event_portal_respawn e)
 , ptr(new game_event_portal_respawn(e))
 {}
 
+game_event::game_event(const game_event_ball_respawn e)
+: type(game_event_type::ball_respawn)
+, ptr(new game_event_ball_respawn(e))
+{}
+
 game_event::game_event(const game_event_ball_popped e)
 : type(game_event_type::ball_popped)
 , ptr(new game_event_ball_popped(e))
@@ -88,6 +88,11 @@ game_event::game_event(const game_event_ball_portal e)
 game_event::game_event(const game_event_ball_powerup e)
 : type(game_event_type::ball_powerup)
 , ptr(new game_event_ball_powerup(e))
+{}
+
+game_event::game_event(const game_event_ball_rb_explode e)
+: type(game_event_type::ball_rb_explode)
+, ptr(new game_event_ball_rb_explode(e))
 {}
 
 game_event::game_event(const game_event_flag_grabbed e)
@@ -163,6 +168,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::ball_powerup:
             to_json(data, *static_cast<game_event_ball_powerup*>(p.ptr));
+            break;
+        case game_event_type::ball_rb_explode:
+            to_json(data, *static_cast<game_event_ball_rb_explode*>(p.ptr));
             break;
         case game_event_type::flag_grabbed:
             to_json(data, *static_cast<game_event_flag_grabbed*>(p.ptr));

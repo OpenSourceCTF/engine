@@ -212,6 +212,13 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::ball_rb_explode: {
+            server_event_ball_rb_explode* m = static_cast<server_event_ball_rb_explode*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_rb_explode(
+                m->m->id
+            )));
+        } break;
+
         case server_event_type::flag_grabbed: {
             server_event_flag_grabbed* m = static_cast<server_event_flag_grabbed*>(a.ptr);
             try_broadcast(this, game_event(game_event_flag_grabbed(

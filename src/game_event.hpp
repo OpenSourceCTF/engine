@@ -22,6 +22,7 @@
 #include "game_event_ball_score.hpp"
 #include "game_event_ball_portal.hpp"
 #include "game_event_ball_powerup.hpp"
+#include "game_event_ball_rb_explode.hpp"
 #include "game_event_flag_grabbed.hpp"
 #include "game_event_toggle_on.hpp"
 #include "game_event_toggle_off.hpp"
@@ -50,6 +51,7 @@ struct game_event_ball_boosted;
 struct game_event_ball_score;
 struct game_event_ball_portal;
 struct game_event_ball_powerup;
+struct game_event_ball_rb_explode;
 struct game_event_flag_grabbed;
 struct game_event_toggle_on;
 struct game_event_toggle_off;
@@ -79,6 +81,7 @@ struct game_event
     game_event(const game_event_ball_score e);
     game_event(const game_event_ball_portal e);
     game_event(const game_event_ball_powerup e);
+    game_event(const game_event_ball_rb_explode e);
     game_event(const game_event_flag_grabbed e);
     game_event(const game_event_toggle_on e);
     game_event(const game_event_toggle_off e);

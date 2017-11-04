@@ -19,6 +19,7 @@ enum class server_event_type
     ball_score,
     ball_portal,
     ball_powerup,
+    ball_rb_explode,
     booster_respawn,
     powerup_respawn,
     portal_respawn,

@@ -90,6 +90,11 @@ server_event::server_event(server_event_ball_powerup e)
 , ptr(new server_event_ball_powerup(e))
 {}
 
+server_event::server_event(server_event_ball_rb_explode e)
+: type(server_event_type::ball_rb_explode)
+, ptr(new server_event_ball_rb_explode(e))
+{}
+
 server_event::server_event(server_event_flag_grabbed e)
 : type(server_event_type::flag_grabbed)
 , ptr(new server_event_flag_grabbed(e))
