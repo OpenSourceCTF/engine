@@ -56,3 +56,25 @@ game& lobby_server::get_game_from_port(const std::uint16_t port) const
     const settings& config = settings::get_instance();
     return *(games[(port - config.SERVER_GAME_PORT_START)].get());
 }
+
+std::vector<lobby_event_games_game> lobby_server::get_games() const
+{
+    const lobby_server& lobby = lobby_server::get_instance();
+
+    std::vector<lobby_event_games_game> games;
+    games.reserve(lobby.games.size());
+
+    for(auto && o : lobby.games) {
+        games.emplace_back(
+            o->port,
+            o->max_points,
+            o->max_length,
+            o->timestep,
+            o->m->name,
+            o->m->author,
+            o->m->balls.size()
+        );
+    }
+
+	return games;
+}

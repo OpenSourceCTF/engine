@@ -37,7 +37,7 @@ bool try_broadcast(
     bool ret = true;
 
     for(auto && o : g->players) {
-        if(! o->local) {
+        if(! o->local && ! o->remove) {
             if(! try_send(
                 o->srv,
                 o->con,

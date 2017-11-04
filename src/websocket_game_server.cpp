@@ -6,13 +6,24 @@ int start_game_server(const std::uint16_t port)
     websocketpp::server<websocketpp::config::asio> srv;
 
     try {
+        srv.set_reuse_addr(true);
+
         srv.clear_access_channels(websocketpp::log::alevel::all);
         srv.set_access_channels(websocketpp::log::elevel::info);
-        srv.init_asio();
-        srv.set_message_handler(bind(&handle_game_message, &srv, ::_1, ::_2));
-        srv.set_close_handler(bind(&handle_game_close, &srv, ::_1));
-        srv.listen(port);
 
+        srv.set_open_handler(bind(&handle_game_open, &srv, ::_1));
+        srv.set_close_handler(bind(&handle_game_close, &srv, ::_1));
+        srv.set_fail_handler(bind(&handle_game_fail, &srv, ::_1));
+        srv.set_ping_handler(bind(&handle_game_ping, &srv, ::_1, ::_2));
+        srv.set_pong_handler(bind(&handle_game_pong, &srv, ::_1, ::_2));
+        srv.set_pong_timeout_handler(bind(&handle_game_pong_timeout, &srv, ::_1, ::_2));
+        srv.set_interrupt_handler(bind(&handle_game_interrupt, &srv, ::_1));
+        srv.set_validate_handler(bind(&handle_game_validate, &srv, ::_1));
+        srv.set_message_handler(bind(&handle_game_message, &srv, ::_1, ::_2));
+        srv.set_http_handler(bind(&handle_game_http, &srv, ::_1));
+
+        srv.init_asio();
+        srv.listen(port);
         srv.start_accept();
         srv.run();
     } catch (websocketpp::exception const & e) {
@@ -26,6 +37,72 @@ int start_game_server(const std::uint16_t port)
     return 0;
 }
 
+void handle_game_open(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {}
+
+void handle_game_close(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+
+    player* p = g.get_player_from_con(hdl);
+
+    if(p && ! p->remove) {
+        p->local = true;
+        p->remove = true;
+
+        g.add_server_event(server_event(server_event_player_left(p)));
+    } else {
+        spdlog::get("game")->debug("player left but already left?");
+    }
+}
+
+void handle_game_fail(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {}
+
+bool handle_game_ping(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    std::string str
+) {
+    return true;
+}
+
+bool handle_game_pong(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    std::string str
+) {
+    return true;
+}
+
+void handle_game_pong_timeout(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    std::string str
+) {}
+
+void handle_game_interrupt(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {}
+
+bool handle_game_validate(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl
+) {
+    // todo
+    // validate if connection is valid/allowed
+    
+    return true;
+}
 
 void handle_game_message(
     websocketpp::server<websocketpp::config::asio>* srv,
@@ -75,24 +152,14 @@ void handle_game_message(
     }
 } 
 
-void handle_game_close(
+void handle_game_http(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
 ) {
-    lobby_server& lobby = lobby_server::get_instance();
+    auto con = srv->get_con_from_hdl(hdl);
 
-    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
-
-    player* p = g.get_player_from_con(hdl);
-
-    if(p && ! p->remove) {
-        p->local = true;
-        p->remove = true;
-
-        g.add_server_event(server_event(server_event_player_left(p)));
-    } else {
-        spdlog::get("game")->debug("player left but already left?");
-    }
+	con->set_status(websocketpp::http::status_code::ok);
+	con->set_body("Hello World!");
 }
 
 void on_game_chat(
