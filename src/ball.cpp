@@ -179,6 +179,7 @@ void ball::add_flag(flag* f)
 {
     spdlog::get("game")->debug("add new flag");
     flags.emplace_back(f);
+    player_ptr->g->add_server_event(server_event(server_event_flag_grabbed(this, f)));
 }
 
 void ball::reset_flags()

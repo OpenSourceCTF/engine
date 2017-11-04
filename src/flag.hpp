@@ -20,9 +20,11 @@ struct ball;
 
 struct flag
 {
+    static thread_local std::size_t id_counter;
+    std::size_t id;
+    game_accessor game;
     float x;
     float y;
-    game_accessor game;
     flag_type type;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;

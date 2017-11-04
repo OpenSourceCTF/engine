@@ -189,6 +189,21 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::ball_score: {
+            server_event_ball_score* m = static_cast<server_event_ball_score*>(a.ptr);
+            try_broadcast(this, game_event(game_event_ball_score(
+                m->m->id
+            )));
+        } break;
+
+        case server_event_type::flag_grabbed: {
+            server_event_flag_grabbed* m = static_cast<server_event_flag_grabbed*>(a.ptr);
+            try_broadcast(this, game_event(game_event_flag_grabbed(
+                m->m_ball->id,
+                m->m_flag->id
+            )));
+        } break;
+
         default:
             spdlog::get("game")->error("server_event_type ", to_string(a.type), " not enumerated in handle_server_events");
             break;
@@ -441,6 +456,8 @@ void game::score(ball* b)
     if(b->type == ball_type::blue) {
         ++blue_points;
     }
+
+    add_server_event(server_event(server_event_ball_score(b)));
 }
 
 player* game::get_player_from_con(websocketpp::connection_hdl con)

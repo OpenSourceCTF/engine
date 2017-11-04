@@ -18,15 +18,14 @@ enum class game_event_type
     ball_respawn,
     ball_popped,
     ball_boosted,
+    ball_score,
     booster_respawn,
     powerup_respawn,
     portal_respawn,
     bomb_respawn,
     bomb_explosion,
     flag_grabbed,
-    flag_dropped,
     flag_transferred, // neutral flag
-    team_score,
     toggle_on,
     toggle_off
 };

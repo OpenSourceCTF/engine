@@ -1,11 +1,15 @@
 #include "flag.hpp"
+
+thread_local std::size_t flag::id_counter = 0;
+
 flag::flag() {}
 flag::flag(
     const float x,
     const float y,
     const flag_type type
 )
-: x(x)
+: id(id_counter++)
+, x(x)
 , y(y)
 , type(type)
 , body(nullptr)

@@ -17,6 +17,8 @@
 #include "server_event_portal_respawn.hpp"
 #include "server_event_ball_popped.hpp"
 #include "server_event_ball_boosted.hpp"
+#include "server_event_ball_score.hpp"
+#include "server_event_flag_grabbed.hpp"
 
 struct server_event_chat;
 struct server_event_teamchat;
@@ -33,6 +35,8 @@ struct server_event_booster_respawn;
 struct server_event_portal_respawn;
 struct server_event_ball_popped;
 struct server_event_ball_boosted;
+struct server_event_ball_score;
+struct server_event_flag_grabbed;
 
 struct server_event
 {
@@ -54,6 +58,8 @@ struct server_event
     server_event(server_event_portal_respawn e);
     server_event(server_event_ball_popped e);
     server_event(server_event_ball_boosted e);
+    server_event(server_event_ball_score e);
+    server_event(server_event_flag_grabbed e);
 };
 
 #endif

@@ -75,6 +75,16 @@ game_event::game_event(const game_event_ball_boosted e)
 , ptr(new game_event_ball_boosted(e))
 {}
 
+game_event::game_event(const game_event_ball_score e)
+: type(game_event_type::ball_score)
+, ptr(new game_event_ball_score(e))
+{}
+
+game_event::game_event(const game_event_flag_grabbed e)
+: type(game_event_type::flag_grabbed)
+, ptr(new game_event_flag_grabbed(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -124,6 +134,12 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::ball_boosted:
             to_json(data, *static_cast<game_event_ball_boosted*>(p.ptr));
+            break;
+        case game_event_type::ball_score:
+            to_json(data, *static_cast<game_event_ball_score*>(p.ptr));
+            break;
+        case game_event_type::flag_grabbed:
+            to_json(data, *static_cast<game_event_flag_grabbed*>(p.ptr));
             break;
         default:
             spdlog::get("game")->error("game_event_type not enumerated in to_json");
