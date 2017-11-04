@@ -25,7 +25,9 @@ int map_renderer::close_window()
         << std::endl;
     return 0;
 #else
-    window->close();
+    if(window && window->isOpen()) {
+        window->close();
+    }
     return 0;
 #endif
 }
