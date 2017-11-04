@@ -5,9 +5,6 @@ std::string to_string(const ball_type m)
     switch(m) {
         case ball_type::red:  return "red"; break;
         case ball_type::blue: return "blue"; break;
-        default:
-            spdlog::get("game")->error("ball_type not enumerated in to_string");
-            return "";
     }
 }
 

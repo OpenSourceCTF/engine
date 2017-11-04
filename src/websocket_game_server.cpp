@@ -6,9 +6,8 @@ int start_game_server(const std::uint16_t port)
     websocketpp::server<websocketpp::config::asio> srv;
 
     try {
-        srv.set_access_channels(websocketpp::log::alevel::all);
-        srv.clear_access_channels(websocketpp::log::alevel::frame_payload);
-
+        srv.clear_access_channels(websocketpp::log::alevel::all);
+        srv.set_access_channels(websocketpp::log::elevel::info);
         srv.init_asio();
         srv.set_message_handler(bind(&handle_game_message, &srv, ::_1, ::_2));
         srv.set_close_handler(bind(&handle_game_close, &srv, ::_1));
@@ -223,7 +222,7 @@ void on_game_sync(
             if(o->b->type == ball_type::blue) ++blue_cnt;
         }
 
-        if(red_cnt > red_cnt)  return ball_type::blue;
+        if(red_cnt > blue_cnt) return ball_type::blue;
         if(red_cnt < blue_cnt) return ball_type::red;
 
         return std::uniform_int_distribution<int>(0, 1)(random_util::get_instance().eng) == 0

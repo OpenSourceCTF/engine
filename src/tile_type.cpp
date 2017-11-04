@@ -9,9 +9,6 @@ std::string to_string(const tile_type m)
         case tile_type::speed_blue:   return "speed_blue";   break;
         case tile_type::endzone_red:  return "endzone_red";  break;
         case tile_type::endzone_blue: return "endzone_blue"; break;
-        default:
-            spdlog::get("game")->error("tile_type not enumerated in to_string");
-            return "";
     }
 }
 

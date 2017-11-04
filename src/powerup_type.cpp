@@ -6,9 +6,6 @@ std::string to_string(const powerup_type m)
         case powerup_type::jukejuice:   return "jukejuice"; break;
         case powerup_type::rollingbomb: return "rollingbomb"; break;
         case powerup_type::tagpro:      return "tagpro"; break;
-        default:
-            spdlog::get("game")->error("powerup_type not enumerated in to_string");
-            return "";
     }
 }
 
