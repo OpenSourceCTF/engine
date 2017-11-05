@@ -15,7 +15,8 @@ chain::chain(const std::vector<coord> & vertices)
 chain::~chain()
 {
     if(body) {
-        body->GetWorld()->DestroyBody(body);
+        // todo fixme ploffin
+        // body->GetWorld()->DestroyBody(body);
     }
 }
 

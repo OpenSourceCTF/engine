@@ -111,15 +111,18 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
             {"blue_points", p.g->blue_points},
             {"timestep", p.g->timestep}
         }},
-        {"players", players},
-        {"portals", portals},
-        {"toggles", toggles},
-        {"bombs", bombs},
-        {"powerups", powerups},
-        {"boosters", boosters},
-        {"gates", gates},
-        {"flags", flags},
-        {"balls", balls}
+        {"map", *(p.g->m)},
+        {"state", {
+            {"players", players},
+            {"portals", portals},
+            {"toggles", toggles},
+            {"bombs", bombs},
+            {"powerups", powerups},
+            {"boosters", boosters},
+            {"gates", gates},
+            {"flags", flags},
+            {"balls", balls}
+        }}
     };
 
     // add these (and maybe more?)
