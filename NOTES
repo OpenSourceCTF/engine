@@ -1,5 +1,9 @@
 ## TODO
 
+speed up compilation time
+
+add invincibility for X tics after grabbing flag
+
 remove players if they havent moved in X seconds
     unless they're by themselves
 

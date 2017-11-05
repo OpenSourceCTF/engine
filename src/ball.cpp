@@ -57,6 +57,7 @@ void ball::set_player_ptr(player* p)
 void ball::set_portal_transport(portal* p)
 {
     portal_transport_ptr = p;
+    player_ptr->stats.portals_hit++;
 }
 
 void ball::set_position(const b2Vec2 pos)
@@ -92,6 +93,7 @@ void ball::pop()
     respawn_counter = config.BOOSTER_RESPAWN_TIME;
 
     reset_flags();
+    player_ptr->stats.popped++;
     player_ptr->g->add_server_event(server_event(server_event_ball_popped(this)));
 }
 
@@ -110,6 +112,7 @@ void ball::get_boosted()
         body->GetWorldCenter(),
         true
     );
+    player_ptr->stats.boosters_hit++;
 }
 
 void ball::add_powerup(const powerup_type type)
@@ -128,6 +131,7 @@ void ball::add_powerup(const powerup_type type)
 
     spdlog::get("game")->debug("add new powerup for {0:d}", config.POWERUP_LASTING_TIME);
     powerups.emplace_back(type, config.POWERUP_LASTING_TIME);
+    player_ptr->stats.powerups_picked_up++;
 }
 
 bool ball::has_powerup(const powerup_type type)
@@ -182,12 +186,14 @@ void ball::add_flag(flag* f)
     spdlog::get("game")->debug("add new flag");
     flags.emplace_back(f);
     player_ptr->g->add_server_event(server_event(server_event_flag_grabbed(this, f)));
+    player_ptr->stats.flag_grabs++;
 }
 
 void ball::reset_flags()
 {
     for(auto & f : flags) {
         f.f->is_alive = true;
+        player_ptr->stats.flag_drops++;
     }
 
     flags.clear();
@@ -195,6 +201,9 @@ void ball::reset_flags()
 
 void ball::score()
 {
-    reset_flags();
     player_ptr->g->score(this);
+    for(auto && o : flags) {
+        player_ptr->stats.flag_captures++;
+    }
+    reset_flags();
 }
