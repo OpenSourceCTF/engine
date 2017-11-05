@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_BALL_POWERUP_HPP
 
 #include <cstdint>
-#include <json.hpp>
+#include <json/json.hpp>
 
 struct game_event_ball_powerup
 {

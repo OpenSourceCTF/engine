@@ -9,7 +9,7 @@
 
 #include <Box2D/Box2D.h>
 #include <spdlog/spdlog.h>
-#include <json.hpp>
+#include <json/json.hpp>
 #include <linenoise.hpp>
 
 #include "map.hpp"

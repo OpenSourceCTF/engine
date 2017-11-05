@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <spdlog/spdlog.h>
-#include <json.hpp>
+#include <json/json.hpp>
 
 enum class map_type
 {

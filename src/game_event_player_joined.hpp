@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_PLAYER_JOINED_HPP
 
 #include <string>
-#include <json.hpp>
+#include <json/json.hpp>
 #include "player.hpp"
 
 struct game_event_player_joined

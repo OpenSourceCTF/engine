@@ -1,7 +1,7 @@
 #ifndef ML_COORD_HPP
 #define ML_COORD_HPP
 
-#include <json.hpp>
+#include <json/json.hpp>
 
 struct coord
 {

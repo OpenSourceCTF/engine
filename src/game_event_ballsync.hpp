@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_BALLSYNC_HPP
 
 #include <string>
-#include <json.hpp>
+#include <json/json.hpp>
 #include "game.hpp"
 #include "ball_type.hpp"
 

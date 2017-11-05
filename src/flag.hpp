@@ -8,7 +8,7 @@
 #include <Box2D/Box2D.h>
 #include <spdlog/spdlog.h>
 
-#include <json.hpp>
+#include <json/json.hpp>
 #include "game_accessor.hpp"
 #include "flag_type.hpp"
 #include "collision_user_data.hpp"

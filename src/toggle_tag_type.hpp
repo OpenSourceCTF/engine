@@ -5,7 +5,7 @@
 #include <string>
 #include <cstdint>
 #include <spdlog/spdlog.h>
-#include <json.hpp>
+#include <json/json.hpp>
 
 enum class toggle_tag_type
 {

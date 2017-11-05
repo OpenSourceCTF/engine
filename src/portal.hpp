@@ -4,7 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <Box2D/Box2D.h>
-#include <json.hpp>
+#include <json/json.hpp>
 
 #include "game_accessor.hpp"
 #include "collision_user_data.hpp"

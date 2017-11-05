@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
-#include <json.hpp>
+#include <json/json.hpp>
 #include "toggle_tag_type.hpp"
 #include "util.hpp"
 #include "ball.hpp"

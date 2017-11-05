@@ -3,7 +3,7 @@
 
 #include <array>
 #include <Box2D/Box2D.h>
-#include <json.hpp>
+#include <json/json.hpp>
 
 struct polygon
 {

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <spdlog/spdlog.h>
-#include <json.hpp>
+#include <json/json.hpp>
 #include "game_event_type.hpp"
 #include "game_event_gamesync.hpp"
 #include "game_event_player_joined.hpp"

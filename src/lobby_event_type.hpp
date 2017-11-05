@@ -2,7 +2,7 @@
 #define ML_LOBBY_EVENT_TYPE_HPP
 
 #include <spdlog/spdlog.h>
-#include <json.hpp>
+#include <json/json.hpp>
 #include <string>
 #include <iostream>
 

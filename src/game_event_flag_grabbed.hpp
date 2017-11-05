@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_FLAG_GRABBED_HPP
 
 #include <cstdint>
-#include <json.hpp>
+#include <json/json.hpp>
 
 struct game_event_flag_grabbed
 {

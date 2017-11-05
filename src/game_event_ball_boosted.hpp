@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_BALL_BOOSTED_HPP
 
 #include <cstdint>
-#include <json.hpp>
+#include <json/json.hpp>
 #include <Box2D/Box2D.h>
 
 struct game_event_ball_boosted
