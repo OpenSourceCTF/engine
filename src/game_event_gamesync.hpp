@@ -5,6 +5,7 @@
 #include <json/json_fwd.hpp>
 #include "game.hpp"
 #include "ball_type.hpp"
+#include "settings.hpp"
 
 struct game;
 

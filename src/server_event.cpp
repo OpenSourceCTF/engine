@@ -115,3 +115,8 @@ server_event::server_event(server_event_toggle_off e)
 , ptr(new server_event_toggle_off(e))
 {}
 
+server_event::server_event(server_event_game_finished e)
+: type(server_event_type::game_finished)
+, ptr(new server_event_game_finished(e))
+{}
+

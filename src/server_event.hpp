@@ -26,6 +26,7 @@
 #include "server_event_flag_grabbed.hpp"
 #include "server_event_toggle_on.hpp"
 #include "server_event_toggle_off.hpp"
+#include "server_event_game_finished.hpp"
 
 struct server_event_gamesync;
 struct server_event_chat;
@@ -50,6 +51,7 @@ struct server_event_ball_rb_explode;
 struct server_event_flag_grabbed;
 struct server_event_toggle_on;
 struct server_event_toggle_off;
+struct server_event_game_finished;
 
 struct server_event
 {
@@ -79,6 +81,7 @@ struct server_event
     server_event(server_event_flag_grabbed e);
     server_event(server_event_toggle_on e);
     server_event(server_event_toggle_off e);
+    server_event(server_event_game_finished e);
 };
 
 #endif

@@ -28,6 +28,11 @@ store player stats
 
 request player stats event
 
+neutral flag mode:
+    add flag_transferred event
+    add game type
+    add transfer method
+
 
 ---
 

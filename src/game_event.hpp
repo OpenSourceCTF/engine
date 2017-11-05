@@ -27,12 +27,8 @@
 #include "game_event_flag_grabbed.hpp"
 #include "game_event_toggle_on.hpp"
 #include "game_event_toggle_off.hpp"
+#include "game_event_game_finished.hpp"
 
-// todo implement these
-/*
-#include "game_event_flag_transferred.hpp"
-rollingbomb
-*/
 
 struct game_event_ballsync;
 struct game_event_gamesync;
@@ -56,6 +52,7 @@ struct game_event_ball_rb_explode;
 struct game_event_flag_grabbed;
 struct game_event_toggle_on;
 struct game_event_toggle_off;
+struct game_event_game_finished;
 
 
 // this is used for relaying game events over network
@@ -86,6 +83,7 @@ struct game_event
     game_event(game_event_flag_grabbed e);
     game_event(game_event_toggle_on e);
     game_event(game_event_toggle_off e);
+    game_event(game_event_game_finished e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);

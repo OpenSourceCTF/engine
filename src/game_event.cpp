@@ -111,6 +111,11 @@ game_event::game_event(game_event_toggle_off e)
 , ptr(new game_event_toggle_off(e))
 {}
 
+game_event::game_event(game_event_game_finished e)
+: type(game_event_type::game_finished)
+, ptr(new game_event_game_finished(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -181,6 +186,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::toggle_off:
             to_json(data, *std::static_pointer_cast<game_event_toggle_off>(p.ptr));
+            break;
+        case game_event_type::game_finished:
+            to_json(data, *std::static_pointer_cast<game_event_game_finished>(p.ptr));
             break;
     }
 

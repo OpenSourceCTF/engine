@@ -27,5 +27,6 @@ std::string to_string(const game_event_type m)
         // case game_event_type::flag_transferred: return "flag_transferred"; break;
         case game_event_type::toggle_on:        return "toggle_on";        break;
         case game_event_type::toggle_off:       return "toggle_off";       break;
+        case game_event_type::game_finished:    return "game_finished";    break;
     }
 }

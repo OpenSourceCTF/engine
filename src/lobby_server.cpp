@@ -48,6 +48,7 @@ game& lobby_server::get_game_from_port(const std::uint16_t port) const
 
 std::vector<lobby_event_games_game> lobby_server::get_games() const
 {
+    const settings& config = settings::get_instance();
     const lobby_server& lobby = lobby_server::get_instance();
 
     std::vector<lobby_event_games_game> games;
@@ -56,8 +57,8 @@ std::vector<lobby_event_games_game> lobby_server::get_games() const
     for(auto && o : lobby.games) {
         games.emplace_back(
             o->port,
-            o->max_points,
-            o->max_length,
+            config.GAME_MAX_POINTS,
+            config.GAME_MAX_LENGTH,
             o->timestep,
             o->m->name,
             o->m->author,

@@ -24,17 +24,15 @@ struct game
 
     std::uint16_t port;
     map* m;
-    std::uint32_t max_points;
-    std::uint32_t max_length;
     std::uint32_t red_points;
     std::uint32_t blue_points;
     b2World * world;
     std::size_t timestep;
+    bool finished;
     std::vector<std::unique_ptr<player>> players;
     std::mutex server_events_queue_mutex;
     std::queue<server_event> server_events_queue;
 
-    game();
     game(const std::uint16_t port);
     game(const game&) = delete;
 

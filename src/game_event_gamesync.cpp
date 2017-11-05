@@ -7,6 +7,8 @@ game_event_gamesync::game_event_gamesync(const game* g)
 
 void to_json(nlohmann::json& j, const game_event_gamesync& p)
 {
+    const settings& config = settings::get_instance();
+
     std::vector<nlohmann::json> players;
     std::vector<nlohmann::json> portals;
     std::vector<nlohmann::json> toggles;
@@ -103,8 +105,8 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
 
     j = nlohmann::json{
         {"game", {
-            {"max_points", p.g->max_points},
-            {"max_length", p.g->max_length},
+            {"max_points", config.GAME_MAX_POINTS},
+            {"max_length", config.GAME_MAX_LENGTH},
             {"red_points", p.g->red_points},
             {"blue_points", p.g->blue_points},
             {"timestep", p.g->timestep}

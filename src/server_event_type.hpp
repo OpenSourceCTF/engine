@@ -29,7 +29,7 @@ enum class server_event_type
     flag_grabbed,
     toggle_on,
     toggle_off,
-
+    game_finished,
 
     // flag_transferred // neutral flag
 };

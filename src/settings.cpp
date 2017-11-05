@@ -68,6 +68,9 @@ settings& settings::get_instance()
             boost::algorithm::trim(m);
         }
 
+        instance.GAME_MAX_LENGTH = reader.GetInteger("game", "max_length", 0);
+        instance.GAME_MAX_POINTS = reader.GetInteger("game", "max_points", 0);
+
 
         instance.is_initialized = true;
     }

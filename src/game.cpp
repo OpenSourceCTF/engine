@@ -1,17 +1,14 @@
 #include "game.hpp"
 #include <json/json.hpp>
 
-game::game(){}
-
 game::game(const std::uint16_t port)
 : port(port)
 , m(nullptr)
-, max_points(3)
-, max_length(15*60)
 , red_points(0)
 , blue_points(0)
 , world(nullptr)
 , timestep(0)
+, finished(false)
 {}
 
 bool game::spawn_srv_thread()
@@ -58,18 +55,13 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
-            add_server_event(server_event(server_event_ballsync(this)));
-        }
-
         handle_server_events();
-
-        this->step();
-        world->Step(
-            1.0f/config.WORLD_FRAMERATE,
-            config.WORLD_VELO_ITERATIONS,
-            config.WORLD_POS_ITERATIONS
-        );
+        if(! finished) {
+            this->step();
+            if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
+                add_server_event(server_event(server_event_ballsync(this)));
+            }
+        }
 
         const std::chrono::high_resolution_clock::time_point t_end {
             std::chrono::high_resolution_clock::now()
@@ -99,6 +91,19 @@ void game::handle_server_events()
 
     while(! server_events_queue.empty()) {
         const server_event a = std::move(server_events_queue.front());
+
+        // only allow these commands to go through, drop everything else
+        if(finished) switch(a.type) {
+            case server_event_type::player_joined:
+            case server_event_type::player_left:
+            case server_event_type::chat:
+            case server_event_type::teamchat:
+            case server_event_type::honk:
+            case server_event_type::game_finished:
+                break;
+
+            default: goto pop_server_event;
+        }
 
         switch(a.type) {
         case server_event_type::gamesync: {
@@ -261,8 +266,15 @@ void game::handle_server_events()
                 m->m_toggle->id
             )));
         } break;
+
+        case server_event_type::game_finished: {
+            auto m = std::static_pointer_cast<server_event_game_finished>(a.ptr);
+            try_broadcast(this, game_event(game_event_game_finished()));
+        } break;
+
         }
 
+pop_server_event:
         server_events_queue.pop();
     }
 
@@ -382,6 +394,16 @@ bool game::load_map(const std::string map_src)
 
 void game::step()
 {
+    const settings& config = settings::get_instance();
+
+    if(timestep    >= config.GAME_MAX_LENGTH
+    || red_points  >= config.GAME_MAX_POINTS
+    || blue_points >= config.GAME_MAX_POINTS) {
+        add_server_event(server_event(server_event_game_finished(this)));
+        finished = true;
+        return;
+    }
+
     for(auto && o : players) {
         ball* b = o->b;
         if(b && b->is_alive) {
@@ -462,6 +484,12 @@ void game::step()
             }
         }
     }
+
+    world->Step(
+        1.0f/config.WORLD_FRAMERATE,
+        config.WORLD_VELO_ITERATIONS,
+        config.WORLD_POS_ITERATIONS
+    );
 
     ++timestep;
 }

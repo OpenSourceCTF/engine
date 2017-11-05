@@ -65,6 +65,9 @@ struct settings
     int SERVER_BALLSYNC_EVERY;
     std::vector<std::string> SERVER_MAPS;
 
+    std::size_t GAME_MAX_POINTS;
+    std::size_t GAME_MAX_LENGTH;
+
 
     // use this to initialize
     static settings& get_instance();
