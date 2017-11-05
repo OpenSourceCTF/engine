@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_PLAYER_LEFT_HPP
 
 #include <string>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "player.hpp"
 
 struct game_event_player_left

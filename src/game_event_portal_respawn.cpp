@@ -1,4 +1,5 @@
 #include "game_event_portal_respawn.hpp"
+#include <json/json.hpp>
 
 game_event_portal_respawn::game_event_portal_respawn(
     const std::size_t id,

@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <spdlog/spdlog.h>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 
 enum class spawn_type
 {

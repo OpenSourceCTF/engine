@@ -1,4 +1,5 @@
 #include "websocket_server.hpp"
+#include <json/json.hpp>
 
 std::uint16_t get_local_port(
     websocketpp::server<websocketpp::config::asio>* srv,

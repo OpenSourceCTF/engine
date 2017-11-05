@@ -1,4 +1,5 @@
 #include "game_event_bomb_explosion.hpp"
+#include <json/json.hpp>
 
 game_event_bomb_explosion::game_event_bomb_explosion(
     const std::size_t id

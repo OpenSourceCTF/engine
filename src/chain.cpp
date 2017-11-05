@@ -1,4 +1,5 @@
 #include "chain.hpp"
+#include <json/json.hpp>
 
 
 chain::chain()

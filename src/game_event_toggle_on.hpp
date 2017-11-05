@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_TOGGLE_ON_HPP
 
 #include <cstdint>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 
 struct game_event_toggle_on
 {

@@ -1,4 +1,5 @@
 #include "tp_map_importer.hpp"
+#include <json/json.hpp>
 
 
 // the types of tiles from tagpro .png map

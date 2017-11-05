@@ -1,4 +1,5 @@
 #include "game_event_gamesync.hpp"
+#include <json/json.hpp>
 
 game_event_gamesync::game_event_gamesync(const game* g)
 : g(g)

@@ -1,4 +1,5 @@
 #include "lobby_event_games.hpp"
+#include <json/json.hpp>
 
 lobby_event_games_game::lobby_event_games_game(
     std::uint16_t port,

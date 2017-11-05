@@ -1,4 +1,5 @@
 #include "toggle_tag_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const toggle_tag_type m)
 {

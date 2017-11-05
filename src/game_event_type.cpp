@@ -1,4 +1,5 @@
 #include "game_event_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const game_event_type m)
 {

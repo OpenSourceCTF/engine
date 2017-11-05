@@ -1,4 +1,5 @@
 #include "game_event_toggle_on.hpp"
+#include <json/json.hpp>
 
 game_event_toggle_on::game_event_toggle_on(
     const std::size_t ball_id,

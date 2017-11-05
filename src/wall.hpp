@@ -4,7 +4,7 @@
 #include <memory>
 #include <array>
 #include <Box2D/Box2D.h>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "collision_user_data.hpp"
 #include "polygon.hpp"
 #include "color.hpp"

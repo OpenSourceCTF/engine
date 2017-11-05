@@ -1,4 +1,5 @@
 #include "spawn_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const spawn_type m)
 {

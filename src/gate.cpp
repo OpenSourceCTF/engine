@@ -1,4 +1,5 @@
 #include "gate.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t gate::id_counter = 0;
 

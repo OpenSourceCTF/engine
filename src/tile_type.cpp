@@ -1,4 +1,5 @@
 #include "tile_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const tile_type m)
 {

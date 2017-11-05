@@ -1,4 +1,5 @@
 #include "booster.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t booster::id_counter = 0;
 

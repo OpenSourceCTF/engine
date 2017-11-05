@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_CHAT_HPP
 
 #include <string>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "player.hpp"
 
 struct game_event_chat

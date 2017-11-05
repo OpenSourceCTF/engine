@@ -1,4 +1,5 @@
 #include "game_event_player_joined.hpp"
+#include <json/json.hpp>
 
 game_event_player_joined::game_event_player_joined(player* p)
 : p(p)

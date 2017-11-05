@@ -1,4 +1,5 @@
 #include "toggle.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t toggle::id_counter = 0;
 

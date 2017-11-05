@@ -1,4 +1,5 @@
 #include "map.hpp"
+#include <json/json.hpp>
 
 map::map()
 : is_loaded(false)

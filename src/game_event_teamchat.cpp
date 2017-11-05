@@ -1,4 +1,6 @@
 #include "game_event_teamchat.hpp"
+#include <json/json.hpp>
+
 game_event_teamchat::game_event_teamchat(
     player* p,
     std::string msg

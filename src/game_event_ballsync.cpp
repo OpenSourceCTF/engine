@@ -1,4 +1,5 @@
 #include "game_event_ballsync.hpp"
+#include <json/json.hpp>
 
 game_event_ballsync::game_event_ballsync(game* g)
 : g(g)

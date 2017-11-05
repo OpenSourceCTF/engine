@@ -1,4 +1,5 @@
 #include "bomb.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t bomb::id_counter = 0;
 

@@ -1,4 +1,5 @@
 #include "coord.hpp"
+#include <json/json.hpp>
 
 coord::coord() {}
     

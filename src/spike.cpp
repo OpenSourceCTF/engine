@@ -1,4 +1,5 @@
 #include "spike.hpp"
+#include <json/json.hpp>
 
 spike::spike(){}
 spike::spike(

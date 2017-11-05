@@ -1,4 +1,5 @@
 #include "game_event_player_left.hpp"
+#include <json/json.hpp>
 
 game_event_player_left::game_event_player_left(
     player* p

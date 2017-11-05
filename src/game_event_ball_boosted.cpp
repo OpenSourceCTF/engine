@@ -1,4 +1,5 @@
 #include "game_event_ball_boosted.hpp"
+#include <json/json.hpp>
 
 game_event_ball_boosted::game_event_ball_boosted(
     const std::size_t ball_id,

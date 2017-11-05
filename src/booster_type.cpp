@@ -1,4 +1,5 @@
 #include "booster_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const booster_type m)
 {

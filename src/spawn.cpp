@@ -1,4 +1,5 @@
 #include "spawn.hpp"
+#include <json/json.hpp>
 
 spawn::spawn(){}
 spawn::spawn(

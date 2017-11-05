@@ -1,4 +1,5 @@
 #include "game_event_ball_portal.hpp"
+#include <json/json.hpp>
 
 game_event_ball_portal::game_event_ball_portal(
     const std::size_t ball_id,

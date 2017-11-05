@@ -2,7 +2,7 @@
 #define ML_LOBBY_EVENT_HPP
 
 #include <spdlog/spdlog.h>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "lobby_event_type.hpp"
 #include "lobby_event_games.hpp"
 

@@ -1,4 +1,5 @@
 #include "lobby_event.hpp"
+#include <json/json.hpp>
 
 lobby_event::lobby_event(const lobby_event_games e)
 : type(lobby_event_type::games)

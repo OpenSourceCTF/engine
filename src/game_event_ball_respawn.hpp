@@ -2,7 +2,7 @@
 #define ML_GAME_EVENT_BALL_RESPAWN_HPP
 
 #include <cstdint>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include <Box2D/Box2D.h>
 
 struct game_event_ball_respawn

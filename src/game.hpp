@@ -7,7 +7,7 @@
 #include <mutex>
 #include <queue>
 #include <memory>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "map.hpp"
 #include "server_event.hpp"
 #include "player.hpp"

@@ -1,4 +1,5 @@
 #include "flag.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t flag::id_counter = 0;
 

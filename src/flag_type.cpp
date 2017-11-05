@@ -1,4 +1,5 @@
 #include "flag_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const flag_type m)
 {

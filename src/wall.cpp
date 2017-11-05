@@ -1,4 +1,5 @@
 #include "wall.hpp"
+#include <json/json.hpp>
 
 wall::wall(){}
 wall::wall(

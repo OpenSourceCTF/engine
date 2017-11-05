@@ -1,4 +1,5 @@
 #include "websocket_game_server.hpp"
+#include <json/json.hpp>
 
 int start_game_server(const std::uint16_t port) 
 {

@@ -1,4 +1,5 @@
 #include "lobby_server.hpp"
+#include <json/json.hpp>
 
 lobby_server& lobby_server::get_instance()
 {

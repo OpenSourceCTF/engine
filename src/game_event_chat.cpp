@@ -1,4 +1,5 @@
 #include "game_event_chat.hpp"
+#include <json/json.hpp>
 
 game_event_chat::game_event_chat(
     player* p,

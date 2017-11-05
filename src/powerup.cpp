@@ -1,4 +1,5 @@
 #include "powerup.hpp"
+#include <json/json.hpp>
 
 thread_local std::size_t powerup::id_counter = 0;
 

@@ -1,5 +1,6 @@
 #include "websocket_server.hpp"
 #include "websocket_lobby_server.hpp"
+#include <json/json.hpp>
 
 int start_lobby_server(
     lobby_server& lobby,

@@ -1,4 +1,5 @@
 #include "game_event.hpp"
+#include <json/json.hpp>
 
 game_event::game_event(game_event_gamesync e)
 : type(game_event_type::gamesync)

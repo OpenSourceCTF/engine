@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 #include "spawn_type.hpp"
 
 struct spawn

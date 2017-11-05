@@ -1,4 +1,5 @@
 #include "map_type.hpp"
+#include <json/json.hpp>
 
 std::string to_string(const map_type m)
 {

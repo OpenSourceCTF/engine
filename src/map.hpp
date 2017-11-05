@@ -17,7 +17,7 @@
 #include <memory>
 #include <algorithm>
 
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 
 #include "lodepng.h"
 #include "map_type.hpp"

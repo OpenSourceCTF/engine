@@ -1,4 +1,5 @@
 #include "toggle_tag.hpp"
+#include <json/json.hpp>
 
 toggle_tag::toggle_tag(){}
 toggle_tag::toggle_tag(

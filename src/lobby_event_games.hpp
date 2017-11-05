@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <string>
-#include <json/json.hpp>
+#include <json/json_fwd.hpp>
 
 struct lobby_event_games_game
 {

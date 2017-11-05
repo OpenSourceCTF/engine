@@ -1,4 +1,5 @@
 #include "game_event_booster_respawn.hpp"
+#include <json/json.hpp>
 
 game_event_booster_respawn::game_event_booster_respawn(
     const std::size_t id,

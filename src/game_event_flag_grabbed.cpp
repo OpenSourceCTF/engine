@@ -1,4 +1,5 @@
 #include "game_event_flag_grabbed.hpp"
+#include <json/json.hpp>
 
 game_event_flag_grabbed::game_event_flag_grabbed(
     const std::size_t ball_id,
