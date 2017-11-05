@@ -8,6 +8,8 @@ add game end conditions (time, score)
     new_game event (map name)
         need to have players let game know they are ready
 
+vote player event
+
 fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
 
