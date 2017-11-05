@@ -18,15 +18,15 @@ fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
 
 store player stats
-    who popped who
-    who capped
-    who picked up powerups
-    ...
     ideally we can support more than tagpro did
     probably by storing the stats with more detail
     ...
     total distance travelled?
     average speed?
+    ...
+    check todos
+
+request player stats event
 
 
 ---
