@@ -1,5 +1,10 @@
 #include "chain.hpp"
-chain::chain() {}
+
+
+chain::chain()
+: vertices()
+, body(nullptr)
+{}
 
 chain::chain(const std::vector<coord> & vertices)
 : vertices(vertices)
@@ -25,7 +30,6 @@ void chain::add_to_world(b2World * world)
     bdef.angle = 0.0f;
 
     body = world->CreateBody(&bdef);
-
 
     std::vector<b2Vec2> vs(vertices.size());
     int i = 0;
