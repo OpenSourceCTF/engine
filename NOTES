@@ -10,7 +10,6 @@ add game end conditions (time, score)
 
 fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
-fix corners with export
 
 store player stats
     who popped who
