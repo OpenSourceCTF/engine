@@ -52,7 +52,7 @@ struct tp_pos_cmp
 // we have to do this first so we can store the positions
 // so we can link this using our toggle_tags system
 // second param is id of toggle in toggles
-static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_toggle_positions;
+static std::map<tp_pos, std::vector<std::size_t>, tp_pos_cmp> tp_import_toggle_positions;
 static std::map<tp_pos, std::size_t, tp_pos_cmp> tp_import_portal_positions;
 
 // little helper for turning tiles into 2 polys
@@ -99,8 +99,10 @@ void tp_map_importer::tp_toggle_ref(
     const tp_pos toggle_check(x, y);
     if(tp_import_toggle_positions.find(toggle_check)
     != tp_import_toggle_positions.end()) {
-        auto & tags = m.toggles[tp_import_toggle_positions[toggle_check]]->tags;
-        tags.emplace_back(id, type);
+        for(const auto t : tp_import_toggle_positions[toggle_check]) {
+            auto & tags = m.toggles[t]->tags;
+            tags.emplace_back(id, type);
+        }
     }
 }
 
@@ -156,10 +158,9 @@ int tp_map_importer::tp_import_json(const std::string & src)
 
             for(auto p : it.value().at("toggle")) {
                 const auto j_pos = p.at("pos");
-
                 tp_import_toggle_positions[
                     tp_pos(j_pos.at("x"), j_pos.at("y"))
-                ] = m.toggles.size() - 1;
+                ].emplace_back(m.toggles.size() - 1);
             }
 
             for(auto p : make_square_poly(x, y)) {
@@ -221,7 +222,7 @@ int tp_map_importer::tp_import_json(const std::string & src)
 
             std::map<std::string, gate_type> gatetype_map = {
                 {"off",  gate_type::off},
-                {"on",   gate_type::on},
+                {"on",   gate_type::green},
                 {"red",  gate_type::red},
                 {"blue", gate_type::blue}
             };
@@ -382,18 +383,24 @@ int tp_map_importer::tp_import_png(const std::string & src)
             m.tiles.emplace_back(new tile(polygon(x-0.5, y-0.5, x+0.5, y-0.5, x-0.5, y+0.5), config.COLOR_TILE, tile_type::normal));
         } else if(tiletype == tp_tile_type::bomb) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.bombs.emplace_back(new bomb(x, y));
             tp_toggle_ref(x, y, m.bombs.size()-1, toggle_tag_type::bomb);
         } else if(tiletype == tp_tile_type::spike) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.spikes.emplace_back(new spike(x, y));
         } else if(tiletype == tp_tile_type::powerup) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.powerups.emplace_back(new powerup(x, y, {
                 powerup_type::tagpro,
@@ -404,40 +411,56 @@ int tp_map_importer::tp_import_png(const std::string & src)
             // this is handled by toggle
         } else if(tiletype == tp_tile_type::booster_all) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.boosters.emplace_back(new booster(x, y, booster_type::all));
         } else if(tiletype == tp_tile_type::booster_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.boosters.emplace_back(new booster(x, y, booster_type::red));
         } else if(tiletype == tp_tile_type::booster_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.boosters.emplace_back(new booster(x, y, booster_type::blue));
         } else if(tiletype == tp_tile_type::gate) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
         } else if(tiletype == tp_tile_type::portal) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
         } else if(tiletype == tp_tile_type::flag_neutral) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::neutral));
         } else if(tiletype == tp_tile_type::flag_red) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::red));
         } else if(tiletype == tp_tile_type::flag_blue) {
             for(auto p : make_square_poly(x, y)) {
-                m.tiles.emplace_back(new tile(p, config.COLOR_TILE, tile_type::normal));
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::blue));
         } else {

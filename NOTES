@@ -32,6 +32,14 @@ run these to look for bugs
 `grep -r "todo" src`
 `grep -r "fixme" src`
 
+### ploff
+
+chain vertices are shared_ptr - look at
+get the good config values
+return flag properly
+explosions persist after pop?
+toggles render incorrectly
+
 
 ## NETWORK
 client connects to lobby

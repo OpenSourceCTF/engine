@@ -3,3 +3,8 @@ compile_commands.json
 .gdbinit
 .gdbcoms
 **/*.orig
+
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]

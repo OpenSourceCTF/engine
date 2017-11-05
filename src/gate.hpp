@@ -17,8 +17,10 @@ struct gate
     std::size_t id;
     polygon poly;
     gate_type type;
-
     gate_type current;
+    std::shared_ptr<collision_user_data> col_data;
+    int red_minus_blue = 0;
+    b2Body* body;
 
     gate();
     gate(
@@ -28,6 +30,8 @@ struct gate
 
     void mark_on(ball* b);
     void mark_off(ball* b);
+    void kill_if_other(std::unique_ptr<ball>& b);
+    void add_to_world(b2World* world);
 };
 
 void to_json(nlohmann::json& j, const gate& p);

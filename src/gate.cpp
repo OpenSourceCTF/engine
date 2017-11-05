@@ -11,25 +11,54 @@ gate::gate(
 , poly(poly)
 , type(type)
 , current(type)
+, body(nullptr)
 {}
 
 void gate::mark_on(ball* b)
 {
-    // todo -- this needs work
-    switch(type) {
-        case gate_type::off:  current = gate_type::on;  break;
-        case gate_type::on:   current = gate_type::off; break;
-        case gate_type::red:
-        case gate_type::blue:
-            if(! same_color(type, b->type)) current = gate_type::off;
-            else {} // todo - we need to track amount of people on/off toggles for this to work 
-            break;
-    }
+    if(b->type == ball_type::blue) --red_minus_blue;
+    else if(b->type == ball_type::red) ++red_minus_blue;
+    else spdlog::get("game")->error("ball_type neither red nor blue");
+
+    if(red_minus_blue == 0) { current = type; return; }
+    current = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
 }
 
 void gate::mark_off(ball* b)
 {
-    current = type;
+    if(b->type == ball_type::blue) ++red_minus_blue;
+    else if(b->type == ball_type::red) --red_minus_blue;
+    else spdlog::get("game")->error("ball_type neither red nor blue");
+
+    if(red_minus_blue == 0) { current = type; return; }
+    current = red_minus_blue < 0 ? gate_type::blue : gate_type::red;
+}
+
+void gate::kill_if_other(std::unique_ptr<ball>& b) {
+    if(current == gate_type::off) return;
+    if(!same_color(current,b->type)) b->pop();
+}
+
+void gate::add_to_world(b2World* world) {
+    const b2Vec2 center = poly.get_center();
+    b2BodyDef bdef;
+    bdef.type = b2_staticBody;
+    bdef.position.Set(center.x, center.y);
+    bdef.angle = 0.0f;
+    body = world->CreateBody(&bdef);
+
+    const std::array<b2Vec2, 3> vertices = poly.get_vertices();
+
+    b2PolygonShape bshape;
+    bshape.Set(vertices.data(), vertices.size());
+
+    b2FixtureDef fdef;
+    fdef.shape = &bshape;
+    fdef.isSensor = true;
+    fdef.density = 1;
+    body->CreateFixture(&fdef);
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::gate, this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
 void to_json(nlohmann::json& j, const gate& p)

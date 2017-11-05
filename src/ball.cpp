@@ -10,6 +10,7 @@ ball::ball(const ball_type type)
 , portal_transport_ptr(nullptr)
 , is_alive(true)
 , player_ptr(nullptr)
+, in_gate_ptrs({})
 {}
 
 ball::~ball()

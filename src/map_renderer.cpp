@@ -73,7 +73,7 @@ int map_renderer::get_input()
     return 0;
 #else
     const settings& config = settings::get_instance();
-    static std::size_t selected_ball_id = 0; // which to move
+    static int current_ball = 0; // which to move
     sf::Event event;
 
     while(window->pollEvent(event)) {
@@ -99,32 +99,21 @@ int map_renderer::get_input()
                 wireframe = !wireframe;
             }
 
-            if(event.key.code == sf::Keyboard::Key::K) {
-                selected_ball_id = selected_ball_id == 0 ? m.balls.size() - 1 : selected_ball_id - 1;
-            }
-
             if(event.key.code == sf::Keyboard::Key::J) {
-                selected_ball_id = m.balls.empty()
-                    ? 0
-                    : (selected_ball_id == 0
-                        ? m.balls.size() - 1
-                        : selected_ball_id - 1);
+                ++current_ball;
+                current_ball %= m.balls.size();
             }
-
             if(event.key.code == sf::Keyboard::Key::K) {
-                selected_ball_id = m.balls.empty()
-                    ? 0
-                    : (selected_ball_id == m.balls.size() - 1
-                        ? 0
-                        : selected_ball_id + 1);
+                --current_ball;
+                current_ball %= m.balls.size();
             }
         }
     }
 
     if(! m.balls.empty()) {
         // CONTROL
-        if(selected_ball_id >= m.balls.size()) {
-            selected_ball_id = 0;
+        if(current_ball >= m.balls.size()) {
+            current_ball = 0;
         }
 
         int move_x = 0, move_y = 0;
@@ -132,7 +121,7 @@ int map_renderer::get_input()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[selected_ball_id]->move(move_x, move_y);
+        if(move_x || move_y) m.balls[current_ball]->move(move_x, move_y);
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -246,10 +235,10 @@ int map_renderer::render() const
         sf::ConvexShape s;
         add_points(s, o->poly);
         switch(o->current) {
-            case gate_type::off:  s.setFillColor(sf::Color(0,   0,   0,   50)); break;
-            case gate_type::on:   s.setFillColor(sf::Color(0,   255, 0,   50)); break;
-            case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255, 50)); break;
-            case gate_type::red:  s.setFillColor(sf::Color(255, 0,   0,   50)); break;
+            case gate_type::off:  s.setFillColor(sf::Color(70,   70,   70)); break;
+            case gate_type::green:   s.setFillColor(sf::Color(0,   255, 0)); break;
+            case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255)); break;
+            case gate_type::red:  s.setFillColor(sf::Color(255, 0,   0)); break;
         }
         window->draw(s);
     }

@@ -8,7 +8,7 @@
 
 enum class gate_type
 {
-    off, on, blue, red
+    off, green, blue, red
 };
 
 std::string to_string(const gate_type m);
