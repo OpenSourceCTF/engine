@@ -1,16 +1,19 @@
 ## TODO
 
-speed up compilation time
+++ speed up compilation time ++
+    check for any places we can use forward declarations
 
 add invincibility for X tics after grabbing flag
 
 remove players if they havent moved in X seconds
     unless they're by themselves
 
-add game end conditions (time, score)
-    game_finished event (which team won, any fun end of game only stats)
-    new_game event (map name)
-        need to have players let game know they are ready
+game_finished event:
+    maybe add which team won?
+    any fun end of game only stats?
+
+new_game event (map name)
+    need to have players let game know they are ready
 
 vote player event
 

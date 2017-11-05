@@ -124,15 +124,5 @@ void to_json(nlohmann::json& j, const game_event_gamesync& p)
             {"balls", balls}
         }}
     };
-
-    // add these (and maybe more?)
-    // portals state, respawn, alive
-    // toggles state, respawn, alive
-    // bombs respawn, is_alive
-    // boosters respawn, is_alive
-    // gates state
-    // flags state
-    // powerups state, respawn
-    // balls position, velocity, flags, powerups
 }
 
