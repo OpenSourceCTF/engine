@@ -41,7 +41,9 @@ int start_game_server(const std::uint16_t port)
 void handle_game_open(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
-) {}
+) {
+    spdlog::get("game")->info("game open");
+}
 
 void handle_game_close(
     websocketpp::server<websocketpp::config::asio>* srv,
@@ -61,18 +63,23 @@ void handle_game_close(
     } else {
         spdlog::get("game")->debug("player left but already left?");
     }
+    srv->pause_reading(hdl);
+    spdlog::get("game")->info("game close");
 }
 
 void handle_game_fail(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
-) {}
+) {
+    spdlog::get("game")->info("game fail");
+}
 
 bool handle_game_ping(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
+    spdlog::get("game")->info("game ping");
     return true;
 }
 
@@ -81,6 +88,7 @@ bool handle_game_pong(
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
+    spdlog::get("game")->info("game pong");
     return true;
 }
 
@@ -88,17 +96,22 @@ void handle_game_pong_timeout(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
     std::string str
-) {}
+) {
+    spdlog::get("game")->info("game pong timeout");
+}
 
 void handle_game_interrupt(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
-) {}
+) {
+    spdlog::get("game")->info("game interrupt");
+}
 
 bool handle_game_validate(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl
 ) {
+    spdlog::get("game")->info("game validate");
     // todo
     // validate if connection is valid/allowed
     
@@ -135,6 +148,9 @@ void handle_game_message(
 
             } else if(req == "honk") {
                 return on_game_honk(srv, hdl, msg);
+
+            } else if(req == "stats") {
+                return on_game_stats(srv, hdl, msg);
 
             } else {
                 try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
@@ -247,6 +263,25 @@ void on_game_honk(
     }
 }
 
+void on_game_stats(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
+
+    if(p) {
+        g.add_server_event(server_event(server_event_game_stats(p)));
+    } else {
+        spdlog::get("game")->debug("player requested stats but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+    }
+}
 
 void on_game_sync(
     websocketpp::server<websocketpp::config::asio>* srv,

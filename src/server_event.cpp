@@ -120,3 +120,8 @@ server_event::server_event(server_event_game_finished e)
 , ptr(new server_event_game_finished(e))
 {}
 
+server_event::server_event(server_event_game_stats e)
+: type(server_event_type::game_stats)
+, ptr(new server_event_game_stats(e))
+{}
+

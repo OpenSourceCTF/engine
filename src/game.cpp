@@ -272,6 +272,14 @@ void game::handle_server_events()
             try_broadcast(this, game_event(game_event_game_finished()));
         } break;
 
+        case server_event_type::game_stats: {
+            auto m = std::static_pointer_cast<server_event_game_stats>(a.ptr);
+
+            try_send(m->p->srv, m->p->con, websocketpp::frame::opcode::value::text, 
+                game_event(game_event_game_stats(this))
+            );
+        } break;
+
         }
 
 pop_server_event:

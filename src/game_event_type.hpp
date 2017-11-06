@@ -31,7 +31,8 @@ enum class game_event_type
     // flag_transferred, // neutral flag
     toggle_on,
     toggle_off,
-    game_finished
+    game_finished,
+    game_stats,
 };
 
 std::string to_string(const game_event_type m);

@@ -98,6 +98,12 @@ void on_game_honk(
     websocketpp::server<websocketpp::config::asio>::message_ptr msg
 );
 
+void on_game_stats(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+);
+
 void on_game_sync(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,
