@@ -125,3 +125,9 @@ server_event::server_event(server_event_game_stats e)
 , ptr(new server_event_game_stats(e))
 {}
 
+server_event::server_event(server_event_vote_player e)
+: type(server_event_type::vote_player)
+, ptr(new server_event_vote_player(e))
+{}
+
+

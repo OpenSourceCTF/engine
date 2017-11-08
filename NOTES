@@ -8,14 +8,22 @@ add invincibility for X tics after grabbing flag
 remove players if they havent moved in X seconds
     unless they're by themselves
 
-game_finished event:
+game_finished event (currently stub):
     maybe add which team won?
     any fun end of game only stats?
+    send gamesync of next map
+    send start_game event?
 
-new_game event (map name)
+new_game event (map name) ??? ^^
     need to have players let game know they are ready
+    should we just send gamesync?
 
 vote player event
+    has voting player_id, voted player_id, reason string
+    players have N seconds to vote yes/no (in ui)
+    TODO: check that players can only vote once
+          disconnect player if voted more than N times
+          add something to db
 
 fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)

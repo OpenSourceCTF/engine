@@ -111,5 +111,13 @@ void on_game_sync(
     const std::string& login_token
 );
 
+void on_game_vote_player(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    const std::string & player_id,
+    const std::string & reason
+);
+
 #endif
 

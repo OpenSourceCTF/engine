@@ -48,6 +48,7 @@ struct game
     player* add_player(player* p);
     void score(ball* b);
     player* get_player_from_con(websocketpp::connection_hdl con);
+    player* get_player_from_player_id(const std::string & player_id);
     void add_server_event(server_event a);
 };
 

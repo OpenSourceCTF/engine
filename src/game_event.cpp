@@ -121,6 +121,11 @@ game_event::game_event(game_event_game_stats e)
 , ptr(new game_event_game_stats(e))
 {}
 
+game_event::game_event(game_event_vote_player e)
+: type(game_event_type::vote_player)
+, ptr(new game_event_vote_player(e))
+{}
+
 void to_json(nlohmann::json& j, const game_event& p)
 {
     nlohmann::json data;
@@ -197,6 +202,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::game_stats:
             to_json(data, *std::static_pointer_cast<game_event_game_stats>(p.ptr));
+            break;
+        case game_event_type::vote_player:
+            to_json(data, *std::static_pointer_cast<game_event_vote_player>(p.ptr));
             break;
     }
 

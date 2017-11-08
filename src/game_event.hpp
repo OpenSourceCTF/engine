@@ -29,6 +29,7 @@
 #include "game_event_toggle_off.hpp"
 #include "game_event_game_finished.hpp"
 #include "game_event_game_stats.hpp"
+#include "game_event_vote_player.hpp"
 
 
 struct game_event_ballsync;
@@ -55,6 +56,7 @@ struct game_event_toggle_on;
 struct game_event_toggle_off;
 struct game_event_game_finished;
 struct game_event_game_stats;
+struct game_event_vote_player;
 
 
 // this is used for relaying game events over network
@@ -87,6 +89,7 @@ struct game_event
     game_event(game_event_toggle_off e);
     game_event(game_event_game_finished e);
     game_event(game_event_game_stats e);
+    game_event(game_event_vote_player e);
 };
 
 void to_json(nlohmann::json& j, const game_event& p);

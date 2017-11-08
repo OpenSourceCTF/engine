@@ -280,6 +280,15 @@ void game::handle_server_events()
             );
         } break;
 
+        case server_event_type::vote_player: {
+            auto m = std::static_pointer_cast<server_event_vote_player>(a.ptr);
+            try_broadcast(this, game_event(game_event_vote_player(
+                m->p,
+                m->vp,
+                m->reason
+            )));
+        } break;
+
         }
 
 pop_server_event:
@@ -586,6 +595,17 @@ player* game::get_player_from_con(websocketpp::connection_hdl con)
 {
     for(auto && o : players) {
         if(o->con.lock() == con.lock()) {
+            return o.get();
+        }
+    }
+
+    return nullptr;
+}
+
+player* game::get_player_from_player_id(const std::string & player_id)
+{
+    for(auto && o : players) {
+        if(o->player_id == player_id) {
             return o.get();
         }
     }

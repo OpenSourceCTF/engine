@@ -31,7 +31,7 @@ enum class server_event_type
     toggle_off,
     game_finished,
     game_stats,
-
+    vote_player,
     // flag_transferred // neutral flag
 };
 

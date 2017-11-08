@@ -152,6 +152,11 @@ void handle_game_message(
             } else if(req == "stats") {
                 return on_game_stats(srv, hdl, msg);
 
+            } else if(req == "vote_player") {
+                const std::string player_id = j.at("player_id").get<std::string>();
+                const std::string reason = j.at("reason").get<std::string>();
+                return on_game_vote_player(srv, hdl, msg, player_id, reason);
+
             } else {
                 try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
                     {"error", "unknown_request"}
@@ -336,5 +341,37 @@ void on_game_sync(
 
     // and let everyone know a new player has joined
     g.add_server_event(server_event(server_event_player_joined(p)));
+}
+
+void on_game_vote_player(
+    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp::connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    const std::string & player_id,
+    const std::string & reason
+) {
+    lobby_server& lobby = lobby_server::get_instance();
+
+    game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
+    player* p = g.get_player_from_con(hdl);
+    player* voted_p = g.get_player_from_player_id(player_id);
+
+    if(! p) {
+        spdlog::get("game")->debug("player voted but hasnt joined yet");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "not_joined"}
+        });
+        return;
+    }
+
+    if(! voted_p) {
+        spdlog::get("game")->debug("player voted player which doesnt exist");
+        try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
+            {"error", "voted_player_not_exist"}
+        });
+        return;
+    }
+
+    g.add_server_event(server_event(server_event_vote_player(p, voted_p, reason)));
 }
 

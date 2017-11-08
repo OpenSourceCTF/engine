@@ -33,6 +33,7 @@ enum class game_event_type
     toggle_off,
     game_finished,
     game_stats,
+    vote_player,
 };
 
 std::string to_string(const game_event_type m);
