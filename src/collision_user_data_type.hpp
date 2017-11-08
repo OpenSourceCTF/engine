@@ -13,7 +13,11 @@ enum class collision_user_data_type
     powerup,
     flag,
     portal,
-    gate
+    gate,
+    speed_red,
+    speed_blue,
+    endzone_red,
+    endzone_blue,
 };
 
 #endif

@@ -13,16 +13,17 @@ settings& settings::get_instance()
         spdlog::get("game")->error("cannot load 'config.ini'");
         return instance;
     } else {
-        instance.BALL_MOVEMENT_SPEED  = reader.GetReal("ball", "movement_speed", 0);
-        instance.BALL_JUKEJUICE_SPEED = reader.GetReal("ball", "jukejuice_speed", 0);
-        instance.BALL_DAMPING         = reader.GetReal("ball", "damping", 0);
-        instance.BALL_DENSITY         = reader.GetReal("ball", "density", 0);
-        instance.BALL_FRICTION        = reader.GetReal("ball", "friction", 0);
-        instance.BALL_RESTITUTION     = reader.GetReal("ball", "restitution", 0);
-        instance.BALL_RADIUS          = reader.GetReal("ball", "radius", 0);
-        instance.BALL_POP_FORCE       = reader.GetReal("ball","pop_force",0);
+        instance.BALL_MOVEMENT_SPEED   = reader.GetReal("ball", "movement_speed", 0);
+        instance.BALL_SPEED_TILE_SPEED = reader.GetReal("ball", "speed_tile_speed", 0);
+        instance.BALL_JUKEJUICE_SPEED  = reader.GetReal("ball", "jukejuice_speed", 0);
+        instance.BALL_DAMPING          = reader.GetReal("ball", "damping", 0);
+        instance.BALL_DENSITY          = reader.GetReal("ball", "density", 0);
+        instance.BALL_FRICTION         = reader.GetReal("ball", "friction", 0);
+        instance.BALL_RESTITUTION      = reader.GetReal("ball", "restitution", 0);
+        instance.BALL_RADIUS           = reader.GetReal("ball", "radius", 0);
+        instance.BALL_POP_FORCE        = reader.GetReal("ball","pop_force",0);
         instance.BALL_POP_RADIUS       = reader.GetReal("ball","pop_radius",0);
-        instance.BALL_RESPAWN_TIME    = reader.GetInteger("ball", "respawn_time", 0);
+        instance.BALL_RESPAWN_TIME     = reader.GetInteger("ball", "respawn_time", 0);
 
         instance.SPIKE_RADIUS = reader.GetReal("spike", "radius", 0);
 

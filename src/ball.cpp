@@ -11,6 +11,7 @@ ball::ball(const ball_type type)
 , is_alive(true)
 , player_ptr(nullptr)
 , in_gate_ptrs({})
+, on_tile_speed_counter(0)
 {}
 
 ball::~ball()
@@ -69,9 +70,12 @@ void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
-    const float f = (has_powerup(powerup_type::jukejuice))
-        ? config.BALL_JUKEJUICE_SPEED
-        : config.BALL_MOVEMENT_SPEED;
+    const bool has_jukejuice = has_powerup(powerup_type::jukejuice);
+    const bool on_speed_tile = on_tile_speed_counter > 0;
+
+    float f = config.BALL_MOVEMENT_SPEED;
+    if(has_jukejuice) f = std::max(f, config.BALL_JUKEJUICE_SPEED);
+    if(on_speed_tile) f = std::max(f, config.BALL_SPEED_TILE_SPEED);
 
     const float a = angle_from_input(x, y);
 

@@ -2,7 +2,7 @@
 
 const collision_user_data unknown_data;
 
-static constexpr bool VERBOSE_CONTACT = false;
+static constexpr bool VERBOSE_CONTACT = true;
 
 void contact_listener::BeginContact(b2Contact* contact)
 {
@@ -156,6 +156,13 @@ void contact_listener::BeginContact(b2Contact* contact)
 
             if(o) o->step_on(m);
         }
+
+        if(m->type == ball_type::red && cdata.has(collision_user_data_type::speed_red)) {
+            m->on_tile_speed_counter++;
+        }
+        if(m->type == ball_type::blue && cdata.has(collision_user_data_type::speed_blue)) {
+            m->on_tile_speed_counter++;
+        }
     }
 }
 
@@ -210,6 +217,13 @@ void contact_listener::EndContact(b2Contact* contact)
             if(o) {
                 m->in_gate_ptrs.erase(o);
             }
+        }
+
+        if(m->type == ball_type::red && cdata.has(collision_user_data_type::speed_red)) {
+            m->on_tile_speed_counter--;
+        }
+        if(m->type == ball_type::blue && cdata.has(collision_user_data_type::speed_blue)) {
+            m->on_tile_speed_counter--;
         }
     }
 }

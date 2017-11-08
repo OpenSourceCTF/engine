@@ -397,6 +397,11 @@ bool game::load_map(const std::string map_src)
         o->add_to_world(world);
     }
 
+    for(auto && o : m->tiles) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
     // use our cache we made above to add balls to existing players
     for(auto && o : player_balls) {
         player* p = o.first;
