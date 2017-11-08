@@ -53,7 +53,7 @@ void toggle::add_to_world(b2World * world)
 
 void toggle::step_on(ball* b)
 {
-    for(auto & o : tags) {
+    for(auto && o : tags) {
         o.step_on(b);
     }
 
@@ -62,7 +62,7 @@ void toggle::step_on(ball* b)
 
 void toggle::step_off(ball* b)
 {
-    for(auto & o : tags) {
+    for(auto && o : tags) {
         o.step_off(b);
     }
 

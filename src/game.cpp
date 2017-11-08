@@ -442,7 +442,7 @@ void game::step()
             add_server_event(server_event(server_event_ball_respawn(o.get())));
         }
 
-        for(auto & p : o->powerups) {
+        for(auto && p : o->powerups) {
             --p.counter;
         }
 

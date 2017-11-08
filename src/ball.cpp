@@ -125,7 +125,7 @@ void ball::add_powerup(const powerup_type type)
 
     const settings& config = settings::get_instance();
 
-    for(auto & o : powerups) {
+    for(auto && o : powerups) {
         if(o.type == type) {
             spdlog::get("game")->debug("increase time");
             o.counter = config.POWERUP_LASTING_TIME;
@@ -140,7 +140,7 @@ void ball::add_powerup(const powerup_type type)
 
 bool ball::has_powerup(const powerup_type type)
 {
-    for(auto & o : powerups) {
+    for(auto && o : powerups) {
         if(o.type == type) {
             return true;
         }
@@ -176,7 +176,7 @@ void ball::rb_explode()
 
 bool ball::has_flag(const flag_type type)
 {
-    for(auto & o : flags) {
+    for(auto && o : flags) {
         if(o.f->type == type) {
             return true;
         }
@@ -195,7 +195,7 @@ void ball::add_flag(flag* f)
 
 void ball::reset_flags()
 {
-    for(auto & f : flags) {
+    for(auto && f : flags) {
         f.f->is_alive = true;
         player_ptr->stats.flag_drops++;
     }
@@ -206,8 +206,6 @@ void ball::reset_flags()
 void ball::score()
 {
     player_ptr->g->score(this);
-    for(auto && o : flags) {
-        player_ptr->stats.flag_captures++;
-    }
+    player_ptr->stats.flag_captures += flags.size();
     reset_flags();
 }

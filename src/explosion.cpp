@@ -19,7 +19,7 @@ void explosion::explode(
 
     world->QueryAABB(&callback, aabb);
 
-    for(auto & m : callback.bodies) {
+    for(auto && m : callback.bodies) {
         const b2Vec2 mpos = m->GetPosition();
 
         const float d = dist(pos.x, pos.y, mpos.x, mpos.y);

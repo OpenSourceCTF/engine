@@ -16,6 +16,7 @@
 #include <cmath>
 #include <memory>
 #include <algorithm>
+#include <functional>
 
 #include <json/json_fwd.hpp>
 

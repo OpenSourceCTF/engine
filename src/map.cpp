@@ -15,18 +15,30 @@ void to_json(nlohmann::json& j, const map& p)
     }
 
     // todo clean me up
-    std::vector<wall>    walls;    for(auto && o : p.walls)    walls.emplace_back(*o);
-    std::vector<tile>    tiles;    for(auto && o : p.tiles)    tiles.emplace_back(*o);
-    std::vector<portal>  portals;  for(auto && o : p.portals)  portals.emplace_back(*o);
-    std::vector<toggle>  toggles;  for(auto && o : p.toggles)  toggles.emplace_back(*o);
-    std::vector<spawn>   spawns;   for(auto && o : p.spawns)   spawns.emplace_back(*o);
-    std::vector<bomb>    bombs;    for(auto && o : p.bombs)    bombs.emplace_back(*o);
-    std::vector<spike>   spikes;   for(auto && o : p.spikes)   spikes.emplace_back(*o);
-    std::vector<powerup> powerups; for(auto && o : p.powerups) powerups.emplace_back(*o);
-    std::vector<booster> boosters; for(auto && o : p.boosters) boosters.emplace_back(*o);
-    std::vector<gate>    gates;    for(auto && o : p.gates)    gates.emplace_back(*o);
-    std::vector<flag>    flags;    for(auto && o : p.flags)    flags.emplace_back(*o);
-    std::vector<chain>   chains;   for(auto && o : p.chains)   chains.emplace_back(*o);
+    std::vector<std::reference_wrapper<wall>>    walls;
+    for(auto && o : p.walls)    walls.emplace_back(*o);
+    std::vector<std::reference_wrapper<tile>>    tiles;
+    for(auto && o : p.tiles)    tiles.emplace_back(*o);
+    std::vector<std::reference_wrapper<portal>>  portals;
+    for(auto && o : p.portals)  portals.emplace_back(*o);
+    std::vector<std::reference_wrapper<toggle>>  toggles;
+    for(auto && o : p.toggles)  toggles.emplace_back(*o);
+    std::vector<std::reference_wrapper<spawn>>   spawns;
+    for(auto && o : p.spawns)   spawns.emplace_back(*o);
+    std::vector<std::reference_wrapper<bomb>>    bombs;
+    for(auto && o : p.bombs)    bombs.emplace_back(*o);
+    std::vector<std::reference_wrapper<spike>>   spikes;
+    for(auto && o : p.spikes)   spikes.emplace_back(*o);
+    std::vector<std::reference_wrapper<powerup>> powerups;
+    for(auto && o : p.powerups) powerups.emplace_back(*o);
+    std::vector<std::reference_wrapper<booster>> boosters;
+    for(auto && o : p.boosters) boosters.emplace_back(*o);
+    std::vector<std::reference_wrapper<gate>>    gates;
+    for(auto && o : p.gates)    gates.emplace_back(*o);
+    std::vector<std::reference_wrapper<flag>>    flags;
+    for(auto && o : p.flags)    flags.emplace_back(*o);
+    std::vector<std::reference_wrapper<chain>>   chains;
+    for(auto && o : p.chains)   chains.emplace_back(*o);
 
     j = nlohmann::json{
         {"meta", {
@@ -95,7 +107,7 @@ void from_json(const nlohmann::json& j, map& p)
     }
 
     for(auto && o : p.toggles) {
-        for(auto & m : o->tags) {
+        for(auto && m : o->tags) {
             switch(m.type) {
                 case toggle_tag_type::bomb: m.ptr = p.bombs[m.id].get(); break;
                 case toggle_tag_type::gate: m.ptr = p.gates[m.id].get(); break;

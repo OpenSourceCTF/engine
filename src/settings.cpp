@@ -65,7 +65,7 @@ settings& settings::get_instance()
         instance.SERVER_GAME_PORT_START = reader.GetReal("server", "game_port_start", 0);
         instance.SERVER_BALLSYNC_EVERY  = reader.GetInteger("server", "ballsync_every", 0);
         instance.SERVER_MAPS            = split_on(reader.Get("server", "maps", ""), '\n');
-        for(auto & m : instance.SERVER_MAPS) {
+        for(auto && m : instance.SERVER_MAPS) {
             boost::algorithm::trim(m);
         }
 

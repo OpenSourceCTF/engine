@@ -90,7 +90,7 @@ powerup_type powerup::get_random_type()
 void to_json(nlohmann::json& j, const powerup& p)
 {
     std::vector<std::string> types;
-    for(auto & o : p.possible_types) {
+    for(auto && o : p.possible_types) {
         types.emplace_back(to_string(o));
     };
 
@@ -105,7 +105,7 @@ void from_json(const nlohmann::json& j, powerup& p)
 {
     std::vector<powerup_type> possible_types;
     const std::vector<std::string> types = j.at("types").get<std::vector<std::string>>();
-    for(auto & o : types) {
+    for(auto && o : types) {
         possible_types.emplace_back(powerup_type_from_string(o));
     }
 
