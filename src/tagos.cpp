@@ -69,13 +69,8 @@ int export_tp_map(
 
 int render(const std::string & map_src)
 {
-    std::ifstream t(map_src);
-    std::stringstream buf;
-    buf << t.rdbuf();
-
-
-    map m = nlohmann::json::parse(buf.str());
-    game g(0, &m);
+    game g(0);
+    g.load_map(map_src);
     g.spawn_phys_thread();
 
     if(display_renderer(*(g.m)) != 0) {
@@ -91,7 +86,7 @@ int serve()
         const char* ebuf,
         std::vector<std::string>& completions
     ) {
-        const std::vector<std::string> cmds = {"quit", "help", "render", "stats", "log", "map"};
+        const std::vector<std::string> cmds = {"exit", "quit", "help", "render", "stats", "log", "map"};
         const std::string edit(ebuf);
 
         for(auto && o : cmds) {
@@ -136,14 +131,15 @@ int serve()
         const std::string cmd = iparts[0];
 
 
-        if(cmd == "quit") {
+        if(cmd == "exit" || cmd == "quit") {
             lobby.is_alive = false;
             std::cout << "quitting..." << std::endl;
         } else if(cmd == "help") {
             std::cout
                 << "available commands: \n\n"
-                << "\thelp           (show this help)\n" 
-                << "\tquit           (quits server)\n" 
+                << "\thelp           (show this help)\n"
+                << "\texit           (quits server)\n"
+                << "\tquit           (quits server)\n"
                 << "\trender GAME_ID (opens sfml debug window for game)\n"
                 << "\tstats          (shows game/player stats)\n"
                 << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
@@ -269,20 +265,8 @@ int serve()
             game* g = lobby.games[game_id].get();
 
             const std::string map_src = iparts[2];
-            map* m;
-            try {
-                spdlog::get("game")->debug("lobby_server: loading: ", map_src);
-                std::ifstream t(map_src);
-                std::stringstream buf;
-                buf << t.rdbuf();
 
-                m = new map(nlohmann::json::parse(buf.str()));
-            } catch(nlohmann::detail::parse_error e) {
-                spdlog::get("game")->error("mapload: ", e.what());
-                continue;
-            }
-
-            g->change_map(m);
+            g->load_map(map_src);
         } else {
             std::cout
                 << "unrecognized command (try help)"

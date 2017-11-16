@@ -1,13 +1,33 @@
 ## TODO
 
-id_counters must be reset on map load
-    otherwise they keep growing
+speed up compilation time
+
+add invincibility for X tics after grabbing flag
 
 remove players if they havent moved in X seconds
     unless they're by themselves
+
 add game end conditions (time, score)
+    game_finished event (which team won, any fun end of game only stats)
+    new_game event (map name)
+        need to have players let game know they are ready
+
+vote player event
+
 fix segfault on exit
-make gamesync use gameevent/server event
+fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
+
+store player stats
+    ideally we can support more than tagpro did
+    probably by storing the stats with more detail
+    ...
+    total distance travelled?
+    average speed?
+    ...
+    check todos
+
+request player stats event
+
 
 ---
 

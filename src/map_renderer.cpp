@@ -11,10 +11,10 @@ void map_renderer::display_help() const
     std::cout
         << "gui instructions: " << std::endl
         << std::endl
-        << "movement: arrow keys" << std::endl
-        << "wireframe toggle: p" << std::endl
-        << "switch player: j/k"
-        << "zoom: mousewheel" << std::endl;
+        << "movement:          arrow keys" << std::endl
+        << "select ball:       j/k" << std::endl
+        << "wireframe toggle:  p" << std::endl
+        << "zoom:              mousewheel" << std::endl;
 }
 
 int map_renderer::close_window()
@@ -25,7 +25,9 @@ int map_renderer::close_window()
         << std::endl;
     return 0;
 #else
-    window->close();
+    if(window && window->isOpen()) {
+        window->close();
+    }
     return 0;
 #endif
 }
@@ -62,7 +64,6 @@ int map_renderer::open_window()
 #endif
 }
 
-int current_ball = 0;
 int map_renderer::get_input()
 {
 #ifdef DISABLE_RENDER
@@ -72,6 +73,7 @@ int map_renderer::get_input()
     return 0;
 #else
     const settings& config = settings::get_instance();
+    static int current_ball = 0; // which to move
     sf::Event event;
 
     while(window->pollEvent(event)) {
