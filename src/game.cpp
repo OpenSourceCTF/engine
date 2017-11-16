@@ -341,6 +341,7 @@ bool game::load_map(const std::string map_src)
         }
 
         m = new map(map_j);
+        m->game.set_game(this);
     } catch(nlohmann::detail::parse_error e) {
         spdlog::get("game")->error("loading map failed:", e.what());
         return false;
@@ -457,16 +458,37 @@ void game::step()
             o->powerups.end()
         );
 
+        if(! o->is_alive) {
+            continue;
+        }
+
         if(o->portal_transport_ptr) {
             const portal* p = o->portal_transport_ptr;
             o->set_position(b2Vec2(p->x, p->y));
             o->portal_transport_ptr = nullptr;
         }
+
         if(o->in_gate_ptrs.size()) {
             for(const auto& g : o->in_gate_ptrs) {
                 g->kill_if_other(o);
             }
             if(!o->is_alive) o->in_gate_ptrs = {};
+        }
+
+        // check if we can score yet
+        if(! o->flags.empty() && o->on_tile_endzone_counter > 0) {
+            flag* score_flag = nullptr;
+
+            for(auto && f : m->flags) {
+                if(! f->is_alive && f->type == inv_corresponding_color<flag_type>(o->type)) {
+                    score_flag = f.get();
+                    break;
+                }
+            }
+
+            if(score_flag) {
+                o->score();
+            }
         }
     }
 

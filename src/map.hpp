@@ -43,6 +43,7 @@
 #include "contact_listener.hpp"
 #include "random_util.hpp"
 #include "chain.hpp"
+#include "game_accessor.hpp"
 
 struct toggle;
 struct ball;
@@ -65,6 +66,7 @@ struct map
     std::uint32_t version;
     std::uint32_t width;
     std::uint32_t height;
+    game_accessor game;
 
     std::vector<std::unique_ptr<wall>>    walls;
     std::vector<std::unique_ptr<tile>>    tiles;
