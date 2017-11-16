@@ -49,19 +49,25 @@ void contact_listener::BeginContact(b2Contact* contact)
 
                     if(m->has_powerup(powerup_type::tagpro)) {
                         b->pop();
+                        m->player_ptr->stats.tags++;
+                        b->player_ptr->stats.popped_tagged++;
                     }
                     if(b->has_powerup(powerup_type::tagpro)) {
                         m->pop();
+                        b->player_ptr->stats.tags++;
+                        m->player_ptr->stats.popped_tagged++;
                     }
                 }
 
                 if(! disable_flag_check && (! m->flags.empty() || ! b->flags.empty())) {
                     if(m->has_flag(inv_corresponding_color<flag_type>(m->type))) {
                         m->pop();
+                        b->player_ptr->stats.flag_returns++;
                     }
 
                     if(b->has_flag(inv_corresponding_color<flag_type>(b->type))) {
                         b->pop();
+                        m->player_ptr->stats.flag_returns++;
                     }
                 }
             }
@@ -70,22 +76,21 @@ void contact_listener::BeginContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::spike)) {
             if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin spike");
 
-            if(m) m->pop();
+            if(m) {
+                m->pop();
+                m->player_ptr->stats.popped_spikes++;
+            }
         }
 
         if(cdata.has(collision_user_data_type::gate)) {
             if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin gate");
 
             gate* o = static_cast<gate*>(
-                    cdata.get_ptr(collision_user_data_type::gate)
+                cdata.get_ptr(collision_user_data_type::gate)
             );
 
-            ball * b = static_cast<ball*>(
-                cdata.get_ptr(collision_user_data_type::ball)
-            );
-
-            if(o && b) {
-                b->in_gate_ptrs.insert(o);
+            if(o) {
+                m->in_gate_ptrs.insert(o);
             }
         }
 
@@ -96,7 +101,10 @@ void contact_listener::BeginContact(b2Contact* contact)
                 cdata.get_ptr(collision_user_data_type::bomb)
             );
 
-            if(o) o->explode();
+            if(o) {
+                o->explode();
+                m->player_ptr->stats.bombs_hit++;
+            }
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
@@ -195,16 +203,12 @@ void contact_listener::EndContact(b2Contact* contact)
         if(cdata.has(collision_user_data_type::gate)) {
             if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: left gate");
 
-            gate* o = static_cast<gate*>(
-                    cdata.get_ptr(collision_user_data_type::gate)
+            gate * o = static_cast<gate*>(
+                cdata.get_ptr(collision_user_data_type::gate)
             );
 
-            ball * b = static_cast<ball*>(
-                cdata.get_ptr(collision_user_data_type::ball)
-            );
-
-            if(o && b) {
-                b->in_gate_ptrs.erase(o);
+            if(o) {
+                m->in_gate_ptrs.erase(o);
             }
         }
     }

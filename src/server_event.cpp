@@ -1,5 +1,10 @@
 #include "server_event.hpp"
 
+server_event::server_event(server_event_gamesync e)
+: type(server_event_type::gamesync)
+, ptr(new server_event_gamesync(e))
+{}
+
 server_event::server_event(server_event_chat e)
 : type(server_event_type::chat)
 , ptr(new server_event_chat(e))

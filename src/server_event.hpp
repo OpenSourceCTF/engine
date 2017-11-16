@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "server_event_type.hpp"
+#include "server_event_gamesync.hpp"
 #include "server_event_player_joined.hpp"
 #include "server_event_player_left.hpp"
 #include "server_event_chat.hpp"
@@ -26,6 +27,7 @@
 #include "server_event_toggle_on.hpp"
 #include "server_event_toggle_off.hpp"
 
+struct server_event_gamesync;
 struct server_event_chat;
 struct server_event_teamchat;
 struct server_event_player_joined;
@@ -54,6 +56,7 @@ struct server_event
     server_event_type type;
     std::shared_ptr<void> ptr;
 
+    server_event(server_event_gamesync e);
     server_event(server_event_chat e);
     server_event(server_event_teamchat e);
     server_event(server_event_player_joined e);

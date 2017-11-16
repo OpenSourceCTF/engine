@@ -10,6 +10,7 @@
 #include "game.hpp"
 #include "websocket_lobby_server.hpp"
 #include "settings.hpp"
+#include "lobby_event.hpp"
 
 struct game;
 
@@ -30,6 +31,7 @@ struct lobby_server
     void start_server();
 
     game& get_game_from_port(const std::uint16_t port) const;
+    std::vector<lobby_event_games_game> get_games() const;
 private:
     // prevent client from creating new instances
     lobby_server() {}

@@ -6,6 +6,7 @@
 
 enum class server_event_type
 {
+    gamesync,
     player_joined,
     player_left,
     chat,
