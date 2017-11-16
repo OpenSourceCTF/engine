@@ -178,12 +178,13 @@ int map_renderer::render() const
     oss << "textures/" << config.DEFAULT_TEXTURE << "/tiles.png";
     auto tx_file = oss.str();
 
-    sf::Texture* tx_sheet(new sf::Texture);
-    if(!tx_sheet->loadFromFile(tx_file)) {
+    sf::Texture tx_sheet;
+    if(!tx_sheet.loadFromFile(tx_file)) {
         spdlog::get("game")->error("map renderer: couldn't load textures");
     }
+    const sf::Texture const_tx_sheet = tx_sheet;
 
-auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
+    auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     {
         const sf::Vector2f pos(scaler * a.x, scaler * a.y);
         const float w = std::pow(
@@ -198,14 +199,43 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
         return res;
     };
 
+    auto configure_sprite = [&](sf::Sprite& s, b2Body* body) {
+        b2AABB aabb;
+        b2Transform t;
+        t.SetIdentity();
+        aabb.lowerBound = b2Vec2(FLT_MAX,FLT_MAX);
+        aabb.upperBound = b2Vec2(-FLT_MAX,-FLT_MAX);
+        b2Fixture* fixture = body->GetFixtureList();
+        while (fixture != nullptr) {
+             const b2Shape *shape = fixture->GetShape();
+             const int childCount = shape->GetChildCount();
+             for (int child = 0; child < childCount; ++child) {
+                    const b2Vec2 r(shape->m_radius, shape->m_radius);
+                    b2AABB shapeAABB;
+                    shape->ComputeAABB(&shapeAABB, t, child);
+                    shapeAABB.lowerBound = shapeAABB.lowerBound + r;
+                    shapeAABB.upperBound = shapeAABB.upperBound - r;
+                    aabb.Combine(shapeAABB);
+            }
+            fixture = fixture->GetNext();
+        }
+        s.setPosition(body->GetPosition().x * scaler, body->GetPosition().y * scaler);
+        /*
+        s.setOrigin(scaler * (body->GetWorldCenter().x
+                              -aabb.lowerBound.x),
+                    scaler * (body->GetWorldCenter().y
+                              -aabb.lowerBound.y));
+                              */
+    };
+
     if(! wireframe) {
         for(auto && o : m.walls) {
-	    sf::ConvexShape s;
-	    s.setTexture(tx_sheet);
-	    const sf::IntRect R(80, 120, 40, 40);
-	    s.setTextureRect(R);
-	    add_points(s, o->poly);
-	    window->draw(s);
+            sf::ConvexShape s;
+            add_points(s, o->poly);
+            s.setTexture(&tx_sheet);
+            const sf::IntRect R(80, 120, 40, 40);
+            s.setTextureRect(R);
+            window->draw(s);
         }
     } else {
         std::size_t i = 0;
@@ -233,22 +263,21 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     
     for(auto && o : m.tiles) {
         sf::ConvexShape s;
-        s.setTexture(tx_sheet);
+        add_points(s, o->poly);
+        s.setTexture(&tx_sheet);
         const sf::IntRect R(120, 120, 40, 40);
         s.setTextureRect(R);
-        add_points(s, o->poly);
-        color_mode(s, o->col);
         window->draw(s);
     }
 
     for(auto && o : m.gates) {
-        sf::ConvexShape s;
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect off(120, 80, 40, 40);
         const sf::IntRect green(160, 80, 40, 40);
         const sf::IntRect red(0, 120, 40, 40);
         const sf::IntRect blue(40, 120, 40, 40);
-        add_points(s, o->poly);
         switch(o->current) {
             case gate_type::off:  s.setTextureRect(off); break;
             case gate_type::green:   s.setTextureRect(green); break;
@@ -259,11 +288,9 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     }
 
     for(auto && o : m.portals) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect R(0, 160, 40, 40);
         s.setTextureRect(R);
         window->draw(s);
@@ -271,22 +298,18 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
 
     for(auto && o : m.bombs) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect R(160, 160, 40, 40);
         s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.spikes) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect R(40, 160, 40, 40);
         s.setTextureRect(R);
         window->draw(s);
@@ -294,11 +317,9 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     
     for(auto && o : m.powerups) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect tp(0, 80, 40, 40);
         const sf::IntRect rb(160, 40, 40, 40);
         const sf::IntRect jj(120, 40, 40, 40);
@@ -313,22 +334,18 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     }
     
     for(auto && o : m.toggles) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 4);
-        s.setPosition((o->x) * scaler, (o->y)  * scaler);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect R(80, 80, 40, 40);
         s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.flags) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect blue(40, 40, 40, 40);
         const sf::IntRect blue_taken(80, 40, 40, 40);
         const sf::IntRect red(160, 0, 40, 40);
@@ -345,11 +362,9 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
 
     for(auto && o : m.boosters) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setRadius(scaler / 3);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition((o->x) * scaler, (o->y)  * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
         const sf::IntRect blue(40, 80, 40, 40);
         const sf::IntRect red(160, 120, 40, 40);
         const sf::IntRect yellow(0, 0, 40, 40);
@@ -363,12 +378,11 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
 
     for(auto && o : m.balls) {
         if(! o->is_alive) continue;
-        b2Vec2 pos = o->body->GetPosition();
-        sf::CircleShape s;
-        s.setRadius(config.BALL_RADIUS * scaler);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(pos.x * scaler, pos.y  * scaler);
-        s.setTexture(tx_sheet);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        s.rotate(o->body->GetAngle() * 180 / PI);
+        
         const sf::IntRect red(80, 160, 40, 40);
         const sf::IntRect blue(120, 80, 40, 40);
         switch(o->type) {
@@ -377,6 +391,7 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
         }
 
         if(! o->powerups.empty()) {
+            /*
             s.setOutlineThickness(2);
             s.setOutlineColor(sf::Color(
                 (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
@@ -384,6 +399,7 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
                 (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
                 255
             ));
+            */
         }
 
         window->draw(s);
@@ -391,10 +407,9 @@ auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
         if(! o->flags.empty()) {
             const flag* f = o->flags[0].f;
 
-            sf::CircleShape s;
-            s.setRadius(scaler / 4);
-            s.setOrigin(s.getRadius(), s.getRadius());
-            s.setPosition(pos.x * scaler, pos.y  * scaler);
+            sf::CircleShape sh;
+            sf::Sprite s;
+            configure_sprite(s,o->body);
             const sf::IntRect blue(40, 40, 40, 40);
             const sf::IntRect red(160, 0, 40, 40);
             const sf::IntRect yellow(80, 0, 40, 40);

@@ -2,6 +2,7 @@
 #define ML_MAP_RENDERER_HPP
 
 #include <iostream>
+#include <limits>
 
 #ifndef DISABLE_RENDER
 #include <SFML/Audio.hpp>
