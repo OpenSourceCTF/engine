@@ -157,11 +157,23 @@ void contact_listener::BeginContact(b2Contact* contact)
             if(o) o->step_on(m);
         }
 
-        if(m->type == ball_type::red && cdata.has(collision_user_data_type::speed_red)) {
-            m->on_tile_speed_counter++;
+        // check tiles
+        if(m->type == ball_type::red) {
+            if(cdata.has(collision_user_data_type::speed_red)) {
+                m->on_tile_speed_counter++;
+            }
+            if(cdata.has(collision_user_data_type::endzone_red)) {
+                m->on_tile_endzone_counter++;
+            }
         }
-        if(m->type == ball_type::blue && cdata.has(collision_user_data_type::speed_blue)) {
-            m->on_tile_speed_counter++;
+
+        if(m->type == ball_type::blue) {
+            if(cdata.has(collision_user_data_type::speed_blue)) {
+                m->on_tile_speed_counter++;
+            }
+            if(cdata.has(collision_user_data_type::endzone_blue)) {
+                m->on_tile_endzone_counter++;
+            }
         }
     }
 }
