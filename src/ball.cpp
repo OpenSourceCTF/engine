@@ -12,6 +12,7 @@ ball::ball(const ball_type type)
 , player_ptr(nullptr)
 , in_gate_ptrs({})
 , on_tile_speed_counter(0)
+, on_tile_endzone_counter(0)
 {}
 
 ball::~ball()
@@ -48,6 +49,11 @@ void ball::add_to_world(b2World * world)
     body->SetUserData(static_cast<void*>(col_data.get()));
 
     is_alive = true;
+    in_gate_ptrs.clear();
+    on_tile_speed_counter = 0;
+    on_tile_endzone_counter = 0;
+
+    std::cout << "add to world" << std::endl;
 }
 
 void ball::set_player_ptr(player* p)
@@ -197,7 +203,7 @@ void ball::reset_flags()
 {
     for(auto && f : flags) {
         f.f->is_alive = true;
-        player_ptr->stats.flag_drops++;
+        player_ptr->stats.flag_drops++; // todo fixme : we count caps as drops as well here
     }
 
     flags.clear();

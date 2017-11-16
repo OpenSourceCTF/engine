@@ -41,6 +41,7 @@ struct ball
     player* player_ptr;
     std::unordered_set<gate*> in_gate_ptrs;
     std::size_t on_tile_speed_counter;
+    std::size_t on_tile_endzone_counter;
 
     ball(const ball_type type);
     ~ball();
