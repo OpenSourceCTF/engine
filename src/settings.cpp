@@ -24,6 +24,7 @@ settings& settings::get_instance()
         instance.BALL_POP_FORCE        = reader.GetReal("ball","pop_force",0);
         instance.BALL_POP_RADIUS       = reader.GetReal("ball","pop_radius",0);
         instance.BALL_RESPAWN_TIME     = reader.GetInteger("ball", "respawn_time", 0);
+        instance.BALL_GRAB_INVINCIBILITY_TIME = reader.GetInteger("ball", "grab_invincibility_time", 0);
 
         instance.SPIKE_RADIUS = reader.GetReal("spike", "radius", 0);
 

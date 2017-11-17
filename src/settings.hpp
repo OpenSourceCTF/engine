@@ -23,6 +23,7 @@ struct settings
     float BALL_POP_FORCE;
     float BALL_POP_RADIUS;
     int   BALL_RESPAWN_TIME;
+    int   BALL_GRAB_INVINCIBILITY_TIME;
 
     float SPIKE_RADIUS;
 

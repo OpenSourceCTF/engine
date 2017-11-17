@@ -34,7 +34,7 @@ void contact_listener::BeginContact(b2Contact* contact)
             );
 
             if(! same_color(m->type, b->type)) {
-                bool disable_flag_check = false;
+                bool disable_flag_check = m->grab_invincibility_counter > 0;
 
                 if(! m->powerups.empty() || ! b->powerups.empty()) {
                     if(m->has_powerup(powerup_type::rollingbomb)) {

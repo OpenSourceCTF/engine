@@ -13,6 +13,7 @@ ball::ball(const ball_type type)
 , in_gate_ptrs({})
 , on_tile_speed_counter(0)
 , on_tile_endzone_counter(0)
+, grab_invincibility_counter(0)
 {}
 
 ball::~ball()
@@ -52,6 +53,7 @@ void ball::add_to_world(b2World * world)
     in_gate_ptrs.clear();
     on_tile_speed_counter = 0;
     on_tile_endzone_counter = 0;
+    grab_invincibility_counter = 0;
 
     std::cout << "add to world" << std::endl;
 }
@@ -193,8 +195,10 @@ bool ball::has_flag(const flag_type type)
 
 void ball::add_flag(flag* f)
 {
-    spdlog::get("game")->debug("add new flag");
+    const settings& config = settings::get_instance();
+
     flags.emplace_back(f);
+    grab_invincibility_counter = config.BALL_GRAB_INVINCIBILITY_TIME;
     player_ptr->g->add_server_event(server_event(server_event_flag_grabbed(this, f)));
     player_ptr->stats.flag_grabs++;
 }

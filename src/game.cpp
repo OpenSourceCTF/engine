@@ -462,6 +462,10 @@ void game::step()
             continue;
         }
 
+        if(o->grab_invincibility_counter > 0) {
+            o->grab_invincibility_counter--;
+        }
+
         if(o->portal_transport_ptr) {
             const portal* p = o->portal_transport_ptr;
             o->set_position(b2Vec2(p->x, p->y));
