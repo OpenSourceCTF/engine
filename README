@@ -12,6 +12,8 @@ c++11 compiler (i use g++)
 
 ## build
 
+NOTE: building takes a lot of memory, you might want to use -j4 or something
+
 to build normally
 
 `make -j`
