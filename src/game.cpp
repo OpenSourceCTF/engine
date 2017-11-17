@@ -343,7 +343,7 @@ bool game::load_map(const std::string map_src)
         m = new map(map_j);
         m->game.set_game(this);
     } catch(nlohmann::detail::parse_error e) {
-        spdlog::get("game")->error("loading map failed:", e.what());
+        spdlog::get("game")->error("loading map `{}` failed: {}", map_src, e.what());
         return false;
     }
 

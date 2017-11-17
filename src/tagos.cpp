@@ -70,7 +70,11 @@ int export_tp_map(
 int render(const std::string & map_src)
 {
     game g(0);
-    g.load_map(map_src);
+
+    if(! g.load_map(map_src)) {
+        return EXIT_FAILURE;
+    }
+
     g.spawn_phys_thread();
 
     if(display_renderer(*(g.m)) != 0) {
