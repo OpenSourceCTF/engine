@@ -7,7 +7,6 @@ tagos
 requires:
 sfml 2.3
 boost 1.58
-box2d 2.3
 make
 c++11 compiler (i use g++)
 

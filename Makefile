@@ -1,12 +1,14 @@
-override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic -Werror=switch
-override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lboost_system -lboost_thread -pthread
+override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic -Werror=switch -Wno-inconsistent-missing-override
+override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system \
+	-Llib/Box2D/Build/gmake/bin/Debug -lBox2D \
+	-lboost_system -lboost_thread \
+	-pthread
 
 BUILD := build
 SRC := src
-INCLUDE := include
+INCLUDE := -Iinclude -Ilib/Box2D
 
 SOURCES := $(wildcard $(SRC)/*.cpp)
-SOURCES := $(filter-out $(SRC)/tagos.cpp, $(SOURCES))
 OBJECTS := $(SOURCES:$(SRC)/%.cpp=$(BUILD)/%.o)
 
 all: tagos
@@ -16,14 +18,14 @@ release: tagos
 debug: CXXFLAGS += -DDEBUG -g
 debug: tagos
 
-tagos: $(OBJECTS) $(BUILD)/tagos.o
+tagos: $(OBJECTS) lib/Box2D/Build/gmake/bin/Debug/libBox2D.a
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
-$(BUILD)/tagos.o: $(SRC)/tagos.cpp
-	$(CXX) $(CXXFLAGS) -I$(INCLUDE) $(SRC)/tagos.cpp -c -o $(BUILD)/tagos.o
-
 $(BUILD)/%.o: $(SRC)/%.cpp
-	$(CXX) $(CXXFLAGS) -I$(INCLUDE) $< -c -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $< -c -o $@
+
+lib/Box2D/Build/gmake/bin/Debug/libBox2D.a:
+	make -C lib/Box2D/Build/gmake
 
 .PHONY: clean
 
