@@ -3,8 +3,6 @@
 ++ speed up compilation time ++
     check for any places we can use forward declarations
 
-add invincibility for X tics after grabbing flag
-
 remove players if they havent moved in X seconds
     unless they're by themselves
 
@@ -27,6 +25,8 @@ vote player event
 
 fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
+fix when maps in config is just `maps=maps/Head.json` server stops working
+fix server should exit if any ports not available
 
 store player stats
     ideally we can support more than tagpro did
@@ -43,12 +43,6 @@ neutral flag mode:
     add flag_transferred event
     add game type
     add transfer method
-
-implement endzone handling:
-    caps
-
-implement speed tiles
-
 
 ---
 

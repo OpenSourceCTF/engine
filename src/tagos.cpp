@@ -97,6 +97,7 @@ int serve()
 
         // todo: add completion for multiple characters
         // and handling for render N 
+        // and handling for loading maps
     });
 
     lobby_server& lobby = lobby_server::get_instance();
