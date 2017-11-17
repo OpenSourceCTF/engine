@@ -12,12 +12,13 @@
 #include <json/json.hpp>
 #include <linenoise.hpp>
 
+#include "settings.hpp"
 #include "map.hpp"
 #include "tp_map_importer.hpp"
 #include "map_renderer.hpp"
-#include "settings.hpp"
 #include "lobby_server.hpp"
 #include "game.hpp"
+#include "websocket_game_client.hpp"
 
 std::thread renderer_thread;
 bool close_renderer_window=false;
@@ -284,15 +285,23 @@ int serve()
     return 0;
 }
 
+int play(const std::string & uri)
+{
+    // todo
+    return EXIT_SUCCESS;
+}
+
+
 int main(int argc, char ** argv)
 {
     settings::get_instance(); // to load settings up front
 
     if(argc < 2) {
-        std::cerr << "usage: ./tagos [export|render|serve] [PARAMS]" << std::endl;
+        std::cerr << "usage: ./tagos [export|render|serve|play] [PARAMS]" << std::endl;
         std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
         std::cerr << "./tagos render maps/head.json" << std::endl;
         std::cerr << "./tagos serve" << std::endl;
+        // std::cerr << "./tagos play 127.0.0.1 5001" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -340,6 +349,17 @@ int main(int argc, char ** argv)
         }
 
         return serve();
+    } else if(mode == "play") {
+        if(argc != 3) {
+            std::cerr
+                << "error: play needs uri arg" << std::endl
+                << "ex: play ws://127.0.0.1:5001" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        const std::string uri(argv[2]);
+
+        return play(uri);
     } else {
         std::cerr << "error: invalid mode: " << mode << std::endl;
         return EXIT_FAILURE;
