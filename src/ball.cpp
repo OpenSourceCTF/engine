@@ -77,11 +77,11 @@ void ball::move(const int x, const int y)
     const settings& config = settings::get_instance();
 
     const bool has_jukejuice = has_powerup(powerup_type::jukejuice);
-    const bool on_speed_tile = on_tile_speed_counter > 0;
+    const bool has_speed_tile = on_tile_speed_counter > 0 && flags.empty();
 
     float f = config.BALL_MOVEMENT_SPEED;
-    if(has_jukejuice) f = std::max(f, config.BALL_JUKEJUICE_SPEED);
-    if(on_speed_tile) f = std::max(f, config.BALL_SPEED_TILE_SPEED);
+    if(has_jukejuice)  f = std::max(f, config.BALL_JUKEJUICE_SPEED);
+    if(has_speed_tile) f = std::max(f, config.BALL_SPEED_TILE_SPEED);
 
     const float a = angle_from_input(x, y);
 
