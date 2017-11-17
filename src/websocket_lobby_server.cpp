@@ -31,12 +31,14 @@ int start_lobby_server(
         srv.start_accept();
         srv.run();
     } catch (websocketpp::exception const & e) {
-        spdlog::get("game")->error("server exception", e.what());
+        spdlog::get("game")->error("server exception {}", e.what());
         lobby.is_alive = false;
+        std::exit(EXIT_FAILURE);
         return 1;
     } catch (...) {
         spdlog::get("game")->error("unknown server exception");
         lobby.is_alive = false;
+        std::exit(EXIT_FAILURE);
         return 1;
     }
 

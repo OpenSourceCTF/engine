@@ -26,7 +26,6 @@ vote player event
 fix segfault on exit
 fix crash on disconnect/reconnect (to reprod just run loadtest.js then kill it)
 fix when maps in config is just `maps=maps/Head.json` server stops working
-fix server should exit if any ports not available
 
 store player stats
     ideally we can support more than tagpro did

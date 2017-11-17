@@ -28,10 +28,12 @@ int start_game_server(const std::uint16_t port)
         srv.start_accept();
         srv.run();
     } catch (websocketpp::exception const & e) {
-        spdlog::get("game")->error("server exception", e.what());
+        spdlog::get("game")->error("server exception {}", e.what());
+        std::exit(EXIT_FAILURE);
         return 1;
     } catch (...) {
         spdlog::get("game")->error("unknown server exception");
+        std::exit(EXIT_FAILURE);
         return 1;
     }
 
