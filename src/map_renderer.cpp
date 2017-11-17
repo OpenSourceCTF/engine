@@ -73,8 +73,10 @@ int map_renderer::get_input()
     return 0;
 #else
     const settings& config = settings::get_instance();
-    static int current_ball = 0; // which to move
+    static std::size_t current_player = 0;
     sf::Event event;
+
+    const game* g = m.game;
 
     while(window->pollEvent(event)) {
         if(event.type == sf::Event::Closed) {
@@ -94,26 +96,27 @@ int map_renderer::get_input()
             }
         }
 
+
         if(event.type == sf::Event::KeyPressed) {
             if(event.key.code == sf::Keyboard::Key::P) {
                 wireframe = !wireframe;
             }
 
             if(event.key.code == sf::Keyboard::Key::J) {
-                ++current_ball;
-                current_ball %= m.balls.size();
+                ++current_player;
+                current_player %= g->players.size();
             }
             if(event.key.code == sf::Keyboard::Key::K) {
-                --current_ball;
-                current_ball %= m.balls.size();
+                current_player = current_player > 0
+                    ? current_player - 1
+                    : g->players.size() - 1;
             }
         }
     }
 
-    if(! m.balls.empty()) {
-        // CONTROL
-        if(current_ball >= m.balls.size()) {
-            current_ball = 0;
+    if(! g->players.empty()) {
+        if(current_player >= g->players.size()) {
+            current_player = 0;
         }
 
         int move_x = 0, move_y = 0;
@@ -121,7 +124,11 @@ int map_renderer::get_input()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
-        if(move_x || move_y) m.balls[current_ball]->move(move_x, move_y);
+        if(move_x || move_y) {
+            player* p = g->players[current_player].get();
+            p->xdir = move_x;
+            p->ydir = move_y;
+        }
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
