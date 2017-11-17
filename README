@@ -29,6 +29,14 @@ you could do `make debug` or `make release` here too
 
 `make -j CXXFLAGS=-DDISABLE_RENDER`
 
+to clean the build files 
+
+`make mostlyclean`
+
+to clean everything including built libs
+
+`make clean`
+
 ## run
 
 to convert map format
