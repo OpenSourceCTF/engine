@@ -50,6 +50,8 @@ struct settings
     float PORTAL_RADIUS;
     int   PORTAL_RESPAWN_TIME;
 
+    std::string DEFAULT_TEXTURE;
+
     color COLOR_TILE;
     color COLOR_WALL;
 

@@ -50,6 +50,8 @@ settings& settings::get_instance()
         instance.PORTAL_RADIUS       = reader.GetReal("portal", "radius", 0);
         instance.PORTAL_RESPAWN_TIME = reader.GetInteger("portal", "respawn_time", 0);
 
+        instance.DEFAULT_TEXTURE     = reader.Get("texture", "default", "");
+
         instance.COLOR_TILE = color(reader.Get("color", "tile", "000000"));
         instance.COLOR_WALL = color(reader.Get("color", "wall", "000000"));
 

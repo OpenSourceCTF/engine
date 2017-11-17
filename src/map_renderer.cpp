@@ -101,7 +101,6 @@ int map_renderer::get_input()
             if(event.key.code == sf::Keyboard::Key::P) {
                 wireframe = !wireframe;
             }
-
             if(event.key.code == sf::Keyboard::Key::J) {
                 ++current_player;
                 current_player %= g->players.size();
@@ -156,6 +155,7 @@ int map_renderer::render() const
         << std::endl;
     return 0;
 #else
+    const settings& config = settings::get_instance();
     window->clear(sf::Color::Black);
     window->setView(view);
 
@@ -185,6 +185,16 @@ int map_renderer::render() const
         s.setPoint(2, sf::Vector2f(poly.x3 * scaler, poly.y3 * scaler));
     };
 
+    std::ostringstream oss;
+    oss << "textures/" << config.DEFAULT_TEXTURE << "/tiles.png";
+    auto tx_file = oss.str();
+
+    sf::Texture tx_sheet;
+    if(!tx_sheet.loadFromFile(tx_file)) {
+        spdlog::get("game")->error("map renderer: couldn't load textures");
+    }
+    const sf::Texture const_tx_sheet = tx_sheet;
+
     auto make_thick_line = [&](const coord& a, const coord& b) -> sf::RectangleShape
     {
         const sf::Vector2f pos(scaler * a.x, scaler * a.y);
@@ -200,11 +210,42 @@ int map_renderer::render() const
         return res;
     };
 
+    auto configure_sprite = [&](sf::Sprite& s, b2Body* body) {
+        b2AABB aabb;
+        b2Transform t;
+        t.SetIdentity();
+        aabb.lowerBound = b2Vec2(FLT_MAX,FLT_MAX);
+        aabb.upperBound = b2Vec2(-FLT_MAX,-FLT_MAX);
+        b2Fixture* fixture = body->GetFixtureList();
+        while (fixture != nullptr) {
+             const b2Shape *shape = fixture->GetShape();
+             const int childCount = shape->GetChildCount();
+             for (int child = 0; child < childCount; ++child) {
+                    const b2Vec2 r(shape->m_radius, shape->m_radius);
+                    b2AABB shapeAABB;
+                    shape->ComputeAABB(&shapeAABB, t, child);
+                    shapeAABB.lowerBound = shapeAABB.lowerBound + r;
+                    shapeAABB.upperBound = shapeAABB.upperBound - r;
+                    aabb.Combine(shapeAABB);
+            }
+            fixture = fixture->GetNext();
+        }
+        s.setPosition(body->GetPosition().x * scaler, body->GetPosition().y * scaler);
+        /*
+        s.setOrigin(scaler * (body->GetWorldCenter().x
+                              -aabb.lowerBound.x),
+                    scaler * (body->GetWorldCenter().y
+                              -aabb.lowerBound.y));
+                              */
+    };
+
     if(! wireframe) {
         for(auto && o : m.walls) {
             sf::ConvexShape s;
             add_points(s, o->poly);
-            color_mode(s, o->col);
+            s.setTexture(&tx_sheet);
+            const sf::IntRect R(80, 120, 40, 40);
+            s.setTextureRect(R);
             window->draw(s);
         }
     } else {
@@ -234,131 +275,142 @@ int map_renderer::render() const
     for(auto && o : m.tiles) {
         sf::ConvexShape s;
         add_points(s, o->poly);
-        color_mode(s, o->col);
+        s.setTexture(&tx_sheet);
+        const sf::IntRect R(120, 120, 40, 40);
+        s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.gates) {
-        sf::ConvexShape s;
-        add_points(s, o->poly);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect off(120, 80, 40, 40);
+        const sf::IntRect green(160, 80, 40, 40);
+        const sf::IntRect red(0, 120, 40, 40);
+        const sf::IntRect blue(40, 120, 40, 40);
         switch(o->current) {
-            case gate_type::off:  s.setFillColor(sf::Color(70,   70,   70)); break;
-            case gate_type::green:   s.setFillColor(sf::Color(0,   255, 0)); break;
-            case gate_type::blue: s.setFillColor(sf::Color(0,   0,   255)); break;
-            case gate_type::red:  s.setFillColor(sf::Color(255, 0,   0)); break;
+            case gate_type::off:  s.setTextureRect(off); break;
+            case gate_type::green:   s.setTextureRect(green); break;
+            case gate_type::blue: s.setTextureRect(blue); break;
+            case gate_type::red:  s.setTextureRect(red); break;
         }
         window->draw(s);
     }
 
     for(auto && o : m.portals) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        const int alpha = o->is_alive ? 255 : 100;
-        s.setFillColor(sf::Color(255, 0, 232, alpha));
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect R(0, 160, 40, 40);
+        s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.bombs) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setPointCount(8);
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y * scaler);
-        s.setFillColor(sf::Color(30, 30, 30));
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect R(160, 160, 40, 40);
+        s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.spikes) {
-        sf::CircleShape s;
-        s.setPointCount(3);
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setFillColor(sf::Color(70, 70, 70));
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect R(40, 160, 40, 40);
+        s.setTextureRect(R);
         window->draw(s);
     }
     
     for(auto && o : m.powerups) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setPointCount(5);
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y  * scaler);
-        s.setFillColor(sf::Color(30, 255, 30));
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect tp(0, 80, 40, 40);
+        const sf::IntRect rb(160, 40, 40, 40);
+        const sf::IntRect jj(120, 40, 40, 40);
 
-        s.setOutlineThickness(2);
         switch(o->type) {
-            case powerup_type::tagpro:      s.setOutlineColor(sf::Color(255, 0, 0, 255)); break;
-            case powerup_type::jukejuice:   s.setOutlineColor(sf::Color(0, 255, 0, 255)); break;
-            case powerup_type::rollingbomb: s.setOutlineColor(sf::Color(0, 0, 255, 255)); break;
+            case powerup_type::tagpro:      s.setTextureRect(tp); break;
+            case powerup_type::jukejuice:   s.setTextureRect(jj); break;
+            case powerup_type::rollingbomb: s.setTextureRect(rb); break;
         }
 
         window->draw(s);
     }
     
     for(auto && o : m.toggles) {
-        sf::CircleShape s;
-        s.setRadius(scaler / 4);
-        s.setPosition((o->x + 0.25) * scaler, (o->y + 0.25)  * scaler);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setFillColor(sf::Color(230, 200, 100));
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect R(80, 80, 40, 40);
+        s.setTextureRect(R);
         window->draw(s);
     }
 
     for(auto && o : m.flags) {
-        sf::CircleShape s;
-        s.setPointCount(3);
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(o->x * scaler, o->y * scaler);
-        const int alpha = o->is_alive ? 255 : 100;
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect blue(40, 40, 40, 40);
+        const sf::IntRect blue_taken(80, 40, 40, 40);
+        const sf::IntRect red(160, 0, 40, 40);
+        const sf::IntRect red_taken(0, 40, 40, 40);
+        const sf::IntRect yellow(80, 0, 40, 40);
+        const sf::IntRect yellow_taken(120, 0, 40, 40);
         switch(o->type) {
-            case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 20, alpha)); break;
-            case flag_type::blue:    s.setFillColor(sf::Color(30, 30, 170, alpha)); break;
-            case flag_type::red:     s.setFillColor(sf::Color(170, 30, 30, alpha)); break;
+            case flag_type::neutral: s.setTextureRect(o->is_alive ? yellow : yellow_taken); break;
+            case flag_type::blue:    s.setTextureRect(o->is_alive ? blue : blue_taken); break;
+            case flag_type::red:     s.setTextureRect(o->is_alive ? red : red_taken); break;
         }
         window->draw(s);
     }
 
     for(auto && o : m.boosters) {
         if(! o->is_alive) continue;
-        sf::CircleShape s;
-        s.setPointCount(3);
-        s.setRadius(scaler / 3);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition((o->x + 0.17) * scaler, (o->y + 0.17)  * scaler);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        const sf::IntRect blue(40, 80, 40, 40);
+        const sf::IntRect red(160, 120, 40, 40);
+        const sf::IntRect yellow(0, 0, 40, 40);
         switch(o->type) {
-            case booster_type::all:  s.setFillColor(sf::Color(250, 250, 70)); break;
-            case booster_type::red:  s.setFillColor(sf::Color(255, 75, 25));  break;
-            case booster_type::blue: s.setFillColor(sf::Color(25, 75, 255));  break;
+            case booster_type::all:  s.setTextureRect(yellow); break;
+            case booster_type::red:  s.setTextureRect(red);  break;
+            case booster_type::blue: s.setTextureRect(blue);  break;
         }
         window->draw(s);
     }
 
     for(auto && o : m.balls) {
         if(! o->is_alive) continue;
-        b2Vec2 pos = o->body->GetPosition();
-        sf::CircleShape s;
-        s.setRadius(scaler / 2);
-        s.setOrigin(s.getRadius(), s.getRadius());
-        s.setPosition(pos.x * scaler, pos.y  * scaler);
+        sf::Sprite s;
+        configure_sprite(s,o->body);
+        s.setTexture(const_tx_sheet);
+        s.rotate(o->body->GetAngle() * 180 / PI);
+        
+        const sf::IntRect red(80, 160, 40, 40);
+        const sf::IntRect blue(120, 80, 40, 40);
         switch(o->type) {
-            case ball_type::red:  s.setFillColor(sf::Color(200, 50, 50)); break;
-            case ball_type::blue: s.setFillColor(sf::Color(50, 50, 200)); break;
+            case ball_type::red:  s.setTextureRect(red); break;
+            case ball_type::blue: s.setTextureRect(blue); break;
         }
 
         if(! o->powerups.empty()) {
+            /*
             s.setOutlineThickness(2);
             s.setOutlineColor(sf::Color(
-                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
                 (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
+                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
                 (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
                 255
             ));
+            */
         }
 
         window->draw(s);
@@ -366,14 +418,16 @@ int map_renderer::render() const
         if(! o->flags.empty()) {
             const flag* f = o->flags[0].f;
 
-            sf::CircleShape s;
-            s.setRadius(scaler / 4);
-            s.setOrigin(s.getRadius(), s.getRadius());
-            s.setPosition(pos.x * scaler, pos.y  * scaler);
+            sf::CircleShape sh;
+            sf::Sprite s;
+            configure_sprite(s,o->body);
+            const sf::IntRect blue(40, 40, 40, 40);
+            const sf::IntRect red(160, 0, 40, 40);
+            const sf::IntRect yellow(80, 0, 40, 40);
             switch(f->type) {
-                case flag_type::neutral: s.setFillColor(sf::Color(250, 240, 10)); break;
-                case flag_type::blue:    s.setFillColor(sf::Color(70, 70, 230));  break;
-                case flag_type::red:     s.setFillColor(sf::Color(230, 70, 70));  break;
+                case flag_type::neutral: s.setTextureRect(yellow); break;
+                case flag_type::blue:    s.setTextureRect(blue); break;
+                case flag_type::red:     s.setTextureRect(red); break;
             }
 
             window->draw(s);
