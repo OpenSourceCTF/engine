@@ -53,53 +53,10 @@ void handle_client_message(
     websocketpp::client<websocketpp::config::asio>::message_ptr msg
 );
 
-void on_client_chat(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& chat_msg
-);
-
-void on_client_teamchat(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& chat_msg
-);
-
-void on_client_movement(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const int xdir,
-    const int ydir
-);
-
-void on_client_honk(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg
-);
-
-void on_client_stats(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg
-);
-
 void on_client_sync(
     websocketpp::client<websocketpp::config::asio>* c,
     websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& login_token
-);
-
-void on_client_vote_player(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string & player_id,
-    const std::string & reason
+    websocketpp::client<websocketpp::config::asio>::message_ptr msg
 );
 
 #endif

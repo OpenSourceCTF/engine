@@ -27,11 +27,11 @@ int start_client_server(const std::string uri)
         c.connect(con);
         c.run();
     } catch (websocketpp::exception const & e) {
-        spdlog::get("game")->error("server exception {}", e.what());
+        spdlog::get("game")->error("client exception {}", e.what());
         std::exit(EXIT_FAILURE);
         return 1;
     } catch (...) {
-        spdlog::get("game")->error("unknown server exception");
+        spdlog::get("game")->error("unknown client exception");
         std::exit(EXIT_FAILURE);
         return 1;
     }
@@ -92,99 +92,28 @@ void handle_client_message(
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
 
-        if(j.find("request") != j.end()) {
-            const std::string req = j.at("request").get<std::string>();
+        if(j.find("event") != j.end()) {
+            const std::string evt = j.at("event").get<std::string>();
 
-            if(req == "gamesync") {
-                const std::string login_token = j.at("login_token").get<std::string>();
-                return on_client_sync(c, hdl, msg, login_token);
-
-            } else if(req == "chat") {
-                const std::string chat_msg = j.at("msg").get<std::string>();
-                return on_client_chat(c, hdl, msg, chat_msg);
-
-            } else if(req == "teamchat") {
-                const std::string chat_msg = j.at("msg").get<std::string>();
-                return on_client_teamchat(c, hdl, msg, chat_msg);
-
-            } else if(req == "movement") {
-                const int xdir = j.at("xdir").get<int>();
-                const int ydir = j.at("ydir").get<int>();
-                return on_client_movement(c, hdl, msg, xdir, ydir);
-
-            } else if(req == "honk") {
-                return on_client_honk(c, hdl, msg);
-
-            } else if(req == "stats") {
-                return on_client_stats(c, hdl, msg);
-
-            } else if(req == "vote_player") {
-                const std::string player_id = j.at("player_id").get<std::string>();
-                const std::string reason = j.at("reason").get<std::string>();
-                return on_client_vote_player(c, hdl, msg, player_id, reason);
-
+            // todo
+            // fill this out with all the game_event_type types
+            if(evt == "gamesync") {
+                on_client_sync(c, hdl, msg);
             } else {
-                try_send(c, hdl, websocketpp::frame::opcode::value::text, {
-                    {"error", "unknown_request"}
-                });
+                spdlog::get("game")->info("received unknown event: {}", evt);
             }
         } else {
-            try_send(c, hdl, websocketpp::frame::opcode::value::text, {
-                {"error", "missing_request"}
-            });
+            spdlog::get("game")->info("didn't receive event");
         }
     } catch(...) {
-        try_send(c, hdl, websocketpp::frame::opcode::value::text, {
-            {"error", "json_parse_error"}
-        });
+        spdlog::get("game")->error("unknown exception encountered in message handler");
     }
 }
-
-void on_client_chat(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& chat_msg
-) {}
-
-void on_client_teamchat(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& chat_msg
-) {}
-
-void on_client_movement(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const int xdir,
-    const int ydir
-) {}
-
-void on_client_honk(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg
-) {}
-
-void on_client_stats(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg
-) {}
 
 void on_client_sync(
     websocketpp::client<websocketpp::config::asio>* c,
     websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string& login_token
-) {}
-
-void on_client_vote_player(
-    websocketpp::client<websocketpp::config::asio>* c,
-    websocketpp::connection_hdl hdl,
-    websocketpp::client<websocketpp::config::asio>::message_ptr msg,
-    const std::string & player_id,
-    const std::string & reason
-) {}
+    websocketpp::client<websocketpp::config::asio>::message_ptr msg
+) {
+    spdlog::get("game")->info("gamesync not implemented");
+}
