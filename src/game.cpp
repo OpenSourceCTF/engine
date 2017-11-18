@@ -436,6 +436,11 @@ void game::step()
         if(b && b->is_alive) {
             if(o->xdir || o->ydir) {
                 b->move(o->xdir, o->ydir);
+
+                if(o->local) {
+                    o->xdir = 0;
+                    o->ydir = 0;
+                }
             }
         }
     }
