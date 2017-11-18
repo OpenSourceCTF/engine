@@ -52,16 +52,16 @@ for dir in */; do
   }
 
   #gates
-  p2rect 480 120 0.6 21
-  p2rect 520 120 0.6 22
-  p2rect 560 120 0.6 23
-  p2rect 600 120 0.6 24
+  convert "${dir}/tiles.png" -crop 40x40+480+120 ttmp/21.png
+  convert "${dir}/tiles.png" -crop 40x40+520+120 ttmp/22.png
+  convert "${dir}/tiles.png" -crop 40x40+560+120 ttmp/23.png
+  convert "${dir}/tiles.png" -crop 40x40+600+120 ttmp/24.png
 
   #walls
   p2rect 10 10 1 25
 
   #tiles
-  p2rect 540 168 1 26
+  convert "${dir}/tiles.png" -crop 40x40+520+160 ttmp/26.png
 
   if [ ! -d "../textures/${dir}" ]; then
     mkdir "../textures/${dir}"
