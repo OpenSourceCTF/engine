@@ -291,12 +291,12 @@ int map_renderer::render() const
     for(auto && o : m.spikes) {
         std_obj_render(o, sf::IntRect(40, 160, 40, 40));
     }
-    
+
+    const sf::IntRect tagpro(0, 80, 40, 40);
+    const sf::IntRect jukejuice(120, 40, 40, 40);
+    const sf::IntRect rollingbomb(160, 40, 40, 40);
     for(auto && o : m.powerups) {
         if(! o->is_alive) continue;
-        const sf::IntRect tagpro(0, 80, 40, 40);
-        const sf::IntRect jukejuice(120, 40, 40, 40);
-        const sf::IntRect rollingbomb(160, 40, 40, 40);
 
         switch(o->type) {
             case powerup_type::tagpro:      std_obj_render(o, tagpro);      break;
@@ -351,33 +351,37 @@ int map_renderer::render() const
         if(! o->is_alive) continue;
 
         const sf::IntRect red(80, 160, 40, 40);
-        const sf::IntRect blue(120, 80, 40, 40);
+        const sf::IntRect blue(120, 160, 40, 40);
 
         switch(o->type) {
             case ball_type::red:  std_obj_render(o, red, true);  break;
             case ball_type::blue: std_obj_render(o, blue, true); break;
         }
 
-        /*
         if(! o->powerups.empty()) {
-            s.setOutlineThickness(2);
-            s.setOutlineColor(sf::Color(
-                (o->has_powerup(powerup_type::jukejuice)   ? 255 : 0),
-                (o->has_powerup(powerup_type::tagpro)      ? 255 : 0),
-                (o->has_powerup(powerup_type::rollingbomb) ? 255 : 0),
-                255
-            ));
-        }*/
+            for(auto && p : o->powerups) {
+                switch(p.type) {
+                    case powerup_type::tagpro:
+                        std_obj_render(o, tagpro, false, b2Vec2(0.25, 0.15), 0.5); break;
+                    case powerup_type::jukejuice:
+                        std_obj_render(o, jukejuice, false, b2Vec2(-0.25, 0.15), 0.5); break;
+                    case powerup_type::rollingbomb:
+                        std_obj_render(o, rollingbomb, false, b2Vec2(0, -0.3), 0.5); break;
+                }
+            }
+        }
 
         if(! o->flags.empty()) {
             const sf::IntRect blue(40, 40, 40, 40);
             const sf::IntRect red(160, 0, 40, 40);
             const sf::IntRect yellow(80, 0, 40, 40);
 
+            const b2Vec2 offset(0.5, -0.75);
+
             switch(o->flags.back().f->type) {
-                case flag_type::neutral: std_obj_render(o, yellow); break;
-                case flag_type::blue:    std_obj_render(o, blue);   break;
-                case flag_type::red:     std_obj_render(o, red);    break;
+                case flag_type::neutral: std_obj_render(o, yellow, false, offset); break;
+                case flag_type::blue:    std_obj_render(o, blue, false, offset);   break;
+                case flag_type::red:     std_obj_render(o, red, false, offset);    break;
             }
         }
     }

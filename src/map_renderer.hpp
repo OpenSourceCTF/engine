@@ -52,14 +52,16 @@ struct map_renderer
     void std_obj_render(
         const T& o,
         const sf::IntRect txr,
-        const bool rotate=false
+        const bool rotate=false,
+        const b2Vec2 offset=b2Vec2(0.0, 0.0),
+        const float scale=1.0f
     ) const {
         const b2Vec2 pos = o->body->GetPosition();
         sf::CircleShape s;
-        s.setRadius(scaler/2);
+        s.setRadius(scaler/2*scale);
         s.setOrigin(s.getRadius(), s.getRadius());
         if(rotate) s.rotate(o->body->GetAngle() * 180 / PI);
-        s.setPosition(pos.x * scaler, pos.y  * scaler);
+        s.setPosition((pos.x + offset.x) * scaler, (pos.y + offset.y)  * scaler);
         color_mode(s);
 
         if(! wireframe) {
