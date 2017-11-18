@@ -78,9 +78,3 @@ in future we plan for move to webrtc
 ---
 
 look in the `./tests` folder for examples
-
-## BUILD
-
-itd be nice if the libraries were just in a folder and built correctly as part of makefile
-maybe with subrepositories?
-
