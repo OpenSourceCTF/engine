@@ -12,109 +12,111 @@
 #include "user.hpp"
 #include "random_util.hpp"
 
+typedef websocketpp::server<websocketpp::config::asio> websocketpp_server;
+
 struct lobby_server;
 
 int start_game_server(const std::uint16_t port);
 
 void handle_game_open(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 void handle_game_close(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 void handle_game_fail(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 bool handle_game_ping(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 );
 
 bool handle_game_pong(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 );
 
 void handle_game_pong_timeout(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 );
 
 void handle_game_interrupt(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 bool handle_game_validate(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 void handle_game_message(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+    websocketpp_server::message_ptr msg
 );
 
 void handle_game_http(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 );
 
 void on_game_chat(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    websocketpp_server::message_ptr msg,
     const std::string& chat_msg
 );
 
 void on_game_teamchat(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    websocketpp_server::message_ptr msg,
     const std::string& chat_msg
 );
 
 void on_game_movement(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    websocketpp_server::message_ptr msg,
     const int xdir,
     const int ydir
 );
 
 void on_game_honk(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+    websocketpp_server::message_ptr msg
 );
 
 void on_game_stats(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+    websocketpp_server::message_ptr msg
 );
 
 void on_game_sync(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    websocketpp_server::message_ptr msg,
     const std::string& login_token
 );
 
 void on_game_vote_player(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg,
+    websocketpp_server::message_ptr msg,
     const std::string & player_id,
     const std::string & reason
 );

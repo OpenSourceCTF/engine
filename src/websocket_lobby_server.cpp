@@ -7,7 +7,7 @@ int start_lobby_server(
     const std::uint16_t port
 ) {
     spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);
-    websocketpp::server<websocketpp::config::asio> srv;
+    websocketpp_server srv;
 
     try {
         srv.set_reuse_addr(true);
@@ -46,22 +46,22 @@ int start_lobby_server(
 }
 
 void handle_lobby_open(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {}
 
 void handle_lobby_close(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {}
 
 void handle_lobby_fail(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {}
 
 bool handle_lobby_ping(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
@@ -69,7 +69,7 @@ bool handle_lobby_ping(
 }
 
 bool handle_lobby_pong(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
@@ -77,18 +77,18 @@ bool handle_lobby_pong(
 }
 
 void handle_lobby_pong_timeout(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
     std::string str
 ) {}
 
 void handle_lobby_interrupt(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {}
 
 bool handle_lobby_validate(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {
     // todo
@@ -98,9 +98,9 @@ bool handle_lobby_validate(
 }
 
 void handle_lobby_message(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+    websocketpp_server::message_ptr msg
 ) {
     try {
         nlohmann::json j = nlohmann::json::parse(msg->get_payload());
@@ -118,7 +118,7 @@ void handle_lobby_message(
 }
 
 void handle_lobby_http(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl
 ) {
     auto con = srv->get_con_from_hdl(hdl);
@@ -132,9 +132,9 @@ void handle_lobby_http(
 }
 
 void on_lobby_request_games(
-    websocketpp::server<websocketpp::config::asio>* srv,
+    websocketpp_server* srv,
     websocketpp::connection_hdl hdl,
-    websocketpp::server<websocketpp::config::asio>::message_ptr msg
+    websocketpp_server::message_ptr msg
 ) {
     const lobby_server& lobby = lobby_server::get_instance();
 
