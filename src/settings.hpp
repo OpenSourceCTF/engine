@@ -50,14 +50,16 @@ struct settings
     float PORTAL_RADIUS;
     int   PORTAL_RESPAWN_TIME;
 
-    std::string DEFAULT_TEXTURE;
-
     color COLOR_TILE;
     color COLOR_WALL;
 
     int GUI_INITIAL_WINDOW_WIDTH;
     int GUI_INITIAL_WINDOW_HEIGHT;
     float GUI_MOVEMENT_SPEED_DIV;
+    std::string GUI_TEXTURE;
+    int GUI_ANTIALIASING;
+    float GUI_POLY_EXTRUDE;
+
 
     int WORLD_FRAMERATE;
     int WORLD_VELO_ITERATIONS;

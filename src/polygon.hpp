@@ -25,7 +25,7 @@ struct polygon
         const float y3
     );
 
-    b2Vec2 get_center();
+    b2Vec2 get_center() const;
     std::array<b2Vec2, 3> get_vertices();
 };
 

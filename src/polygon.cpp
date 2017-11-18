@@ -65,7 +65,7 @@ polygon::polygon(
     this->y3 = v[2].y;
 }
 
-b2Vec2 polygon::get_center()
+b2Vec2 polygon::get_center() const
 {
     return b2Vec2((x1 + x2 + x3) / 3.0f, (y1 + y2 + y3) / 3.0f);
 }

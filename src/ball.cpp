@@ -54,8 +54,6 @@ void ball::add_to_world(b2World * world)
     on_tile_speed_counter = 0;
     on_tile_endzone_counter = 0;
     grab_invincibility_counter = 0;
-
-    std::cout << "add to world" << std::endl;
 }
 
 void ball::set_player_ptr(player* p)
