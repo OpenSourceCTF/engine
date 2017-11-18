@@ -78,6 +78,10 @@ int render(const std::string & map_src)
 
     g.spawn_phys_thread();
 
+    ball* b = g.add_ball(new ball(ball_type::red));
+    player* p = g.add_player(new player(&g, b, "player_id", true, "name", 100));
+    b->set_player_ptr(p);
+
     if(display_renderer(*(g.m)) != 0) {
         return EXIT_FAILURE;
     }
