@@ -58,6 +58,16 @@ return flag properly
 explosions persist after pop?
 toggles render incorrectly
 
+## RENDERER
+
+export and render disabled versions of objects (portals, boosters, etc)
+export and render different tile types
+show text above players heads (their name)
+show effect for explosions
+walls and tiles and spikes (static objects) should each be rendered to a rendertexture
+render walls nicer
+    once there is a rendertexture of wall we can use a shader on it
+
 
 ## NETWORK
 client connects to lobby
