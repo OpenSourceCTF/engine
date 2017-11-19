@@ -62,6 +62,7 @@ struct ball
     void add_flag(flag* f);
     void reset_flags();
     void score();
+    void take_flags(ball* o, const flag_type type);
 };
 
 #endif

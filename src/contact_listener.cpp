@@ -26,6 +26,9 @@ void contact_listener::BeginContact(b2Contact* contact)
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
+        // TODO
+        // extract this out to a nice function we can unit test
+        // since all the interactions a bit tricky
         if(cdata.has_both(collision_user_data_type::ball)) {
             if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin ball");
 
@@ -34,16 +37,17 @@ void contact_listener::BeginContact(b2Contact* contact)
             );
 
             if(! same_color(m->type, b->type)) {
-                bool disable_flag_check = m->grab_invincibility_counter > 0;
+                bool disable_flag_check_a = m->grab_invincibility_counter > 0;
+                bool disable_flag_check_b = b->grab_invincibility_counter > 0;
 
                 if(! m->powerups.empty() || ! b->powerups.empty()) {
                     if(m->has_powerup(powerup_type::rollingbomb)) {
-                        disable_flag_check = true;
+                        disable_flag_check_a = true;
                         m->rb_explode();
                     }
 
                     if(b->has_powerup(powerup_type::rollingbomb)) {
-                        disable_flag_check = true;
+                        disable_flag_check_b = true;
                         b->rb_explode();
                     }
 
@@ -59,15 +63,23 @@ void contact_listener::BeginContact(b2Contact* contact)
                     }
                 }
 
-                if(! disable_flag_check && (! m->flags.empty() || ! b->flags.empty())) {
+                if(! disable_flag_check_a && ! m->flags.empty()) {
                     if(m->has_flag(inv_corresponding_color<flag_type>(m->type))) {
                         m->pop();
                         b->player_ptr->stats.flag_returns++;
+                    } else if(m->has_flag(flag_type::neutral)) {
+                        b->take_flags(m, flag_type::neutral);
+                        m->pop();
                     }
+                }
 
+                if(! disable_flag_check_b && ! b->flags.empty()) {
                     if(b->has_flag(inv_corresponding_color<flag_type>(b->type))) {
                         b->pop();
                         m->player_ptr->stats.flag_returns++;
+                    } else if(b->has_flag(flag_type::neutral)) {
+                        m->take_flags(b, flag_type::neutral);
+                        b->pop();
                     }
                 }
             }
