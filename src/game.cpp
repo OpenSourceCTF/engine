@@ -561,7 +561,7 @@ void game::respawn_ball(ball* b)
 
     for(auto && s : m->spawns) {
         if(same_color(s->type, b->type)) {
-            for(std::size_t i=0; i<(s->weight > 0) ? s->weight : 1; ++i) {
+            for(std::size_t i=0; i<((s->weight > 0) ? s->weight : 1); ++i) {
                 potential_spawns.emplace_back(*s);
             }
         }
