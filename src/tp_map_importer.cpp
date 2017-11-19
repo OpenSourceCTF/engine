@@ -26,7 +26,10 @@ enum class tp_tile_type
     portal,
     flag_neutral,
     flag_red,
-    flag_blue
+    flag_blue,
+    respawn_red,
+    respawn_blue,
+    gravitywell,
 };
 
 
@@ -309,8 +312,10 @@ int tp_map_importer::tp_import_png(const std::string & src)
         {"cac000", tp_tile_type::portal},
         {"808000", tp_tile_type::flag_neutral},
         {"ff0000", tp_tile_type::flag_red},
-        {"0000ff", tp_tile_type::flag_blue}
-
+        {"0000ff", tp_tile_type::flag_blue},
+        {"9b0000", tp_tile_type::respawn_red},
+        {"00009b", tp_tile_type::respawn_blue},
+        {"202020", tp_tile_type::gravitywell},
     };
 
     for(std::size_t i=0; i<pixels.size() / 4; ++i) {
@@ -464,6 +469,29 @@ int tp_map_importer::tp_import_png(const std::string & src)
                                               tile_type::normal));
             }
             m.flags.emplace_back(new flag(x, y, flag_type::blue));
+        } else if(tiletype == tp_tile_type::respawn_red) {
+            for(auto p : make_square_poly(x, y)) {
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
+            }
+            m.spawns.emplace_back(new spawn(x, y, 1.0, 1.0, spawn_type::red));
+        } else if(tiletype == tp_tile_type::respawn_blue) {
+            for(auto p : make_square_poly(x, y)) {
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
+            }
+            m.spawns.emplace_back(new spawn(x, y, 1.0, 1.0, spawn_type::blue));
+        } else if(tiletype == tp_tile_type::gravitywell) {
+            for(auto p : make_square_poly(x, y)) {
+                m.tiles.emplace_back(new tile(p,
+                                              config.COLOR_TILE,
+                                              tile_type::normal));
+            }
+            // todo
+            // these currently skipped
+            std::cout << "--gravity well skipped--";
         } else {
             std::cerr << "error: unhandled tile_type: " << tile_color << std::endl;
             return 1;
