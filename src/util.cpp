@@ -53,8 +53,12 @@ std::vector<std::string> split_on(const std::string & str, const char n)
 std::vector<std::unique_ptr<chain>> poly2chain(
     const std::vector<polygon> & poly_set
 ) {
-
     using edge = std::pair<std::pair<float,float>,std::pair<float,float>>;
+
+    // special case to prevent torus bug
+    if(poly_set.empty()) {
+        return {};
+    }
 
     // TODO: use a quicker hash
     auto sort_poly = [](const polygon& poly) {
@@ -161,7 +165,7 @@ std::vector<std::unique_ptr<chain>> poly2chain(
     }
 
     if(outside_edges.begin() == outside_edges.end()) {
-        spdlog::get("game")->error("polygons on a taurus");
+        spdlog::get("game")->error("polygons on a torus");
         exit(EXIT_FAILURE);
     } 
 
