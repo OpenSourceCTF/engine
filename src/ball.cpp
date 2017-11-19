@@ -100,7 +100,7 @@ void ball::pop()
         .explode(body->GetPosition(), body->GetWorld());
 
     is_alive = false;
-    respawn_counter = config.BOOSTER_RESPAWN_TIME;
+    respawn_counter = config.BALL_RESPAWN_TIME;
 
     reset_flags();
     player_ptr->stats.popped++;
