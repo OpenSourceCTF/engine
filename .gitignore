@@ -1,5 +1,6 @@
 tagos
 compile_commands.json
+export_all_maps.failed.log
 .gdbinit
 .gdbcoms
 **/*.orig
