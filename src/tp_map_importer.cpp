@@ -41,15 +41,19 @@ struct tp_pos
     std::uint32_t y;
     tp_pos(const std::uint32_t x, const std::uint32_t y): x(x), y(y){}
 
+    bool operator <(const tp_pos& rhs) const
+    {
+        // todo this will fail for maps over 100000 in size
+        // hopefully that never happens lol
+        return ((y*100000) + x) < ((rhs.y * 100000) + rhs.x);
+    }
 };
 
 struct tp_pos_cmp
 {
     bool operator()(const tp_pos& lhs, const tp_pos&rhs) const
     {
-        // todo this will fail for maps over 100000 in size
-        // hopefully that never happens lol
-        return ((lhs.y*100000) + lhs.x) < ((rhs.y * 100000) + rhs.x);
+        return lhs < rhs;
     }
 };
 
@@ -175,6 +179,9 @@ int tp_map_importer::tp_import_json(const std::string & src)
 
     if(j.find("portals") != j.end()) {
         auto j_portals = j.at("portals");
+
+        std::map<tp_pos, portal> destination_portals;
+
         for (json::iterator it = j_portals.begin(); it != j_portals.end(); ++it) {
             const auto j_port = it.value();
 
@@ -189,8 +196,10 @@ int tp_map_importer::tp_import_json(const std::string & src)
             }
 
             if(j_port.find("destination") != j_port.end()) {
-
                 p.has_destination = true;
+                auto j_dest = j_port.at("destination");
+                const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
+                destination_portals[dpos] = p;
             }
 
             m.portals.emplace_back(new portal(p));
@@ -199,6 +208,17 @@ int tp_map_importer::tp_import_json(const std::string & src)
             // so we can reference this same map to find destination id
             // from x,y coords
             tp_import_portal_positions[tp_pos(x, y)] = m.portals.size() - 1;
+        }
+
+        // add portals from destination_portals list which only exist as destinations
+        for(auto iter=destination_portals.begin(); iter != destination_portals.end();) {
+            const tp_pos dpos = (*iter).first;
+
+            if(tp_import_portal_positions.find(dpos) == tp_import_portal_positions.end()) {
+                m.portals.emplace_back(new portal(dpos.x, dpos.y));
+                tp_import_portal_positions[dpos] = m.portals.size() - 1;
+                ++iter;
+            }
         }
 
         // we loop through again to finish adding the destinations as ids
@@ -210,8 +230,13 @@ int tp_map_importer::tp_import_json(const std::string & src)
             if(p->has_destination) {
                 auto j_dest = j_port.at("destination");
                 const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
-                const std::size_t destination_id = tp_import_portal_positions.at(dpos);
 
+                if(tp_import_portal_positions.find(dpos) == tp_import_portal_positions.end()) {
+                    spdlog::get("game")->info("tp_import_portal_position at {0:d},{0:d} not found", dpos.x, dpos.y);
+                    p->has_destination = false;
+                    continue;
+                }
+                const std::size_t destination_id = tp_import_portal_positions.at(dpos);
                 p->destination_id = destination_id;
             }
         }
