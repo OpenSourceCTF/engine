@@ -137,6 +137,10 @@ int tp_map_importer::tp_import_json(const std::string & src)
         {"gravity",         map_type::gravity},
         {"gravityCTF",      map_type::gravityCTF},
     };
+    if(j.find("info") == j.end()) {
+        std::cerr << "error: 'info' not found" << std::endl;
+        return 1;
+    }
     const auto j_info = j.at("info");
     std::string j_maptype;
     if(j_info.find("gameMode") == j_info.end()) {
@@ -151,8 +155,17 @@ int tp_map_importer::tp_import_json(const std::string & src)
     }
 
     m.type    = maptype_map[j_maptype];
-    m.name    = j_info.at("name");
-    m.author  = j_info.at("author");
+    if(j_info.find("name") == j_info.end()) {
+        m.name = "unknown name";
+    } else {
+        m.name = j_info.at("name");
+    }
+
+    if(j_info.find("author") == j_info.end()) {
+        m.author = "unknown-author";
+    } else {
+        m.author = j_info.at("author");
+    }
     m.version = 1;
     switch(m.type) {
     case map_type::none_gravityCTF:
@@ -170,10 +183,16 @@ int tp_map_importer::tp_import_json(const std::string & src)
     if(j.find("switches") != j.end()) {
         auto j_toggle = j.at("switches");
         for (json::iterator it = j_toggle.begin(); it != j_toggle.end(); ++it) {
+            if(it.key() == "timer") {
+                continue;
+            }
+
             std::vector<std::string> pieces = split_on(it.key(), ',');
+            if(pieces.size() != 2) {
+                continue;
+            }
             const std::uint32_t x = std::stoi(pieces.at(0));
             const std::uint32_t y = std::stoi(pieces.at(1));
-
             
             const std::uint32_t timer = (it.value().find("timer") != it.value().end())
                 ? it.value()["timer"].get<int>()
@@ -203,6 +222,9 @@ int tp_map_importer::tp_import_json(const std::string & src)
             const auto j_port = it.value();
 
             std::vector<std::string> pieces = split_on(it.key(), ',');
+            if(pieces.size() != 2) {
+                continue;
+            }
             const std::uint32_t x = std::stoi(pieces.at(0));
             const std::uint32_t y = std::stoi(pieces.at(1));
 
@@ -213,10 +235,12 @@ int tp_map_importer::tp_import_json(const std::string & src)
             }
 
             if(j_port.find("destination") != j_port.end()) {
-                p.has_destination = true;
                 auto j_dest = j_port.at("destination");
-                const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
-                destination_portals[dpos] = p;
+                if(j_dest.find("x") != j_dest.end() && j_dest.find("y") != j_dest.end()) {
+                    p.has_destination = true;
+                    const tp_pos dpos(j_dest.at("x"), j_dest.at("y"));
+                    destination_portals[dpos] = p;
+                }
             }
 
             m.portals.emplace_back(new portal(p));
@@ -241,6 +265,10 @@ int tp_map_importer::tp_import_json(const std::string & src)
         std::size_t id = 0;
         for (json::iterator it = j_portals.begin(); it != j_portals.end(); ++it, ++id) {
             const auto j_port = it.value();
+            if(id >= m.portals.size()) {
+                std::cerr << "portal id generation error" << std::endl;
+                return 1;
+            }
             portal* p = m.portals.at(id).get();
 
             if(p->has_destination) {
@@ -262,6 +290,9 @@ int tp_map_importer::tp_import_json(const std::string & src)
         auto j_fields = j.at("fields");
         for (json::iterator it = j_fields.begin(); it != j_fields.end(); ++it) {
             std::vector<std::string> pieces = split_on(it.key(), ',');
+            if(pieces.size() != 2) {
+                continue;
+            }
             const std::uint32_t x = std::stoi(pieces.at(0));
             const std::uint32_t y = std::stoi(pieces.at(1));
 
@@ -288,8 +319,8 @@ int tp_map_importer::tp_import_json(const std::string & src)
     }
 
     if(j.find("spawnPoints") != j.end()) {
+        const auto j_spawnpoints = j.at("spawnPoints");
         auto load_spawnpoints = [&](const spawn_type type) {
-            const auto j_spawnpoints = j.at("spawnPoints");
             auto j_spawns = (type == spawn_type::blue)
                 ? j_spawnpoints.at("blue")
                 : j_spawnpoints.at("red");
@@ -297,15 +328,23 @@ int tp_map_importer::tp_import_json(const std::string & src)
             for (json::iterator it = j_spawns.begin(); it != j_spawns.end(); ++it) {
                 const std::uint32_t x      = it.value()["x"];
                 const std::uint32_t y      = it.value()["y"];
-                const std::uint32_t radius = it.value()["radius"];
-                const std::uint32_t weight = it.value()["weight"];
+                const std::uint32_t radius = (it.value().find("radius") != it.value().end())
+                    ? static_cast<float>(it.value()["radius"])
+                    : 1.0;
+                const std::uint32_t weight = (it.value().find("weight") != it.value().end())
+                    ? static_cast<std::uint32_t>(it.value()["weight"])
+                    : 1;
 
                 m.spawns.emplace_back(new spawn(x, y, radius, weight, type));
             }
         };
 
-        load_spawnpoints(spawn_type::red);
-        load_spawnpoints(spawn_type::blue);
+        if(j_spawnpoints.find("red") != j_spawnpoints.end()) {
+            load_spawnpoints(spawn_type::red);
+        }
+        if(j_spawnpoints.find("blue") != j_spawnpoints.end()) {
+            load_spawnpoints(spawn_type::blue);
+        }
     }
 
     return 0;
