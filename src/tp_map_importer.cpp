@@ -130,7 +130,9 @@ int tp_map_importer::tp_import_json(const std::string & src)
 
     std::map<std::string, map_type> maptype_map = {
         {"normal",          map_type::normal},
-        {"none-gravityCTF", map_type::none_gravityCTF}
+        {"none-gravityCTF", map_type::none_gravityCTF},
+        {"gravity",         map_type::gravity},
+        {"gravityCTF",      map_type::gravityCTF},
     };
     const auto j_info = j.at("info");
     std::string j_maptype;
@@ -149,6 +151,18 @@ int tp_map_importer::tp_import_json(const std::string & src)
     m.name    = j_info.at("name");
     m.author  = j_info.at("author");
     m.version = 1;
+    switch(m.type) {
+    case map_type::none_gravityCTF:
+    case map_type::gravity:
+    case map_type::gravityCTF:
+        m.gravity = 9.8; // todo is this correct value?
+        m.jumping_enabled = true;
+        break;
+    default:
+        m.gravity = 0.0;
+        m.jumping_enabled = false;
+        break;
+    }
 
     if(j.find("switches") != j.end()) {
         auto j_toggle = j.at("switches");

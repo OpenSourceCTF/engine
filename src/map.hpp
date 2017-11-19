@@ -66,6 +66,8 @@ struct map
     std::uint32_t version;
     std::uint32_t width;
     std::uint32_t height;
+    float gravity;
+    bool jumping_enabled;
     game_accessor game;
 
     std::vector<std::unique_ptr<wall>>    walls;

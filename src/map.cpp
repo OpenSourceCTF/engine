@@ -42,12 +42,14 @@ void to_json(nlohmann::json& j, const map& p)
 
     j = nlohmann::json{
         {"meta", {
-            {"type",    to_string(p.type)},
-            {"name",    p.name},
-            {"author",  p.author},
-            {"version", p.version},
-            {"width",   p.width},
-            {"height",  p.height}
+            {"type",            to_string(p.type)},
+            {"name",            p.name},
+            {"author",          p.author},
+            {"version",         p.version},
+            {"width",           p.width},
+            {"height",          p.height},
+            {"gravity",         p.gravity},
+            {"jumping_enabled", p.jumping_enabled},
         }},
         {"walls",    walls},
         {"tiles",    tiles},
@@ -81,12 +83,14 @@ void from_json(const nlohmann::json& j, map& p)
 
 
     auto meta = j.at("meta");
-    p.type    = map_type_from_string(meta.at("type").get<std::string>());
-    p.name    = meta.at("name").get<std::string>();
-    p.author  = meta.at("author").get<std::string>();
-    p.version = meta.at("version").get<int>();
-    p.width   = meta.at("width").get<int>();
-    p.height  = meta.at("height").get<int>();
+    p.type            = map_type_from_string(meta.at("type").get<std::string>());
+    p.name            = meta.at("name").get<std::string>();
+    p.author          = meta.at("author").get<std::string>();
+    p.version         = meta.at("version").get<int>();
+    p.width           = meta.at("width").get<int>();
+    p.height          = meta.at("height").get<int>();
+    p.gravity         = meta.at("gravity").get<float>();
+    p.jumping_enabled = meta.at("jumping_enabled").get<bool>();
 
     p.walls    = from_json_helper<wall>(j, "walls");
     p.tiles    = from_json_helper<tile>(j, "tiles");

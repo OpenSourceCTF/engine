@@ -8,7 +8,7 @@
 
 enum class map_type
 {
-    normal, none_gravityCTF
+    normal, none_gravityCTF, gravity, gravityCTF
 };
 
 std::string to_string(const map_type m);

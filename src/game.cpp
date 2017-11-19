@@ -353,7 +353,7 @@ bool game::load_map(const std::string map_src)
         delete world;
     }
 
-    world = new b2World(b2Vec2(0, 0));
+    world = new b2World(b2Vec2(0, m->gravity));
 
     // todo: does this need to be thread_local
     thread_local static contact_listener contact_listener_instance;
@@ -490,8 +490,6 @@ void game::step()
 
         // check if we can score yet
         if(! o->flags.empty() && o->on_tile_endzone_counter > 0) {
-            flag* score_flag = nullptr;
-
             for(auto && f : m->flags) {
                 if(! f->is_alive && (
                     (f->type == inv_corresponding_color<flag_type>(o->type)) ||
