@@ -15,6 +15,7 @@
 #include "settings.hpp"
 #include "map.hpp"
 #include "tp_map_importer.hpp"
+#include "pms_map_importer.hpp"
 #include "map_renderer.hpp"
 #include "lobby_server.hpp"
 #include "game.hpp"
@@ -57,6 +58,28 @@ int export_tp_map(
     tp_map_importer importer(m);
 
     if(importer.tp_import(json_src, png_src) != 0) {
+        return EXIT_FAILURE;
+    }
+
+    std::ofstream out_f(out_src);
+    out_f << nlohmann::json(m).dump(4);
+    out_f.close();
+    std::cout << "done!" << std::endl;
+
+    return EXIT_SUCCESS;
+}
+
+int export_pms_map(
+    const std::string & pms_src,
+    const double scale_size,
+    const std::string & out_src
+) {
+    std::cout << "exporting " << pms_src << "... " << std::flush;
+
+    map m;
+    pms_map_importer importer(m);
+
+    if(importer.import(pms_src, scale_size) != 0) {
         return EXIT_FAILURE;
     }
 
@@ -301,8 +324,9 @@ int main(int argc, char ** argv)
     settings::get_instance(); // to load settings up front
 
     if(argc < 2) {
-        std::cerr << "usage: ./tagos [export|render|serve|play] [PARAMS]" << std::endl;
+        std::cerr << "usage: ./tagos [export|exportpms|render|serve|play] [PARAMS]" << std::endl;
         std::cerr << "./tagos export tp_maps/Head.json tp_maps/Head.png maps/head.json" << std::endl;
+        std::cerr << "./tagos exportpms example.PMS 0.003 maps/example.json" << std::endl;
         std::cerr << "./tagos render maps/head.json" << std::endl;
         std::cerr << "./tagos serve" << std::endl;
         // std::cerr << "./tagos play 127.0.0.1 5001" << std::endl;
@@ -333,6 +357,19 @@ int main(int argc, char ** argv)
         const std::string out_src(argv[4]);
 
         return export_tp_map(json_src, png_src, out_src);
+    } else if(mode == "exportpms") {
+        if(argc != 5) {
+            std::cerr
+                << "error: exportpms needs 3 args" << std::endl
+                << "ex: exportpms IN_PMS SCALE_SIZE OUT_JSON" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        const std::string pms_src(argv[2]);
+        const double      scale_size = std::stod(argv[3]);
+        const std::string out_src(argv[4]);
+
+        return export_pms_map(pms_src, scale_size, out_src);
     } else if(mode == "render") {
         if(argc != 3) {
             std::cerr
