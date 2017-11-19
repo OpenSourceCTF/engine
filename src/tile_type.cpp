@@ -8,6 +8,7 @@ std::string to_string(const tile_type m)
         case tile_type::normal:       return "normal";       break;
         case tile_type::speed_red:    return "speed_red";    break;
         case tile_type::speed_blue:   return "speed_blue";   break;
+        case tile_type::speed_yellow: return "speed_yellow"; break;
         case tile_type::endzone_red:  return "endzone_red";  break;
         case tile_type::endzone_blue: return "endzone_blue"; break;
     }
@@ -19,6 +20,7 @@ tile_type tile_type_from_string(const std::string & m)
     if(m == "normal")       { return tile_type::normal; }
     if(m == "speed_red")    { return tile_type::speed_red; }
     if(m == "speed_blue")   { return tile_type::speed_blue; }
+    if(m == "speed_yellow") { return tile_type::speed_yellow; }
     if(m == "endzone_red")  { return tile_type::endzone_red; }
     if(m == "endzone_blue") { return tile_type::endzone_blue; }
 

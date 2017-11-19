@@ -16,6 +16,7 @@ enum class collision_user_data_type
     gate,
     speed_red,
     speed_blue,
+    speed_yellow,
     endzone_red,
     endzone_blue,
     gravwell,

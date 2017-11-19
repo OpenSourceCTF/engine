@@ -170,6 +170,9 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         // check tiles
+        if(cdata.has(collision_user_data_type::speed_yellow)) {
+            m->on_tile_speed_counter++;
+        }
         if(m->type == ball_type::red) {
             if(cdata.has(collision_user_data_type::speed_red)) {
                 m->on_tile_speed_counter++;
@@ -243,6 +246,9 @@ void contact_listener::EndContact(b2Contact* contact)
             }
         }
 
+        if(cdata.has(collision_user_data_type::speed_yellow)) {
+            m->on_tile_speed_counter--;
+        }
         if(m->type == ball_type::red) {
             if(cdata.has(collision_user_data_type::speed_red)) {
                 m->on_tile_speed_counter--;

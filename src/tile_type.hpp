@@ -12,6 +12,7 @@ enum class tile_type
     normal,
     speed_red,
     speed_blue,
+    speed_yellow,
     endzone_red,
     endzone_blue
 };

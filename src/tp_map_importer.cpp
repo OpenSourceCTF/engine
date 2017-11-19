@@ -5,9 +5,11 @@
 // the types of tiles from tagpro .png map
 enum class tp_tile_type
 {
-    background, tile,
+    background,
+    tile,
     speed_red,
     speed_blue,
+    speed_yellow,
     endzone_red,
     endzone_blue,
     wall,
@@ -332,6 +334,7 @@ int tp_map_importer::tp_import_png(const std::string & src)
         {"d4d4d4", tp_tile_type::tile},
         {"dcbaba", tp_tile_type::speed_red},
         {"bbb8dd", tp_tile_type::speed_blue},
+        {"dcdcba", tp_tile_type::speed_yellow},
         {"b90000", tp_tile_type::endzone_red},
         {"190094", tp_tile_type::endzone_blue},
         {"787878", tp_tile_type::wall},
@@ -400,6 +403,10 @@ int tp_map_importer::tp_import_png(const std::string & src)
         } else if(tiletype == tp_tile_type::speed_blue) {
             for(auto p : make_square_poly(x, y)) {
                 m.tiles.emplace_back(new tile(p, col, tile_type::speed_blue));
+            }
+        } else if(tiletype == tp_tile_type::speed_yellow) {
+            for(auto p : make_square_poly(x, y)) {
+                m.tiles.emplace_back(new tile(p, col, tile_type::speed_yellow));
             }
         } else if(tiletype == tp_tile_type::endzone_red) {
             for(auto p : make_square_poly(x, y)) {
