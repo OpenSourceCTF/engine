@@ -31,6 +31,8 @@ void ball::add_to_world(b2World * world)
     bdef.type = b2_dynamicBody;
     bdef.position.Set(10.0f, 10.0f);
     bdef.angle = 0.0f;
+    bdef.linearDamping = config.BALL_DAMPING;
+    bdef.angularDamping = config.BALL_ANGULAR_DAMPING;
 
     body = world->CreateBody(&bdef);
 

@@ -17,6 +17,7 @@ settings& settings::get_instance()
         instance.BALL_SPEED_TILE_SPEED = reader.GetReal("ball", "speed_tile_speed", 0);
         instance.BALL_JUKEJUICE_SPEED  = reader.GetReal("ball", "jukejuice_speed", 0);
         instance.BALL_DAMPING          = reader.GetReal("ball", "damping", 0);
+        instance.BALL_ANGULAR_DAMPING  = reader.GetReal("ball", "angular_damping", 0);
         instance.BALL_DENSITY          = reader.GetReal("ball", "density", 0);
         instance.BALL_FRICTION         = reader.GetReal("ball", "friction", 0);
         instance.BALL_RESTITUTION      = reader.GetReal("ball", "restitution", 0);
