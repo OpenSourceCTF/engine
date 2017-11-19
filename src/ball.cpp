@@ -221,9 +221,9 @@ void ball::score()
 
 void ball::take_flags(ball* o, const flag_type type)
 {
-    for(auto && o : o->flags) {
-        if(o.f->type == type) {
-            add_flag(o.f);
+    for(auto && f : o->flags) {
+        if(f.f->type == type) {
+            add_flag(f.f);
         }
     }
 
