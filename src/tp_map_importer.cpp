@@ -32,6 +32,7 @@ enum class tp_tile_type
     respawn_red,
     respawn_blue,
     gravitywell,
+    marsball,
 };
 
 
@@ -357,6 +358,7 @@ int tp_map_importer::tp_import_png(const std::string & src)
         {"9b0000", tp_tile_type::respawn_red},
         {"00009b", tp_tile_type::respawn_blue},
         {"202020", tp_tile_type::gravitywell},
+        {"ff7373", tp_tile_type::marsball},
     };
 
     for(std::size_t i=0; i<pixels.size() / 4; ++i) {
@@ -536,6 +538,9 @@ int tp_map_importer::tp_import_png(const std::string & src)
             }
 
             m.gravwells.emplace_back(new gravwell(x, y, 6.5, 24.0)); // todo -- set correct force
+        } else if(tiletype == tp_tile_type::marsball) {
+            std::cerr << "error: marsball not supported" << std::endl;
+            return 1;
         } else {
             std::cerr << "error: unhandled tile_type: " << tile_color << std::endl;
             return 1;
