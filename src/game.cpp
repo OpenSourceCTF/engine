@@ -493,14 +493,13 @@ void game::step()
             flag* score_flag = nullptr;
 
             for(auto && f : m->flags) {
-                if(! f->is_alive && f->type == inv_corresponding_color<flag_type>(o->type)) {
-                    score_flag = f.get();
+                if(! f->is_alive && (
+                    (f->type == inv_corresponding_color<flag_type>(o->type)) ||
+                    (f->type == flag_type::neutral)
+                )) {
+                    o->score();
                     break;
                 }
-            }
-
-            if(score_flag) {
-                o->score();
             }
         }
     }
