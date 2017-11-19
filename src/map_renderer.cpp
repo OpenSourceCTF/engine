@@ -22,6 +22,7 @@ void map_renderer::display_help() const
         << std::endl
         << "movement:          arrow keys" << std::endl
         << "select ball:       j/k" << std::endl
+        << "center on ball:    c" << std::endl
         << "wireframe toggle:  p" << std::endl
         << "zoom:              mousewheel" << std::endl;
 }
@@ -84,6 +85,7 @@ int map_renderer::get_input()
 #else
     const settings& config = settings::get_instance();
     static std::size_t current_player = 0;
+    static bool player_centered = true;
     sf::Event event;
 
     const game* g = m.game;
@@ -111,6 +113,9 @@ int map_renderer::get_input()
             if(event.key.code == sf::Keyboard::Key::P) {
                 wireframe = !wireframe;
             }
+            if(event.key.code == sf::Keyboard::Key::C) {
+                player_centered = !player_centered;
+            }
             if(event.key.code == sf::Keyboard::Key::J) {
                 ++current_player;
                 current_player %= g->players.size();
@@ -128,17 +133,26 @@ int map_renderer::get_input()
             current_player = 0;
         }
 
+        player* p = g->players[current_player].get();
+
         int move_x = 0, move_y = 0;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) move_y--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) move_x--;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) move_y++;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) move_x++;
         if(move_x || move_y) {
-            player* p = g->players[current_player].get();
             p->xdir = move_x;
             p->ydir = move_y;
         }
+
+        if(player_centered) {
+            view.setCenter(sf::Vector2f(
+                p->b->body->GetPosition().x * scaler,
+                p->b->body->GetPosition().y * scaler
+            ));
+        }
     }
+
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         view.move(-scaler/config.GUI_MOVEMENT_SPEED_DIV, 0);
