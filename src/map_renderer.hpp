@@ -36,7 +36,7 @@ struct map_renderer
         Shape& s,
         const color col=color(255, 255, 255, 255)
     ) const {
-        const sf::Color draw_color(col.r, col.g, col.b); 
+        const sf::Color draw_color(col.r, col.g, col.b, col.a); 
 
         if(wireframe) {
             s.setFillColor(sf::Color(0, 0, 0, 0));

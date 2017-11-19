@@ -29,6 +29,8 @@ void to_json(nlohmann::json& j, const map& p)
     for(auto && o : p.bombs)    bombs.emplace_back(*o);
     std::vector<std::reference_wrapper<spike>>   spikes;
     for(auto && o : p.spikes)   spikes.emplace_back(*o);
+    std::vector<std::reference_wrapper<gravwell>>gravwells;
+    for(auto && o : p.gravwells)gravwells.emplace_back(*o);
     std::vector<std::reference_wrapper<powerup>> powerups;
     for(auto && o : p.powerups) powerups.emplace_back(*o);
     std::vector<std::reference_wrapper<booster>> boosters;
@@ -58,6 +60,7 @@ void to_json(nlohmann::json& j, const map& p)
         {"spawns",   spawns},
         {"bombs",    bombs},
         {"spikes",   spikes},
+        {"gravwells",gravwells},
         {"powerups", powerups},
         {"boosters", boosters},
         {"gates",    gates},
@@ -99,6 +102,7 @@ void from_json(const nlohmann::json& j, map& p)
     p.spawns   = from_json_helper<spawn>(j, "spawns");
     p.bombs    = from_json_helper<bomb>(j, "bombs");
     p.spikes   = from_json_helper<spike>(j, "spikes");
+    p.gravwells= from_json_helper<gravwell>(j, "gravwells");
     p.toggles  = from_json_helper<toggle>(j, "toggles");
     p.powerups = from_json_helper<powerup>(j, "powerups");
     p.boosters = from_json_helper<booster>(j, "boosters");

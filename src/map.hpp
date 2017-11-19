@@ -33,6 +33,7 @@
 #include "spawn.hpp"
 #include "bomb.hpp"
 #include "spike.hpp"
+#include "gravwell.hpp"
 #include "powerup.hpp"
 #include "booster.hpp"
 #include "gate.hpp"
@@ -52,6 +53,7 @@ struct booster;
 struct portal;
 struct wall;
 struct spike;
+struct gravwell;
 struct bomb;
 struct powerup;
 struct flag;
@@ -78,6 +80,7 @@ struct map
     std::vector<std::unique_ptr<spawn>>   spawns;
     std::vector<std::unique_ptr<bomb>>    bombs;
     std::vector<std::unique_ptr<spike>>   spikes;
+    std::vector<std::unique_ptr<gravwell>>gravwells;
     std::vector<std::unique_ptr<booster>> boosters;
     std::vector<std::unique_ptr<gate>>    gates;
     std::vector<std::unique_ptr<flag>>    flags;

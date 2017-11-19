@@ -527,9 +527,8 @@ int tp_map_importer::tp_import_png(const std::string & src)
                                               config.COLOR_TILE,
                                               tile_type::normal));
             }
-            // todo
-            // these currently skipped
-            std::cout << "--gravity well skipped--";
+
+            m.gravwells.emplace_back(new gravwell(x, y, 6.5, 24.0)); // todo -- set correct force
         } else {
             std::cerr << "error: unhandled tile_type: " << tile_color << std::endl;
             return 1;

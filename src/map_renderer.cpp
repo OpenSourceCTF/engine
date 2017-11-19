@@ -292,6 +292,16 @@ int map_renderer::render() const
         std_obj_render(o, sf::IntRect(40, 160, 40, 40));
     }
 
+    for(auto && o : m.gravwells) {
+        const b2Vec2 pos = o->body->GetPosition();
+        sf::CircleShape s;
+        s.setRadius(scaler * o->r);
+        s.setOrigin(s.getRadius(), s.getRadius());
+        s.setPosition(pos.x * scaler, pos.y  * scaler);
+        color_mode(s, color(0, 0, 0, 50));
+        window->draw(s);
+    }
+
     const sf::IntRect tagpro(0, 80, 40, 40);
     const sf::IntRect jukejuice(120, 40, 40, 40);
     const sf::IntRect rollingbomb(160, 40, 40, 40);

@@ -364,6 +364,11 @@ bool game::load_map(const std::string map_src)
         o->game.set_game(this);
     }
 
+    for(auto && o : m->gravwells) {
+        o->add_to_world(world);
+        o->game.set_game(this);
+    }
+
     for(auto && o : m->bombs) {
         o->add_to_world(world);
         o->game.set_game(this);
@@ -500,6 +505,10 @@ void game::step()
                 }
             }
         }
+    }
+
+    for(auto && o : m->gravwells) {
+        o->suck(world);
     }
 
     for(auto && o : m->bombs) {

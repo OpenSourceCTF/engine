@@ -18,6 +18,7 @@ enum class collision_user_data_type
     speed_blue,
     endzone_red,
     endzone_blue,
+    gravwell,
 };
 
 #endif
