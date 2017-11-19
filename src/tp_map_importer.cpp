@@ -211,13 +211,12 @@ int tp_map_importer::tp_import_json(const std::string & src)
         }
 
         // add portals from destination_portals list which only exist as destinations
-        for(auto iter=destination_portals.begin(); iter != destination_portals.end();) {
+        for(auto iter=destination_portals.begin(); iter != destination_portals.end(); ++iter) {
             const tp_pos dpos = (*iter).first;
 
             if(tp_import_portal_positions.find(dpos) == tp_import_portal_positions.end()) {
                 m.portals.emplace_back(new portal(dpos.x, dpos.y));
                 tp_import_portal_positions[dpos] = m.portals.size() - 1;
-                ++iter;
             }
         }
 
