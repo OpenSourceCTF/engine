@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo "" > export_all_maps.failed.log
 find ./tp_maps/ -name "*.json" | while read file;
 do
     base=`basename ${file} .json`
