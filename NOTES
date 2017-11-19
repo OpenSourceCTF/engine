@@ -43,11 +43,6 @@ neutral flag mode:
     add game type
     add transfer method
 
-fix:
-    exporting spawns from png is broken (i think)
-    test with maps/10068.json
-    the map wont load with render
-
 ---
 
 run these to look for bugs
@@ -93,3 +88,12 @@ in future we plan for move to webrtc
 ---
 
 look in the `./tests` folder for examples
+
+
+## MAPEXPORTER
+exporting spawns from png is broken (i think)
+test with maps/10068.json
+the map wont load with render
+
+gravity wells skipped
+
