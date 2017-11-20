@@ -53,10 +53,7 @@ int pms_map_importer::import(
         );
 
         if(is_tile) {
-            const color c1 = config.COLOR_TILE;
-            const color c2 = config.COLOR_TILE;
-            const color c3 = config.COLOR_TILE;
-            m.tiles.emplace_back(new tile(polygon(v1, v2, v3, c1, c2, c3), tile_type::normal));
+            m.tiles.emplace_back(new tile(polygon(v1, v2, v3, config.COLOR_TILE), tile_type::normal));
         } else {
             const color c1(map.polygon[i].vertex[0].color.red, map.polygon[i].vertex[0].color.green, map.polygon[i].vertex[0].color.blue, map.polygon[i].vertex[0].color.alpha);
             const color c2(map.polygon[i].vertex[1].color.red, map.polygon[i].vertex[1].color.green, map.polygon[i].vertex[1].color.blue, map.polygon[i].vertex[1].color.alpha);
