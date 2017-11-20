@@ -10,7 +10,20 @@
 #include "spike.hpp"
 #include "toggle.hpp"
 #include "booster.hpp"
+#include "powerup.hpp"
 #include "flag.hpp"
+#include "portal.hpp"
+
+struct ball;
+struct wall;
+struct gate;
+struct bomb;
+struct spike;
+struct toggle;
+struct booster;
+struct powerup;
+struct flag;
+struct portal;
 
 
 class contact_listener : public b2ContactListener
