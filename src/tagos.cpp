@@ -179,6 +179,8 @@ int serve()
                 << "\tstats          (shows game/player stats)\n"
                 << "\tlog LEVEL      (trace, debug, info, crit, error)\n"
                 << "\tmap GAME_ID MAP(change map)\n"
+                // todo add broadcast command so we can do something like broadcast 7 {"arbitrary_json":"test"} which will send data to all players
+                // likewise for sending to specific player or specific team
                 << std::endl;
         } else if(cmd == "render") {
             if(iparts.size() != 2) {
