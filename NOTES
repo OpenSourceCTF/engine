@@ -44,6 +44,10 @@ neutral flag mode:
 
 add ability to jump if map::jumping_enabled
 
+add max speed
+
+fix movement to be nonlinear
+
 ---
 
 run these to look for bugs
