@@ -86,7 +86,7 @@ void game::run()
 
 void game::handle_server_events()
 {
-    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+    std::lock_guard<std::recursive_mutex> lock(server_events_queue_mutex);
 
     while(! server_events_queue.empty()) {
         const server_event a = std::move(server_events_queue.front());
@@ -688,6 +688,6 @@ player* game::get_player_from_player_id(const std::string & player_id)
 
 void game::add_server_event(server_event a)
 {
-    std::lock_guard<std::mutex> lock(server_events_queue_mutex);
+    std::lock_guard<std::recursive_mutex> lock(server_events_queue_mutex);
     server_events_queue.emplace(a);
 }

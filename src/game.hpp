@@ -30,7 +30,7 @@ struct game
     std::size_t timestep;
     bool finished;
     std::vector<std::unique_ptr<player>> players;
-    std::mutex server_events_queue_mutex;
+    std::recursive_mutex server_events_queue_mutex;
     std::queue<server_event> server_events_queue;
 
     game(const std::uint16_t port);
