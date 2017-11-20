@@ -162,6 +162,9 @@ void to_json(nlohmann::json& j, const polygon& p)
         {"c1r", p.c1.r}, {"c1g", p.c1.g}, {"c1b", p.c1.b}, {"c1a", p.c1.b},
         {"c2r", p.c2.r}, {"c2g", p.c2.g}, {"c2b", p.c2.b}, {"c2a", p.c2.b},
         {"c3r", p.c3.r}, {"c3g", p.c3.g}, {"c3b", p.c3.b}, {"c3a", p.c3.b},
+        {"u1", p.uv1.x}, {"v1", p.uv1.y},
+        {"u2", p.uv2.x}, {"v2", p.uv2.y},
+        {"u3", p.uv3.x}, {"v3", p.uv3.y},
     };
 }
 
@@ -188,6 +191,9 @@ void from_json(const nlohmann::json& j, polygon& p)
             j.at("c3g").get<int>(),
             j.at("c3b").get<int>(),
             j.at("c3a").get<int>()
-        )
+        ),
+        b2Vec2(j.at("u1").get<float>(), j.at("v1").get<float>()),
+        b2Vec2(j.at("u2").get<float>(), j.at("v2").get<float>()),
+        b2Vec2(j.at("u3").get<float>(), j.at("v3").get<float>())
     );
 }
