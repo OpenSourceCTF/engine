@@ -1,10 +1,15 @@
 var WebSocket = require('ws');
 
+const LobbyPort = 5000;
+const Games = 600;
+const PlayersPerGame = 8;
+const GameDelay = 1000;
+const MoveTimeout = 500;
+
 function add_new_connection(port) {
     var ws = new WebSocket('ws://127.0.0.1:' + port);
 
     ws.on('open', () => {
-        console.log('open');
         ws.send(JSON.stringify({
             "request": "gamesync",
             "login_token": "nothing"
@@ -19,10 +24,8 @@ function add_new_connection(port) {
             "ydir": rdir()
         };
 
-        console.log('sending: ', wsdata);
         ws.send(JSON.stringify(wsdata));
-
-        setTimeout(set_random_dir_every_second, Math.random() * 2000);
+        setTimeout(set_random_dir_every_second, Math.random() * MoveTimeout);
     };
 
     ws.on('message', (msg) => {
@@ -30,6 +33,8 @@ function add_new_connection(port) {
 
         if(data.event == "gamesync") {
             set_random_dir_every_second();
+            total_players++;
+            console.log("total_players", total_players);
         }
     });
 
@@ -39,8 +44,11 @@ function add_new_connection(port) {
     });
 }
 
-for(var i=5001; i<=5008; ++i) {
-    for(var j=0; j<8; ++j) {
-        add_new_connection(i);
-    }
+var total_players = 0;
+for(var i=LobbyPort; i<=LobbyPort+Games; ++i) {
+    setTimeout(function(i) {
+        for(var j=0; j<PlayersPerGame; ++j) {
+            add_new_connection(i);
+        }
+    }, GameDelay*(i-LobbyPort), i);
 }
