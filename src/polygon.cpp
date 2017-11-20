@@ -8,7 +8,29 @@ polygon::polygon()
 , c1(color(0, 0, 0, 0))
 , c2(color(0, 0, 0, 0))
 , c3(color(0, 0, 0, 0))
+, uv1(b2Vec2(0, 0))
+, uv2(b2Vec2(0, 0))
+, uv3(b2Vec2(0, 0))
 {}
+
+polygon::polygon(
+    const b2Vec2 v1,
+    const b2Vec2 v2,
+    const b2Vec2 v3,
+    const color c
+)
+: v1(v1)
+, v2(v2)
+, v3(v3)
+, c1(c)
+, c2(c)
+, c3(c)
+, uv1(b2Vec2(0, 0))
+, uv2(b2Vec2(0, 0))
+, uv3(b2Vec2(0, 0))
+{
+    make_clockwise();
+}
 
 polygon::polygon(
     const b2Vec2 v1,
@@ -24,6 +46,38 @@ polygon::polygon(
 , c1(c1)
 , c2(c2)
 , c3(c3)
+, uv1(b2Vec2(0, 0))
+, uv2(b2Vec2(0, 0))
+, uv3(b2Vec2(0, 0))
+{
+    make_clockwise();
+}
+
+polygon::polygon(
+    const b2Vec2 v1,
+    const b2Vec2 v2,
+    const b2Vec2 v3,
+    const color c1,
+    const color c2,
+    const color c3,
+    const b2Vec2 uv1,
+    const b2Vec2 uv2,
+    const b2Vec2 uv3
+)
+: v1(v1)
+, v2(v2)
+, v3(v3)
+, c1(c1)
+, c2(c2)
+, c3(c3)
+, uv1(uv1)
+, uv2(uv2)
+, uv3(uv3)
+{
+    make_clockwise();
+}
+
+void polygon::make_clockwise()
 {
     const b2Vec2 center = get_center();
 
@@ -32,8 +86,9 @@ polygon::polygon(
     std::array<std::size_t, 3> v_idx = {0, 1, 2};
 
     // save original data
-    std::array<b2Vec2, 3> v = {v1, v2, v3};
-    std::array<color, 3> c  = {c1, c2, c3};
+    std::array<b2Vec2, 3> v  = {v1, v2, v3};
+    std::array<color,  3> c  = {c1, c2, c3};
+    std::array<b2Vec2, 3> uv = {uv1, uv2, uv3};
 
     // https://stackoverflow.com/a/6989383 (reversed)
     auto clock = [&](const std::size_t a_idx, const std::size_t b_idx) {
@@ -77,6 +132,10 @@ polygon::polygon(
     this->c1 = c[v_idx[0]];
     this->c2 = c[v_idx[1]];
     this->c3 = c[v_idx[2]];
+
+    this->uv1 = uv[v_idx[0]];
+    this->uv2 = uv[v_idx[1]];
+    this->uv3 = uv[v_idx[2]];
 }
 
 b2Vec2 polygon::get_center() const
