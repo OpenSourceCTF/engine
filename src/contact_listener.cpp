@@ -22,174 +22,69 @@ void contact_listener::BeginContact(b2Contact* contact)
     if(cdata.has(collision_user_data_type::ball)) {
         if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: ball");
 
-        ball * m = static_cast<ball*>(
+        ball * a = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
-        // TODO
-        // extract this out to a nice function we can unit test
-        // since all the interactions a bit tricky
         if(cdata.has_both(collision_user_data_type::ball)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin ball");
-
-            ball * b = static_cast<ball*>(
-                cdata.get_ptr_alt(collision_user_data_type::ball)
-            );
-
-            if(! same_color(m->type, b->type)) {
-                bool disable_flag_check_a = m->grab_invincibility_counter > 0;
-                bool disable_flag_check_b = b->grab_invincibility_counter > 0;
-
-                if(! m->powerups.empty() || ! b->powerups.empty()) {
-                    if(m->has_powerup(powerup_type::rollingbomb)) {
-                        disable_flag_check_a = true;
-                        m->rb_explode();
-                    }
-
-                    if(b->has_powerup(powerup_type::rollingbomb)) {
-                        disable_flag_check_b = true;
-                        b->rb_explode();
-                    }
-
-                    if(m->has_powerup(powerup_type::tagpro)) {
-                        b->pop();
-                        m->player_ptr->stats.tags++;
-                        b->player_ptr->stats.popped_tagged++;
-                    }
-                    if(b->has_powerup(powerup_type::tagpro)) {
-                        m->pop();
-                        b->player_ptr->stats.tags++;
-                        m->player_ptr->stats.popped_tagged++;
-                    }
-                }
-
-                if(! disable_flag_check_a && ! m->flags.empty()) {
-                    if(m->has_flag(inv_corresponding_color<flag_type>(m->type))) {
-                        m->pop();
-                        b->player_ptr->stats.flag_returns++;
-                    } else if(m->has_flag(flag_type::neutral)) {
-                        b->take_flags(m, flag_type::neutral);
-                        m->pop();
-                    }
-                }
-
-                if(! disable_flag_check_b && ! b->flags.empty()) {
-                    if(b->has_flag(inv_corresponding_color<flag_type>(b->type))) {
-                        b->pop();
-                        m->player_ptr->stats.flag_returns++;
-                    } else if(b->has_flag(flag_type::neutral)) {
-                        m->take_flags(b, flag_type::neutral);
-                        b->pop();
-                    }
-                }
-            }
+            begin_ball(a, static_cast<ball*>(cdata.get_ptr_alt(collision_user_data_type::ball)));
         }
 
         if(cdata.has(collision_user_data_type::spike)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin spike");
-
-            if(m) {
-                m->pop();
-                m->player_ptr->stats.popped_spikes++;
-            }
+            begin_ball(a, static_cast<spike*>(cdata.get_ptr(collision_user_data_type::spike)));
         }
 
         if(cdata.has(collision_user_data_type::gate)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin gate");
-
-            gate* o = static_cast<gate*>(
-                cdata.get_ptr(collision_user_data_type::gate)
-            );
-
-            if(o) {
-                m->in_gate_ptrs.insert(o);
-            }
+            begin_ball(a, static_cast<gate*>(cdata.get_ptr(collision_user_data_type::gate)));
         }
 
         if(cdata.has(collision_user_data_type::bomb)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin bomb");
-
-            bomb * o = static_cast<bomb*>(
-                cdata.get_ptr(collision_user_data_type::bomb)
-            );
-
-            if(o) {
-                o->explode();
-                m->player_ptr->stats.bombs_hit++;
-            }
+            begin_ball(a, static_cast<bomb*>(cdata.get_ptr(collision_user_data_type::bomb)));
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin toggle");
-
-            toggle * o = static_cast<toggle*>(
-                cdata.get_ptr(collision_user_data_type::toggle)
-            );
-
-            if(o) o->step_on(m);
+            begin_ball(a, static_cast<toggle*>(cdata.get_ptr(collision_user_data_type::toggle)));
         }
 
         if(cdata.has(collision_user_data_type::booster)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin booster");
-
-            booster * o = static_cast<booster*>(
-                cdata.get_ptr(collision_user_data_type::booster)
-            );
-
-            if(o) o->step_on(m);
+            begin_ball(a, static_cast<booster*>(cdata.get_ptr(collision_user_data_type::booster)));
         }
 
         if(cdata.has(collision_user_data_type::powerup)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin powerup");
-
-            powerup * o = static_cast<powerup*>(
-                cdata.get_ptr(collision_user_data_type::powerup)
-            );
-
-            if(o) o->step_on(m);
+            begin_ball(a, static_cast<powerup*>(cdata.get_ptr(collision_user_data_type::powerup)));
         }
 
         if(cdata.has(collision_user_data_type::flag)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin flag");
-
-            flag * o = static_cast<flag*>(
-                cdata.get_ptr(collision_user_data_type::flag)
-            );
-
-            if(o) o->step_on(m);
+            begin_ball(a, static_cast<flag*>(cdata.get_ptr(collision_user_data_type::flag)));
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin portal");
-
-            portal * o = static_cast<portal*>(
-                cdata.get_ptr(collision_user_data_type::portal)
-            );
-
-            if(o) o->step_on(m);
+            begin_ball(a, static_cast<portal*>(cdata.get_ptr(collision_user_data_type::portal)));
         }
 
         // check tiles
         if(cdata.has(collision_user_data_type::speed_yellow)) {
-            m->on_tile_speed_counter++;
+            a->on_tile_speed_counter++;
         }
-        if(m->type == ball_type::red) {
+        if(a->type == ball_type::red) {
             if(cdata.has(collision_user_data_type::speed_red)) {
-                m->on_tile_speed_counter++;
+                a->on_tile_speed_counter++;
             }
             if(cdata.has(collision_user_data_type::endzone_red)) {
-                m->on_tile_endzone_counter++;
+                a->on_tile_endzone_counter++;
             }
         }
 
-        if(m->type == ball_type::blue) {
+        if(a->type == ball_type::blue) {
             if(cdata.has(collision_user_data_type::speed_blue)) {
-                m->on_tile_speed_counter++;
+                a->on_tile_speed_counter++;
             }
             if(cdata.has(collision_user_data_type::endzone_blue)) {
-                m->on_tile_endzone_counter++;
+                a->on_tile_endzone_counter++;
             }
         }
+
+
     }
 }
 
@@ -210,61 +105,179 @@ void contact_listener::EndContact(b2Contact* contact)
     if(cdata.has(collision_user_data_type::ball)) {
         if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: ball");
 
-        ball * m = static_cast<ball*>(
+        ball * a = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
 
         if(cdata.has(collision_user_data_type::toggle)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: left toggle");
-
-            toggle * o = static_cast<toggle*>(
-                cdata.get_ptr(collision_user_data_type::toggle)
-            );
-
-            if(o) o->step_off(m);
+            end_ball(a, static_cast<toggle*>(cdata.get_ptr(collision_user_data_type::toggle)));
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: portal");
-
-            portal * o = static_cast<portal*>(
-                cdata.get_ptr(collision_user_data_type::portal)
-            );
-
-            if(o) o->step_off(m);
+            end_ball(a, static_cast<portal*>(cdata.get_ptr(collision_user_data_type::portal)));
         }
 
         if(cdata.has(collision_user_data_type::gate)) {
-            if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: left gate");
-
-            gate * o = static_cast<gate*>(
-                cdata.get_ptr(collision_user_data_type::gate)
-            );
-
-            if(o) {
-                m->in_gate_ptrs.erase(o);
-            }
+            end_ball(a, static_cast<gate*>(cdata.get_ptr(collision_user_data_type::gate)));
         }
 
         if(cdata.has(collision_user_data_type::speed_yellow)) {
-            m->on_tile_speed_counter--;
+            a->on_tile_speed_counter--;
         }
-        if(m->type == ball_type::red) {
+        if(a->type == ball_type::red) {
             if(cdata.has(collision_user_data_type::speed_red)) {
-                m->on_tile_speed_counter--;
+                a->on_tile_speed_counter--;
             }
             if(cdata.has(collision_user_data_type::endzone_red)) {
-                m->on_tile_endzone_counter--;
+                a->on_tile_endzone_counter--;
             }
         }
 
-        if(m->type == ball_type::blue) {
+        if(a->type == ball_type::blue) {
             if(cdata.has(collision_user_data_type::speed_blue)) {
-                m->on_tile_speed_counter--;
+                a->on_tile_speed_counter--;
             }
             if(cdata.has(collision_user_data_type::endzone_blue)) {
-                m->on_tile_endzone_counter--;
+                a->on_tile_endzone_counter--;
             }
         }
     }
+}
+
+void contact_listener::begin_ball(ball* a, ball* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin ball");
+
+    if(! same_color(a->type, b->type)) {
+        bool disable_flag_check_a = a->grab_invincibility_counter > 0;
+        bool disable_flag_check_b = b->grab_invincibility_counter > 0;
+
+        if(! a->powerups.empty() || ! b->powerups.empty()) {
+            if(a->has_powerup(powerup_type::rollingbomb)) {
+                disable_flag_check_a = true;
+                a->rb_explode();
+            }
+
+            if(b->has_powerup(powerup_type::rollingbomb)) {
+                disable_flag_check_b = true;
+                b->rb_explode();
+            }
+
+            if(a->has_powerup(powerup_type::tagpro)) {
+                b->pop();
+                a->player_ptr->stats.tags++;
+                b->player_ptr->stats.popped_tagged++;
+            }
+            if(b->has_powerup(powerup_type::tagpro)) {
+                a->pop();
+                b->player_ptr->stats.tags++;
+                a->player_ptr->stats.popped_tagged++;
+            }
+        }
+
+        if(! disable_flag_check_a && ! a->flags.empty()) {
+            if(a->has_flag(inv_corresponding_color<flag_type>(a->type))) {
+                a->pop();
+                b->player_ptr->stats.flag_returns++;
+            } else if(a->has_flag(flag_type::neutral)) {
+                b->take_flags(a, flag_type::neutral);
+                a->pop();
+            }
+        }
+
+        if(! disable_flag_check_b && ! b->flags.empty()) {
+            if(b->has_flag(inv_corresponding_color<flag_type>(b->type))) {
+                b->pop();
+                a->player_ptr->stats.flag_returns++;
+            } else if(b->has_flag(flag_type::neutral)) {
+                a->take_flags(b, flag_type::neutral);
+                b->pop();
+            }
+        }
+    }
+}
+void contact_listener::begin_ball(ball* a, spike* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin spike");
+
+    if(a) {
+        a->pop();
+        a->player_ptr->stats.popped_spikes++;
+    }
+}
+
+void contact_listener::begin_ball(ball* a, gate* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin gate");
+
+    if(b) {
+        a->in_gate_ptrs.insert(b);
+    }
+}
+
+void contact_listener::begin_ball(ball* a, bomb* b)
+{
+
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin bomb");
+
+    if(b) {
+        b->explode();
+        a->player_ptr->stats.bombs_hit++;
+    }
+}
+
+void contact_listener::begin_ball(ball* a, toggle* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin toggle");
+
+    if(b) b->step_on(a);
+}
+
+void contact_listener::begin_ball(ball* a, booster* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin booster");
+
+    if(b) b->step_on(a);
+}
+
+void contact_listener::begin_ball(ball* a, powerup* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin powerup");
+
+    if(b) b->step_on(a);
+}
+
+void contact_listener::begin_ball(ball* a, flag* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin flag");
+
+    if(b) b->step_on(a);
+}
+
+void contact_listener::begin_ball(ball* a, portal* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin portal");
+
+    if(b) b->step_on(a);
+}
+
+void contact_listener::end_ball(ball* a, toggle* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: left toggle");
+
+    if(b) b->step_off(a);
+}
+
+void contact_listener::end_ball(ball* a, portal* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: portal");
+
+    if(b) b->step_off(a);
+}
+
+void contact_listener::end_ball(ball* a, gate* b)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: left gate");
+
+    if(a) a->in_gate_ptrs.erase(b);
 }
