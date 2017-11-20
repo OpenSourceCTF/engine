@@ -63,9 +63,9 @@ std::vector<std::unique_ptr<chain>> poly2chain(
     // TODO: use a quicker hash
     auto sort_poly = [](const polygon& poly) {
         std::vector<std::pair<float,float>> sorted;
-        sorted.push_back(std::make_pair(poly.x1,poly.y1));
-        sorted.push_back(std::make_pair(poly.x2,poly.y2));
-        sorted.push_back(std::make_pair(poly.x3,poly.y3));
+        sorted.push_back(std::make_pair(poly.v1.x, poly.v1.y));
+        sorted.push_back(std::make_pair(poly.v2.x, poly.v2.y));
+        sorted.push_back(std::make_pair(poly.v3.x, poly.v3.y));
         std::sort(sorted.begin(),sorted.end());
         return sorted;
     };
@@ -132,12 +132,12 @@ std::vector<std::unique_ptr<chain>> poly2chain(
         if(seen.find(p) == seen.end()) {
             seen.insert(p);
 
-            edge edge1 = std::make_pair(std::make_pair(p.x1,p.y1),
-                                        std::make_pair(p.x2,p.y2));
-            edge edge2 = std::make_pair(std::make_pair(p.x2,p.y2),
-                                        std::make_pair(p.x3,p.y3));
-            edge edge3 = std::make_pair(std::make_pair(p.x3,p.y3),
-                                        std::make_pair(p.x1,p.y1));
+            edge edge1 = std::make_pair(std::make_pair(p.v1.x, p.v1.y),
+                                        std::make_pair(p.v2.x, p.v2.y));
+            edge edge2 = std::make_pair(std::make_pair(p.v2.x, p.v2.y),
+                                        std::make_pair(p.v3.x, p.v3.y));
+            edge edge3 = std::make_pair(std::make_pair(p.v3.x, p.v3.y),
+                                        std::make_pair(p.v1.x, p.v1.y));
             ++counter[edge1];
             ++counter[edge2];
             ++counter[edge3];

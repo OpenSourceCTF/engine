@@ -9,6 +9,10 @@
 #include <spdlog/spdlog.h>
 #include <json/json_fwd.hpp>
 
+#ifndef DISABLE_RENDER
+#include <SFML/Graphics.hpp>
+#endif
+
 struct color
 {
     std::uint8_t r;
@@ -24,6 +28,13 @@ struct color
         const std::uint8_t b,
         const std::uint8_t a
     );
+
+#ifndef DISABLE_RENDER
+    operator sf::Color () const
+    {
+        return sf::Color(r, g, b, a);
+    }
+#endif
 
     // from rgba hex like ffaabb or ffaabbff
     color(const std::string & hex);

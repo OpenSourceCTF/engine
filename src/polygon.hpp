@@ -4,25 +4,26 @@
 #include <array>
 #include <Box2D/Box2D.h>
 #include <json/json_fwd.hpp>
+#include "color.hpp"
 
 struct polygon
 {
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-    float x3;
-    float y3;
+    b2Vec2 v1;
+    b2Vec2 v2;
+    b2Vec2 v3;
+    color c1;
+    color c2;
+    color c3;
 
     polygon();
 
     polygon(
-        const float x1,
-        const float y1,
-        const float x2,
-        const float y2,
-        const float x3,
-        const float y3
+        const b2Vec2 v1,
+        const b2Vec2 v2,
+        const b2Vec2 v3,
+        const color c1,
+        const color c2,
+        const color c3
     );
 
     b2Vec2 get_center() const;

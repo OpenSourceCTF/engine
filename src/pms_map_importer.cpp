@@ -39,17 +39,29 @@ int pms_map_importer::import(
                 break;
             default: break;
         }
-        const float x1 = map.polygon[i].vertex[0].x * scale_size;
-        const float y1 = map.polygon[i].vertex[0].y * scale_size;
-        const float x2 = map.polygon[i].vertex[1].x * scale_size;
-        const float y2 = map.polygon[i].vertex[1].y * scale_size;
-        const float x3 = map.polygon[i].vertex[2].x * scale_size;
-        const float y3 = map.polygon[i].vertex[2].y * scale_size;
+        const b2Vec2 v1(
+            map.polygon[i].vertex[0].x * scale_size,
+            map.polygon[i].vertex[0].y * scale_size
+        );
+        const b2Vec2 v2(
+            map.polygon[i].vertex[1].x * scale_size,
+            map.polygon[i].vertex[1].y * scale_size
+        );
+        const b2Vec2 v3(
+            map.polygon[i].vertex[2].x * scale_size,
+            map.polygon[i].vertex[2].y * scale_size
+        );
 
         if(is_tile) {
-            m.tiles.emplace_back(new tile(polygon(x1, y1, x2, y2, x3, y3), config.COLOR_TILE, tile_type::normal));
+            const color c1 = config.COLOR_TILE;
+            const color c2 = config.COLOR_TILE;
+            const color c3 = config.COLOR_TILE;
+            m.tiles.emplace_back(new tile(polygon(v1, v2, v3, c1, c2, c3), tile_type::normal));
         } else {
-            m.walls.emplace_back(new wall(polygon(x1, y1, x2, y2, x3, y3), config.COLOR_WALL));
+            const color c1(map.polygon[i].vertex[0].color.red, map.polygon[i].vertex[0].color.green, map.polygon[i].vertex[0].color.blue, map.polygon[i].vertex[0].color.alpha);
+            const color c2(map.polygon[i].vertex[1].color.red, map.polygon[i].vertex[1].color.green, map.polygon[i].vertex[1].color.blue, map.polygon[i].vertex[1].color.alpha);
+            const color c3(map.polygon[i].vertex[2].color.red, map.polygon[i].vertex[2].color.green, map.polygon[i].vertex[2].color.blue, map.polygon[i].vertex[2].color.alpha);
+            m.walls.emplace_back(new wall(polygon(v1, v2, v3, c1, c2, c3)));
         }
 	}
 
@@ -75,6 +87,8 @@ int pms_map_importer::import(
                 break;
             case pms::stGRENADES:
             case pms::stMEDKITS:
+                m.boosters.emplace_back(new booster(x, y, booster_type::all));
+                break;
             case pms::stCLUSTERS:
             case pms::stVEST:
             case pms::stFLAMER:

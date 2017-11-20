@@ -14,14 +14,10 @@ struct collision_user_data;
 struct wall
 {
     polygon poly;
-    color col;
     std::shared_ptr<collision_user_data> col_data;
 
     wall();
-    wall(
-        const polygon poly,
-        const color col
-    );
+    wall(const polygon poly);
 };
 
 void to_json(nlohmann::json& j, const wall& p);

@@ -31,6 +31,7 @@ struct map_renderer
     int close_window();
     int render() const;
 
+#ifndef DISABLE_RENDER
     template <typename Shape>
     void color_mode(
         Shape& s,
@@ -71,6 +72,50 @@ struct map_renderer
 
         window->draw(s);
     }
+
+    template <typename Container>
+    sf::VertexArray generate_vertex_array(
+        const Container & objs
+    ) const {
+        const settings& config = settings::get_instance();
+        const float e = config.GUI_POLY_EXTRUDE;
+
+        sf::VertexArray polys(sf::Triangles, 3*objs.size());
+
+        for(std::size_t i=0; i<objs.size(); ++i) {
+            const polygon poly = objs[i]->poly;
+            const b2Vec2 c = poly.get_center();
+
+            const float a1 = std::atan2(poly.v1.y - c.y, poly.v1.x - c.x);
+            const float a2 = std::atan2(poly.v2.y - c.y, poly.v2.x - c.x);
+            const float a3 = std::atan2(poly.v3.y - c.y, poly.v3.x - c.x);
+
+            polys[(i*3)+0].position = sf::Vector2f(
+                (poly.v1.x * scaler) + (std::cos(a1) * e),
+                (poly.v1.y * scaler) + (std::sin(a1) * e)
+            );
+            polys[(i*3)+1].position = sf::Vector2f(
+                (poly.v2.x * scaler) + (std::cos(a2) * e),
+                (poly.v2.y * scaler) + (std::sin(a2) * e)
+            );
+            polys[(i*3)+2].position = sf::Vector2f(
+                (poly.v3.x * scaler) + (std::cos(a3) * e),
+                (poly.v3.y * scaler) + (std::sin(a3) * e)
+            );
+
+            polys[(i*3)+0].color = poly.c1;
+            polys[(i*3)+1].color = poly.c2;
+            polys[(i*3)+2].color = poly.c3;
+
+            polys[(i*3)+0].texCoords = sf::Vector2f(poly.v1.x * 40., poly.v1.y * 40.);
+            polys[(i*3)+1].texCoords = sf::Vector2f(poly.v2.x * 40., poly.v2.y * 40.);
+            polys[(i*3)+2].texCoords = sf::Vector2f(poly.v3.x * 40., poly.v3.y * 40.);
+        }
+
+        return polys;
+    }
+#endif
+
 };
 
 #endif

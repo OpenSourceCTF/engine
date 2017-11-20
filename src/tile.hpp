@@ -7,7 +7,6 @@
 
 #include <json/json_fwd.hpp>
 #include "polygon.hpp"
-#include "color.hpp"
 #include "tile_type.hpp"
 #include "collision_user_data.hpp"
 #include "game_accessor.hpp"
@@ -18,7 +17,6 @@ struct tile
 {
     game_accessor game;
     polygon poly;
-    color col;
     tile_type type;
     b2Body * body;
     std::shared_ptr<collision_user_data> col_data;
@@ -26,7 +24,6 @@ struct tile
     tile();
     tile(
         const polygon poly,
-        const color col,
         const tile_type type
     );
 

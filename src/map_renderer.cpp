@@ -189,22 +189,22 @@ int map_renderer::render() const
         const settings& config = settings::get_instance();
         const float e = config.GUI_POLY_EXTRUDE;
         const b2Vec2 c = poly.get_center();
-        const float a1 = std::atan2(poly.y1 - c.y, poly.x1 - c.x);
-        const float a2 = std::atan2(poly.y2 - c.y, poly.x2 - c.x);
-        const float a3 = std::atan2(poly.y3 - c.y, poly.x3 - c.x);
+        const float a1 = std::atan2(poly.v1.y - c.y, poly.v1.x - c.x);
+        const float a2 = std::atan2(poly.v2.y - c.y, poly.v2.x - c.x);
+        const float a3 = std::atan2(poly.v3.y - c.y, poly.v3.x - c.x);
 
         s.setPointCount(3);
         s.setPoint(0, sf::Vector2f(
-            (poly.x1 * scaler) + (std::cos(a1) * e),
-            (poly.y1 * scaler) + (std::sin(a1) * e)
+            (poly.v1.x * scaler) + (std::cos(a1) * e),
+            (poly.v1.y * scaler) + (std::sin(a1) * e)
         ));
         s.setPoint(1, sf::Vector2f(
-            (poly.x2 * scaler) + (std::cos(a2) * e),
-            (poly.y2 * scaler) + (std::sin(a2) * e)
+            (poly.v2.x * scaler) + (std::cos(a2) * e),
+            (poly.v2.y * scaler) + (std::sin(a2) * e)
         ));
         s.setPoint(2, sf::Vector2f(
-            (poly.x3 * scaler) + (std::cos(a3) * e),
-            (poly.y3 * scaler) + (std::sin(a3) * e)
+            (poly.v3.x * scaler) + (std::cos(a3) * e),
+            (poly.v3.y * scaler) + (std::sin(a3) * e)
         ));
     };
 
@@ -223,15 +223,18 @@ int map_renderer::render() const
         return res;
     };
 
-    if(! wireframe) {
-        for(auto && o : m.walls) {
-            sf::ConvexShape s;
-            add_points(s, o->poly);
-            s.setTexture(&tx_sheet);
-            s.setTextureRect(sf::IntRect(80, 120, 40, 40));
 
-            window->draw(s);
-        }
+    if(! wireframe) {
+        sf::VertexArray wpolys = generate_vertex_array(m.walls);
+        window->draw(wpolys);
+
+        sf::Image tile_img = tx_sheet.copyToImage();
+        sf::Texture tile_texture;
+        tile_texture.loadFromImage(tile_img, sf::IntRect(120, 120, 40, 40));
+        tile_texture.setRepeated(true);
+
+        sf::VertexArray tpolys = generate_vertex_array(m.tiles);
+        window->draw(tpolys, &tile_texture);
     } else {
         std::size_t i = 0;
 
@@ -254,19 +257,19 @@ int map_renderer::render() const
 
             ++i;
         }
-    }
     
-    for(auto && o : m.tiles) {
-        sf::ConvexShape s;
-        add_points(s, o->poly);
-        color_mode(s, o->col);
+        for(auto && o : m.tiles) {
+            sf::ConvexShape s;
+            add_points(s, o->poly);
+            color_mode(s, o->poly.c1);
 
-        if(! wireframe) {
-            s.setTexture(&tx_sheet);
-            s.setTextureRect(sf::IntRect(120, 120, 40, 40));
+            if(! wireframe) {
+                s.setTexture(&tx_sheet);
+                s.setTextureRect(sf::IntRect(120, 120, 40, 40));
+            }
+
+            window->draw(s);
         }
-
-        window->draw(s);
     }
 
     for(auto && o : m.gates) {
