@@ -46,11 +46,6 @@ void game::run()
 
     // consider std::sleep_until here
     while(true) {
-        if(players.empty()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
-            continue;
-        }
-
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
@@ -81,7 +76,11 @@ void game::run()
 
         spdlog::get("game")->debug("{0:d}ms", std::chrono::duration_cast<std::chrono::milliseconds>(step_duration).count());
 
-        std::this_thread::sleep_for(t_sleep);
+        if(players.empty()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        } else {
+            std::this_thread::sleep_for(t_sleep);
+        }
     }
 }
 
@@ -108,6 +107,7 @@ void game::handle_server_events()
         switch(a.type) {
         case server_event_type::gamesync: {
             auto m = std::static_pointer_cast<server_event_gamesync>(a.ptr);
+
             try_send(m->p->srv, m->p->con, websocketpp::frame::opcode::value::text, 
                 game_event(game_event_gamesync(this))
             );
@@ -115,7 +115,35 @@ void game::handle_server_events()
 
         case server_event_type::player_joined: {
             auto m = std::static_pointer_cast<server_event_player_joined>(a.ptr);
-            try_broadcast(this, game_event(game_event_player_joined(m->p)));
+
+            const ball_type selected_team_color = [](const game* g){
+                std::size_t red_cnt  = 0;
+                std::size_t blue_cnt = 0;
+
+                for(auto && o : g->players) {
+                    if(o->b->type == ball_type::red)  ++red_cnt;
+                    if(o->b->type == ball_type::blue) ++blue_cnt;
+                }
+
+                if(red_cnt > blue_cnt) return ball_type::blue;
+                if(red_cnt < blue_cnt) return ball_type::red;
+
+                return std::uniform_int_distribution<int>(0, 1)(random_util::get_instance().eng) == 0
+                    ? ball_type::red
+                    : ball_type::blue;
+            }(m->p->g);
+
+            player* p = add_player(m->p);
+            p->b = add_ball(new ball(selected_team_color));
+            p->b->set_player_ptr(m->p);
+
+            p->b->add_to_world(world);
+            respawn_ball(p->b);
+
+            // we send all map data here to sync user
+            server_events_queue.emplace(server_event(server_event_gamesync(p)));
+
+            try_broadcast(this, game_event(game_event_player_joined(p)));
         } break;
 
         case server_event_type::player_left: {
@@ -419,6 +447,8 @@ bool game::load_map(const std::string map_src)
         ball* b = add_ball(new ball(t));
         p->b = b;
         b->set_player_ptr(p);
+        b->add_to_world(world);
+        respawn_ball(b);
     }
 
     return true;
@@ -609,9 +639,6 @@ ball* game::add_ball(ball* b)
     m->balls.emplace_back(b);
 
     ball* B = m->balls.back().get();
-
-    B->add_to_world(world);
-    respawn_ball(B);
 
     return B;
 }

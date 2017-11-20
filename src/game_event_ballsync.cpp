@@ -11,6 +11,8 @@ void to_json(nlohmann::json& j, const game_event_ballsync& p)
     balls.reserve(p.g->m->balls.size());
 
     for(auto && o : p.g->m->balls) {
+        if(! o->body) continue;
+
         const b2Vec2 pos  = o->body->GetPosition();
         const b2Vec2 velo = o->body->GetLinearVelocity();
         const float spin  = o->body->GetAngularVelocity();

@@ -373,6 +373,7 @@ int map_renderer::render() const
 
     for(auto && o : m.balls) {
         if(! o->is_alive) continue;
+        if(! o->body)     continue;
 
         const sf::IntRect red(80, 160, 40, 40);
         const sf::IntRect blue(120, 160, 40, 40);

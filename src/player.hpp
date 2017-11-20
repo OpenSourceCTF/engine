@@ -33,7 +33,6 @@ struct player
         const websocketpp::connection_hdl con,
         websocketpp::server<websocketpp::config::asio>* srv,
         game* g,
-        ball* b,
         const std::string player_id,
         const bool is_registered,
         const std::string name,

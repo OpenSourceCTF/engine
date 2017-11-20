@@ -104,6 +104,8 @@ int render(const std::string & map_src)
     ball* b = g.add_ball(new ball(ball_type::red));
     player* p = g.add_player(new player(&g, b, "player_id", true, "name", 100));
     b->set_player_ptr(p);
+    b->add_to_world(g.world);
+    g.respawn_ball(b);
 
     if(display_renderer(*(g.m)) != 0) {
         return EXIT_FAILURE;

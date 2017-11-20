@@ -316,33 +316,8 @@ void on_game_sync(
         return;
     }
 
-    const ball_type selected_team_color = [](const game& g){
-        std::size_t red_cnt  = 0;
-        std::size_t blue_cnt = 0;
-
-        for(auto && o : g.players) {
-            if(o->b->type == ball_type::red)  ++red_cnt;
-            if(o->b->type == ball_type::blue) ++blue_cnt;
-        }
-
-        if(red_cnt > blue_cnt) return ball_type::blue;
-        if(red_cnt < blue_cnt) return ball_type::red;
-
-        return std::uniform_int_distribution<int>(0, 1)(random_util::get_instance().eng) == 0
-            ? ball_type::red
-            : ball_type::blue;
-    }(g);
-
-    // add ball & player to game
-    ball* b = g.add_ball(new ball(selected_team_color));
-    player* p = g.add_player(new player(hdl, srv, &g, b, "player_id", true, "name", 100));
-    b->set_player_ptr(p);
-
-    // we send all map data here to sync user
-    g.add_server_event(server_event(server_event_gamesync(p)));
-
     // and let everyone know a new player has joined
-    g.add_server_event(server_event(server_event_player_joined(p)));
+    g.add_server_event(server_event(server_event_player_joined(new player(hdl, srv, &g, "player_id", true, "name", 100))));
 }
 
 void on_game_vote_player(

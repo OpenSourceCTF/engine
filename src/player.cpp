@@ -4,7 +4,6 @@ player::player(
     const websocketpp::connection_hdl con,
     websocketpp::server<websocketpp::config::asio>* srv,
     game* g,
-    ball* b,
     const std::string player_id,
     const bool is_registered,
     const std::string name,
@@ -15,7 +14,7 @@ player::player(
 , con(con)
 , srv(srv)
 , g(g)
-, b(b)
+, b(nullptr)
 , player_id(player_id)
 , is_registered(is_registered)
 , name(name)
