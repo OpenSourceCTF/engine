@@ -11,6 +11,7 @@
 #include "player.hpp"
 #include "user.hpp"
 #include "random_util.hpp"
+#include "settings.hpp"
 
 typedef websocketpp::server<websocketpp::config::asio> websocketpp_server;
 

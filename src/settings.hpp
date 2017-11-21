@@ -74,6 +74,7 @@ struct settings
 
     std::size_t GAME_MAX_POINTS;
     std::size_t GAME_MAX_LENGTH;
+    std::size_t GAME_MAX_PLAYERS;
 
 
     // use this to initialize

@@ -296,6 +296,7 @@ void on_game_sync(
     websocketpp_server::message_ptr msg,
     const std::string& login_token
 ) {
+    const settings& config = settings::get_instance();
     const lobby_server& lobby = lobby_server::get_instance();
 
     game& g = lobby.get_game_from_port(get_local_port(srv, hdl));
@@ -309,7 +310,7 @@ void on_game_sync(
 
 
     // check game still has open slot
-    if(g.m->balls.size() >= 8) {
+    if(g.players.size() >= config.GAME_MAX_PLAYERS) {
         try_send(srv, hdl, websocketpp::frame::opcode::value::text, {
             {"error", "game_full"}
         });
