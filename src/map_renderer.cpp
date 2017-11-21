@@ -225,6 +225,7 @@ int map_renderer::render() const
 
 
     if(! wireframe) {
+        // todo cache these so we just have to draw the arrays
         sf::VertexArray wpolys = generate_vertex_array(m.walls);
         window->draw(wpolys);
 
@@ -305,6 +306,7 @@ int map_renderer::render() const
         std_obj_render(o, sf::IntRect(160, 160, 40, 40));
     }
 
+    // todo this could be vertex array
     for(auto && o : m.spikes) {
         std_obj_render(o, sf::IntRect(40, 160, 40, 40));
     }
