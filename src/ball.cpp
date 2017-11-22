@@ -13,6 +13,7 @@ ball::ball(const ball_type type)
 , in_gate_ptrs({})
 , on_tile_speed_counter(0)
 , on_tile_endzone_counter(0)
+, jumps_since_land_counter(0)
 , grab_invincibility_counter(0)
 {}
 
@@ -55,6 +56,7 @@ void ball::add_to_world(b2World * world)
     in_gate_ptrs.clear();
     on_tile_speed_counter = 0;
     on_tile_endzone_counter = 0;
+    jumps_since_land_counter = 0;
     grab_invincibility_counter = 0;
 }
 
@@ -78,6 +80,8 @@ void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
+    const bool is_jumping = player_ptr->g->m->jumping_enabled && y == -1;
+
     // check max speed
     const b2Vec2 v = body->GetLinearVelocity();
     const int X = ((v.x >  config.BALL_MAX_MOVEMENT_SPEED && x>0)
@@ -100,9 +104,26 @@ void ball::move(const int x, const int y)
     if(has_jukejuice)  s = std::max(s, config.BALL_JUKEJUICE_SPEED);
     if(has_speed_tile) s = std::max(s, config.BALL_SPEED_TILE_SPEED);
 
+    auto jump = [&]() {
+        body->ApplyLinearImpulse(
+            b2Vec2(0, -config.BALL_JUMP_SPEED),
+            body->GetWorldCenter(),
+            true
+        );
+    };
+
+    if(is_jumping) {
+        if(jumps_since_land_counter < 1 && v.y > -config.BALL_JUMP_MAX_V) {
+            jump();
+            ++jumps_since_land_counter;
+        } else if(jumps_since_land_counter < 2 && std::abs(v.y) < config.BALL_JUMP_MAX_V_2) {
+            if(v.y < 0) jump();
+            ++jumps_since_land_counter;
+        }
+    }
 
     body->ApplyForce(
-        b2Vec2(std::cos(a) * s, std::sin(a) * s),
+        b2Vec2(std::cos(a) * s, player_ptr->g->m->jumping_enabled ? 0 : std::sin(a) * s),
         body->GetWorldCenter(),
         true
     );

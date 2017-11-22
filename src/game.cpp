@@ -613,7 +613,7 @@ void game::respawn_ball(ball* b)
 
         for(auto && f : m->flags) {
             if(f->type == matching_flag_type) {
-                potential_spawns.emplace_back(f->x, f->y, 1, 1, matching_spawn_type);
+                potential_spawns.emplace_back(f->x, f->y-2, 1, 1, matching_spawn_type);
             }
         }
 

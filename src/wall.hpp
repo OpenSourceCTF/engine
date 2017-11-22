@@ -5,16 +5,12 @@
 #include <array>
 #include <Box2D/Box2D.h>
 #include <json/json_fwd.hpp>
-#include "collision_user_data.hpp"
 #include "polygon.hpp"
 #include "color.hpp"
-
-struct collision_user_data;
 
 struct wall
 {
     polygon poly;
-    std::shared_ptr<collision_user_data> col_data;
 
     wall();
     wall(const polygon poly);

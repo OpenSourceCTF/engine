@@ -4,7 +4,6 @@
 wall::wall(){}
 wall::wall(const polygon poly)
 : poly(poly)
-, col_data(nullptr)
 {}
 
 void to_json(nlohmann::json& j, const wall& p)

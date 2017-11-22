@@ -5,7 +5,7 @@ enum class collision_user_data_type
 {
     unknown,
     ball,
-    wall,
+    chain,
     spike,
     bomb,
     toggle,

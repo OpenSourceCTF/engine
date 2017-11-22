@@ -40,9 +40,6 @@ request player stats event
 
 neutral flag mode:
     add flag_transferred event
-    add transfer method
-
-add ability to jump if map::jumping_enabled
 
 ---
 

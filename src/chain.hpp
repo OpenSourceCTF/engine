@@ -3,13 +3,17 @@
 
 #include <vector>
 #include <Box2D/Box2D.h>
+#include "collision_user_data.hpp"
 #include "coord.hpp"
 #include "util.hpp"
+
+struct collision_user_data;
 
 struct chain
 {
     std::vector<coord> vertices;
     b2Body* body;
+    std::shared_ptr<collision_user_data> col_data;
 
     chain();
     chain(const std::vector<coord> & vertices);

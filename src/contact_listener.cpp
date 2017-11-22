@@ -6,6 +6,9 @@ static constexpr bool VERBOSE_CONTACT = true;
 
 void contact_listener::BeginContact(b2Contact* contact)
 {
+    b2WorldManifold manifold;
+    contact->GetWorldManifold(&manifold);
+
     const collision_user_data* user_data_a = static_cast<collision_user_data*>(
         contact->GetFixtureA()->GetBody()->GetUserData()
     );
@@ -27,7 +30,17 @@ void contact_listener::BeginContact(b2Contact* contact)
         );
 
         if(cdata.has_both(collision_user_data_type::ball)) {
-            begin_ball(a, static_cast<ball*>(cdata.get_ptr_alt(collision_user_data_type::ball)));
+            begin_ball(a,
+                static_cast<ball*>(cdata.get_ptr_alt(collision_user_data_type::ball)),
+                manifold
+            );
+        }
+
+        if(cdata.has(collision_user_data_type::chain)) {
+            begin_ball(a,
+                static_cast<chain*>(cdata.get_ptr(collision_user_data_type::chain)),
+                manifold
+            );
         }
 
         if(cdata.has(collision_user_data_type::spike)) {
@@ -39,7 +52,10 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::bomb)) {
-            begin_ball(a, static_cast<bomb*>(cdata.get_ptr(collision_user_data_type::bomb)));
+            begin_ball(
+                a, static_cast<bomb*>(cdata.get_ptr(collision_user_data_type::bomb)),
+                manifold
+            );
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
@@ -90,6 +106,9 @@ void contact_listener::BeginContact(b2Contact* contact)
 
 void contact_listener::EndContact(b2Contact* contact)
 {
+    b2WorldManifold manifold;
+    contact->GetWorldManifold(&manifold);
+
     const collision_user_data * user_data_a = static_cast<collision_user_data*>(
         contact->GetFixtureA()->GetBody()->GetUserData()
     );
@@ -108,6 +127,14 @@ void contact_listener::EndContact(b2Contact* contact)
         ball * a = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
         );
+
+        /*
+        if(cdata.has(collision_user_data_type::chain)) {
+            end_ball(a,
+                static_cast<chain*>(cdata.get_ptr(collision_user_data_type::chain)),
+                manifold
+            );
+        }*/
 
         if(cdata.has(collision_user_data_type::toggle)) {
             end_ball(a, static_cast<toggle*>(cdata.get_ptr(collision_user_data_type::toggle)));
@@ -144,9 +171,16 @@ void contact_listener::EndContact(b2Contact* contact)
     }
 }
 
-void contact_listener::begin_ball(ball* a, ball* b)
+void contact_listener::begin_ball(ball* a, ball* b, b2WorldManifold manifold)
 {
     if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin ball");
+
+    const b2Vec2 bpos(a->body->GetPosition());
+    const b2Vec2 cpos(manifold.points[0]);
+
+    if(cpos.y > bpos.y) {
+        a->jumps_since_land_counter=0;
+    }
 
     if(! same_color(a->type, b->type)) {
         bool disable_flag_check_a = a->grab_invincibility_counter > 0;
@@ -196,6 +230,18 @@ void contact_listener::begin_ball(ball* a, ball* b)
         }
     }
 }
+
+void contact_listener::begin_ball(ball* a, chain* b, b2WorldManifold manifold)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin ball/chain");
+    const b2Vec2 bpos(a->body->GetPosition());
+    const b2Vec2 cpos(manifold.points[0]);
+
+    if(cpos.y > bpos.y) {
+        a->jumps_since_land_counter=0;
+    }
+}
+
 void contact_listener::begin_ball(ball* a, spike* b)
 {
     if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin spike");
@@ -215,10 +261,16 @@ void contact_listener::begin_ball(ball* a, gate* b)
     }
 }
 
-void contact_listener::begin_ball(ball* a, bomb* b)
+void contact_listener::begin_ball(ball* a, bomb* b, b2WorldManifold manifold)
 {
-
     if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: begin bomb");
+
+    const b2Vec2 bpos(a->body->GetPosition());
+    const b2Vec2 cpos(manifold.points[0]);
+
+    if(cpos.y > bpos.y) {
+        a->jumps_since_land_counter=0;
+    }
 
     if(b) {
         b->explode();
@@ -260,6 +312,16 @@ void contact_listener::begin_ball(ball* a, portal* b)
 
     if(b) b->step_on(a);
 }
+
+/*
+void contact_listener::end_ball(ball* a, chain* b, b2WorldManifold manifold)
+{
+    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: end ball/chain");
+
+    const b2Vec2 bpos(a->body->GetPosition());
+    const b2Vec2 cpos(manifold.points[0]);
+}
+*/
 
 void contact_listener::end_ball(ball* a, toggle* b)
 {

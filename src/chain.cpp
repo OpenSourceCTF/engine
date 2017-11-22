@@ -5,11 +5,13 @@
 chain::chain()
 : vertices()
 , body(nullptr)
+, col_data(nullptr)
 {}
 
 chain::chain(const std::vector<coord> & vertices)
 : vertices(vertices)
 , body(nullptr)
+, col_data(nullptr)
 {}
 
 chain::~chain()
@@ -46,6 +48,9 @@ void chain::add_to_world(b2World * world)
     fdef.shape = &ch;
     fdef.density = 1;
     body->CreateFixture(&fdef);
+
+    col_data = std::shared_ptr<collision_user_data>(new collision_user_data(collision_user_data_type::chain, this));
+    body->SetUserData(static_cast<void*>(col_data.get()));
 }
 
 void to_json(nlohmann::json& j, const chain& p)
