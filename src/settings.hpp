@@ -15,6 +15,7 @@ struct settings
     float BALL_MOVEMENT_SPEED;
     float BALL_JUKEJUICE_SPEED;
     float BALL_SPEED_TILE_SPEED;
+    float BALL_MAX_MOVEMENT_SPEED;
     float BALL_DAMPING;
     float BALL_ANGULAR_DAMPING;
     float BALL_DENSITY;

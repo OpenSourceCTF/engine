@@ -78,17 +78,31 @@ void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();
 
+    // check max speed
+    const b2Vec2 v = body->GetLinearVelocity();
+    const int X = ((v.x >  config.BALL_MAX_MOVEMENT_SPEED && x>0)
+                || (v.x < -config.BALL_MAX_MOVEMENT_SPEED && x<0)) ? 0 : x;
+
+    const int Y = ((v.y >  config.BALL_MAX_MOVEMENT_SPEED && y>0)
+                || (v.y < -config.BALL_MAX_MOVEMENT_SPEED && y<0)) ? 0 : y;
+
+    if(X == 0 && Y == 0) {
+        return;
+    }
+
+    const float a = angle_from_input(X, Y);
+
+    // alter speed modifiers
     const bool has_jukejuice = has_powerup(powerup_type::jukejuice);
     const bool has_speed_tile = on_tile_speed_counter > 0 && flags.empty();
 
-    float f = config.BALL_MOVEMENT_SPEED;
-    if(has_jukejuice)  f = std::max(f, config.BALL_JUKEJUICE_SPEED);
-    if(has_speed_tile) f = std::max(f, config.BALL_SPEED_TILE_SPEED);
+    float s = config.BALL_MOVEMENT_SPEED;
+    if(has_jukejuice)  s = std::max(s, config.BALL_JUKEJUICE_SPEED);
+    if(has_speed_tile) s = std::max(s, config.BALL_SPEED_TILE_SPEED);
 
-    const float a = angle_from_input(x, y);
 
     body->ApplyForce(
-        b2Vec2(std::cos(a) * f, std::sin(a) * f),
+        b2Vec2(std::cos(a) * s, std::sin(a) * s),
         body->GetWorldCenter(),
         true
     );
