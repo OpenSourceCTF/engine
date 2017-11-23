@@ -148,17 +148,20 @@ void ball::get_boosted()
 {
     const settings& config = settings::get_instance();
 
-    const b2Vec2 v = body->GetLinearVelocity();
-    const float a = std::atan2(v.y, v.x);
+    b2Vec2 dir = body->GetLinearVelocity();
+    const float speed = dir.Normalize();
 
-    body->ApplyLinearImpulse(
-        b2Vec2(
-            std::cos(a) * config.BOOSTER_FORCE,
-            std::sin(a) * config.BOOSTER_FORCE
-        ),
-        body->GetWorldCenter(),
-        true
-    );
+    if(speed <= config.BOOSTER_MAX_V_TO_FIRE) {
+        body->ApplyLinearImpulse(
+            b2Vec2(
+                dir.x * config.BOOSTER_FORCE,
+                dir.y * config.BOOSTER_FORCE
+            ),
+            body->GetWorldCenter(),
+            true
+        );
+    }
+
     player_ptr->stats.boosters_hit++;
 }
 

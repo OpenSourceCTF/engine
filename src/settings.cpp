@@ -43,6 +43,7 @@ settings& settings::get_instance()
         instance.BOOSTER_RADIUS       = reader.GetReal("booster", "radius", 0);
         instance.BOOSTER_RESPAWN_TIME = reader.GetInteger("booster", "respawn_time", 0);
         instance.BOOSTER_FORCE        = reader.GetReal("booster", "force", 0);
+        instance.BOOSTER_MAX_V_TO_FIRE= reader.GetReal("booster", "max_v_to_fire", 0);
 
         instance.POWERUP_RADIUS       = reader.GetReal("powerup", "radius", 0);
         instance.POWERUP_RESPAWN_TIME = reader.GetInteger("powerup", "respawn_time", 0);

@@ -42,6 +42,7 @@ struct settings
     float BOOSTER_RADIUS;
     int   BOOSTER_RESPAWN_TIME;
     float BOOSTER_FORCE;
+    float BOOSTER_MAX_V_TO_FIRE;
 
     float POWERUP_RADIUS;
     int   POWERUP_RESPAWN_TIME;
