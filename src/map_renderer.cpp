@@ -179,6 +179,7 @@ int map_renderer::render() const
         << std::endl;
     return 0;
 #else
+    std::lock_guard<std::mutex> lock(static_cast<game*>(m.game)->game_loop_mutex);
     window->clear(sf::Color::Black);
     window->setView(view);
 

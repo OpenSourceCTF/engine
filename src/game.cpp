@@ -79,11 +79,14 @@ void game::run()
             std::chrono::high_resolution_clock::now()
         };
 
-        handle_server_events();
-        if(! finished) {
-            this->step();
-            if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
-                add_server_event(server_event(server_event_ballsync(this)));
+        {
+            std::lock_guard<std::mutex> lock(game_loop_mutex);
+            handle_server_events();
+            if(! finished) {
+                this->step();
+                if(timestep % config.SERVER_BALLSYNC_EVERY == 0) {
+                    add_server_event(server_event(server_event_ballsync(this)));
+                }
             }
         }
 
