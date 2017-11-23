@@ -2,34 +2,39 @@
 #include "websocket_lobby_server.hpp"
 #include <json/json.hpp>
 
-int start_lobby_server(
+websocket_lobby_server::websocket_lobby_server(
     lobby_server& lobby,
     const std::uint16_t port
-) {
+)
+: lobby(lobby)
+, port(port)
+{}
+
+int websocket_lobby_server::start_server()
+{
     spdlog::get("game")->info("starting tagos lobby server on port: {0:d}", port);
-    websocketpp_server srv;
 
     try {
-        srv.set_reuse_addr(true);
+        endpoint.set_reuse_addr(true);
 
-        srv.clear_access_channels(websocketpp::log::alevel::all);
-        srv.set_access_channels(websocketpp::log::elevel::info);
+        endpoint.clear_access_channels(websocketpp::log::alevel::all);
+        endpoint.set_access_channels(websocketpp::log::elevel::info);
 
-        srv.set_open_handler(bind(&handle_lobby_open, &srv, ::_1));
-        srv.set_close_handler(bind(&handle_lobby_close, &srv, ::_1));
-        srv.set_fail_handler(bind(&handle_lobby_fail, &srv, ::_1));
-        srv.set_ping_handler(bind(&handle_lobby_ping, &srv, ::_1, ::_2));
-        srv.set_pong_handler(bind(&handle_lobby_pong, &srv, ::_1, ::_2));
-        srv.set_pong_timeout_handler(bind(&handle_lobby_pong_timeout, &srv, ::_1, ::_2));
-        srv.set_interrupt_handler(bind(&handle_lobby_interrupt, &srv, ::_1));
-        srv.set_validate_handler(bind(&handle_lobby_validate, &srv, ::_1));
-        srv.set_message_handler(bind(&handle_lobby_message, &srv, ::_1, ::_2));
-        srv.set_http_handler(bind(&handle_lobby_http, &srv, ::_1));
+        endpoint.set_open_handler(bind(&websocket_lobby_server::handle_open, this, ::_1));
+        endpoint.set_close_handler(bind(&websocket_lobby_server::handle_close, this, ::_1));
+        endpoint.set_fail_handler(bind(&websocket_lobby_server::handle_fail, this, ::_1));
+        endpoint.set_ping_handler(bind(&websocket_lobby_server::handle_ping, this, ::_1, ::_2));
+        endpoint.set_pong_handler(bind(&websocket_lobby_server::handle_pong, this, ::_1, ::_2));
+        endpoint.set_pong_timeout_handler(bind(&websocket_lobby_server::handle_pong_timeout, this, ::_1, ::_2));
+        endpoint.set_interrupt_handler(bind(&websocket_lobby_server::handle_interrupt, this, ::_1));
+        endpoint.set_validate_handler(bind(&websocket_lobby_server::handle_validate, this, ::_1));
+        endpoint.set_message_handler(bind(&websocket_lobby_server::handle_message, this, ::_1, ::_2));
+        endpoint.set_http_handler(bind(&websocket_lobby_server::handle_http, this, ::_1));
 
-        srv.init_asio();
-        srv.listen(port);
-        srv.start_accept();
-        srv.run();
+        endpoint.init_asio();
+        endpoint.listen(port);
+        endpoint.start_accept();
+        endpoint.run();
     } catch (websocketpp::exception const & e) {
         spdlog::get("game")->error("server exception {}", e.what());
         lobby.is_alive = false;
@@ -45,50 +50,42 @@ int start_lobby_server(
     return 0;
 }
 
-void handle_lobby_open(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_open(
     websocketpp::connection_hdl hdl
 ) {}
 
-void handle_lobby_close(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_close(
     websocketpp::connection_hdl hdl
 ) {}
 
-void handle_lobby_fail(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_fail(
     websocketpp::connection_hdl hdl
 ) {}
 
-bool handle_lobby_ping(
-    websocketpp_server* srv,
+bool websocket_lobby_server::handle_ping(
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
     return true;
 }
 
-bool handle_lobby_pong(
-    websocketpp_server* srv,
+bool websocket_lobby_server::handle_pong(
     websocketpp::connection_hdl hdl,
     std::string str
 ) {
     return true;
 }
 
-void handle_lobby_pong_timeout(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_pong_timeout(
     websocketpp::connection_hdl hdl,
     std::string str
 ) {}
 
-void handle_lobby_interrupt(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_interrupt(
     websocketpp::connection_hdl hdl
 ) {}
 
-bool handle_lobby_validate(
-    websocketpp_server* srv,
+bool websocket_lobby_server::handle_validate(
     websocketpp::connection_hdl hdl
 ) {
     // todo
@@ -97,8 +94,7 @@ bool handle_lobby_validate(
     return true;
 }
 
-void handle_lobby_message(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_message(
     websocketpp::connection_hdl hdl,
     websocketpp_server::message_ptr msg
 ) {
@@ -107,21 +103,20 @@ void handle_lobby_message(
         // std::cout << j.dump() << std::endl;
 
         if(j.at("request").get<std::string>() == "games") {
-            return on_lobby_request_games(srv, hdl, msg);
+            return on_request_games(hdl, msg);
         }
 
     } catch(...) {
-        try_send(srv, hdl, websocketpp::frame::opcode::TEXT, {
+        try_send(&endpoint, hdl, websocketpp::frame::opcode::TEXT, {
             {"error", "json_parse_error"}
         });
     }
 }
 
-void handle_lobby_http(
-    websocketpp_server* srv,
+void websocket_lobby_server::handle_http(
     websocketpp::connection_hdl hdl
 ) {
-    auto con = srv->get_con_from_hdl(hdl);
+    auto con = endpoint.get_con_from_hdl(hdl);
 
     const lobby_server& lobby = lobby_server::get_instance();
 
@@ -131,14 +126,13 @@ void handle_lobby_http(
 	con->set_body(j.dump());
 }
 
-void on_lobby_request_games(
-    websocketpp_server* srv,
+void websocket_lobby_server::on_request_games(
     websocketpp::connection_hdl hdl,
     websocketpp_server::message_ptr msg
 ) {
     const lobby_server& lobby = lobby_server::get_instance();
 
-    try_send(srv, hdl, websocketpp::frame::opcode::TEXT,
+    try_send(&endpoint, hdl, websocketpp::frame::opcode::TEXT,
         lobby_event(lobby_event_games(lobby.get_games()))
     );
 }

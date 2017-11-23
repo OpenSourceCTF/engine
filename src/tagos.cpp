@@ -147,7 +147,7 @@ int serve()
                 close_renderer_window = true;
                 continue;
             } else {
-                break;
+                lobby.is_alive = false;
             }
         }
 

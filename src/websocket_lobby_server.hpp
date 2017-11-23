@@ -13,67 +13,65 @@ typedef websocketpp::server<websocketpp::config::asio> websocketpp_server;
 
 struct lobby_server;
 
-int start_lobby_server(lobby_server& lobby, const std::uint16_t port);
+struct websocket_lobby_server
+{
+    websocketpp_server endpoint;
+    lobby_server& lobby;
+    const std::uint16_t port;
 
-void handle_lobby_open(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
+    websocket_lobby_server(lobby_server& lobby, const std::uint16_t port);
 
-void handle_lobby_close(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
+    int start_server();
 
-void handle_lobby_fail(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
+    void handle_open(
+        websocketpp::connection_hdl hdl
+    );
 
-bool handle_lobby_ping(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl,
-    std::string str
-);
+    void handle_close(
+        websocketpp::connection_hdl hdl
+    );
 
-bool handle_lobby_pong(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl,
-    std::string str
-);
+    void handle_fail(
+        websocketpp::connection_hdl hdl
+    );
 
-void handle_lobby_pong_timeout(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl,
-    std::string str
-);
+    bool handle_ping(
+        websocketpp::connection_hdl hdl,
+        std::string str
+    );
 
-void handle_lobby_interrupt(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
+    bool handle_pong(
+        websocketpp::connection_hdl hdl,
+        std::string str
+    );
 
-bool handle_lobby_validate(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
+    void handle_pong_timeout(
+        websocketpp::connection_hdl hdl,
+        std::string str
+    );
 
-void handle_lobby_message(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl,
-    websocketpp_server::message_ptr msg
-);
-        
-void handle_lobby_http(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl
-);
-        
-void on_lobby_request_games(
-    websocketpp_server* srv,
-    websocketpp::connection_hdl hdl,
-    websocketpp_server::message_ptr msg
-);
+    void handle_interrupt(
+        websocketpp::connection_hdl hdl
+    );
+
+    bool handle_validate(
+        websocketpp::connection_hdl hdl
+    );
+
+    void handle_message(
+        websocketpp::connection_hdl hdl,
+        websocketpp_server::message_ptr msg
+    );
+            
+    void handle_http(
+        websocketpp::connection_hdl hdl
+    );
+            
+    void on_request_games(
+        websocketpp::connection_hdl hdl,
+        websocketpp_server::message_ptr msg
+    );
+};
 
 #endif
 

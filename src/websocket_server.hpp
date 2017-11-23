@@ -15,11 +15,6 @@ using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
-std::uint16_t get_local_port(
-    websocketpp::server<websocketpp::config::asio>* srv,
-    websocketpp::connection_hdl hdl
-);
-
 bool try_send(
     websocketpp::server<websocketpp::config::asio>* srv,
     websocketpp::connection_hdl hdl,

@@ -7,9 +7,38 @@ game::game(const std::uint16_t port)
 , red_points(0)
 , blue_points(0)
 , world(nullptr)
+, srv(nullptr)
 , timestep(0)
 , finished(false)
+, shutting_down(false)
 {}
+
+game::~game()
+{
+    shutting_down = true;
+
+    if(srv) {
+        for(auto && o : players) {
+            spdlog::get("game")->info("pause read");
+            srv->endpoint.pause_reading(o->con);
+            spdlog::get("game")->info("close con");
+            srv->endpoint.close(o->con, websocketpp::close::status::going_away, "");
+        }
+
+        spdlog::get("game")->info("stop listen");
+        srv->endpoint.stop_listening();
+    }
+
+    spdlog::get("game")->info("delete world");
+    if(world) {
+        delete world;
+    }
+
+    spdlog::get("game")->info("delete map");
+    if(m) {
+        delete m;
+    }
+}
 
 bool game::spawn_srv_thread()
 {
@@ -19,8 +48,8 @@ bool game::spawn_srv_thread()
     }
 
     srv_thread = std::thread(
-        start_game_server,
-        port
+        &game::run_server,
+        std::ref(*this)
     );
     srv_thread.detach();
     return true;
@@ -45,7 +74,7 @@ void game::run()
     const settings& config = settings::get_instance();
 
     // consider std::sleep_until here
-    while(true) {
+    while(! shutting_down) {
         const std::chrono::high_resolution_clock::time_point t_begin {
             std::chrono::high_resolution_clock::now()
         };
@@ -82,6 +111,15 @@ void game::run()
             std::this_thread::sleep_for(t_sleep);
         }
     }
+
+    spdlog::get("game")->info("shutting down game...");
+}
+
+
+void game::run_server()
+{
+    srv = new websocket_game_server(port);
+    srv->start_server();
 }
 
 void game::handle_server_events()

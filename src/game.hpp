@@ -16,6 +16,7 @@
 
 struct player;
 struct map;
+struct websocket_game_server;
 
 struct game
 {
@@ -27,19 +28,23 @@ struct game
     std::uint32_t red_points;
     std::uint32_t blue_points;
     b2World * world;
+    websocket_game_server* srv;
     std::size_t timestep;
     bool finished;
+    bool shutting_down;
     std::vector<std::unique_ptr<player>> players;
     std::recursive_mutex server_events_queue_mutex;
     std::queue<server_event> server_events_queue;
 
     game(const std::uint16_t port);
     game(const game&) = delete;
+    ~game();
 
     bool load_map(const std::string map_src);
     bool spawn_srv_thread();
     bool spawn_phys_thread();
     void run();
+    void run_server();
     void step();
     void handle_server_events();
 
