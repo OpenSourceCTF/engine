@@ -82,24 +82,22 @@ T inv_corresponding_color(const U a)
 
 // pass a smart_ptr as parameter
 // like vec_to_smart_ptr_vec<std::unique_ptr<wall>>
-template <typename Container>
+template <
+    typename Container,
+    typename T = typename Container::element_type
+>
 std::vector<Container> vec_to_smart_ptr_vec(
-    const std::vector<typename Container::element_type> & v
+    const std::vector<T> & v
 ) {
     std::vector<Container> ret;
     ret.reserve(v.size());
 
     for(auto && o : v) {
-        ret.emplace_back(new typename Container::element_type(o));
+        ret.emplace_back(new T(o));
     }
 
     return ret;
 }
-
-std::vector<std::unique_ptr<chain>> poly2chain(
-    const std::vector<polygon> & poly_set
-);
-
 
 // use this to check/grab a pointer is inside a vector of smart pointers
 template <
@@ -116,6 +114,10 @@ PtrType safe_ptr_from_smart_ptr_vec(const Container& cont, const PtrType cmp)
 
     return nullptr;
 }
+
+std::vector<std::unique_ptr<chain>> poly2chain(
+    const std::vector<polygon> & poly_set
+);
 
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html
