@@ -16,9 +16,12 @@ bool try_send(
     } catch (const websocketpp::lib::error_code& e) {
         spdlog::get("game")->critical(e.message());
         return false;
+    } catch (...) {
+        spdlog::get("game")->critical("unknown exception in try_send");
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool try_broadcast(
