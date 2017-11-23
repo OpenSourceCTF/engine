@@ -24,6 +24,8 @@ vote player event
           add something to db
 
 fix segfault on serve exit
+fix players not always leaving when they disconnect
+    or at least their balls dont leave :/
 
 store player stats
     ideally we can support more than tagpro did
