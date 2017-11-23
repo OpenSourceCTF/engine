@@ -191,6 +191,7 @@ void game::handle_server_events()
         case server_event_type::player_left: {
             auto m = std::static_pointer_cast<server_event_player_left>(a.ptr);
             if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
+            m->p->remove = true;
             try_broadcast(this, game_event(game_event_player_left(m->p)));
         } break;
 
@@ -455,7 +456,9 @@ bool game::load_map(const std::string map_src)
 
     // todo: does this need to be thread_local
     thread_local static contact_listener contact_listener_instance;
+    thread_local static contact_filter contact_filter_instance;
     world->SetContactListener(&contact_listener_instance);
+    world->SetContactFilter(&contact_filter_instance);
 
     for(auto && o : m->spikes) {
         o->add_to_world(world);

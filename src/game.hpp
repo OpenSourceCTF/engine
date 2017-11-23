@@ -13,6 +13,8 @@
 #include "player.hpp"
 #include "websocket_game_server.hpp"
 #include "ball_type.hpp"
+#include "contact_listener.hpp"
+#include "contact_filter.hpp"
 
 struct player;
 struct map;
