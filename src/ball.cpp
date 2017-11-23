@@ -258,9 +258,11 @@ void ball::score()
 
 void ball::take_flags(ball* o, const flag_type type)
 {
+    flag* tflag = nullptr;
     for(auto && f : o->flags) {
         if(f.f->type == type) {
             add_flag(f.f);
+            tflag = f.f;
         }
     }
 
@@ -276,4 +278,8 @@ void ball::take_flags(ball* o, const flag_type type)
         ),
         o->flags.end()
     );
+
+    if(tflag) {
+        player_ptr->g->add_server_event(server_event(server_event_flag_transferred(o, this, tflag)));
+    }
 }

@@ -24,6 +24,7 @@
 #include "server_event_ball_powerup.hpp"
 #include "server_event_ball_rb_explode.hpp"
 #include "server_event_flag_grabbed.hpp"
+#include "server_event_flag_transferred.hpp"
 #include "server_event_toggle_on.hpp"
 #include "server_event_toggle_off.hpp"
 #include "server_event_game_finished.hpp"
@@ -51,6 +52,7 @@ struct server_event_ball_portal;
 struct server_event_ball_powerup;
 struct server_event_ball_rb_explode;
 struct server_event_flag_grabbed;
+struct server_event_flag_transferred;
 struct server_event_toggle_on;
 struct server_event_toggle_off;
 struct server_event_game_finished;
@@ -83,6 +85,7 @@ struct server_event
     server_event(server_event_ball_powerup e);
     server_event(server_event_ball_rb_explode e);
     server_event(server_event_flag_grabbed e);
+    server_event(server_event_flag_transferred e);
     server_event(server_event_toggle_on e);
     server_event(server_event_toggle_off e);
     server_event(server_event_game_finished e);

@@ -28,7 +28,7 @@ enum class game_event_type
     bomb_respawn,
     bomb_explosion,
     flag_grabbed,
-    // flag_transferred, // neutral flag
+    flag_transferred,
     toggle_on,
     toggle_off,
     game_finished,

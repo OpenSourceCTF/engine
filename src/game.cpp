@@ -279,6 +279,15 @@ void game::handle_server_events()
             )));
         } break;
 
+        case server_event_type::flag_transferred: {
+            auto m = std::static_pointer_cast<server_event_flag_transferred>(a.ptr);
+            try_broadcast(this, game_event(game_event_flag_transferred(
+                m->m_ball_send->id,
+                m->m_ball_recv->id,
+                m->m_flag->id
+            )));
+        } break;
+
         case server_event_type::toggle_on: {
             auto m = std::static_pointer_cast<server_event_toggle_on>(a.ptr);
             try_broadcast(this, game_event(game_event_toggle_on(

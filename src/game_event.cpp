@@ -101,6 +101,11 @@ game_event::game_event(game_event_flag_grabbed e)
 , ptr(new game_event_flag_grabbed(e))
 {}
 
+game_event::game_event(game_event_flag_transferred e)
+: type(game_event_type::flag_transferred)
+, ptr(new game_event_flag_transferred(e))
+{}
+
 game_event::game_event(game_event_toggle_on e)
 : type(game_event_type::toggle_on)
 , ptr(new game_event_toggle_on(e))
@@ -190,6 +195,9 @@ void to_json(nlohmann::json& j, const game_event& p)
             break;
         case game_event_type::flag_grabbed:
             to_json(data, *std::static_pointer_cast<game_event_flag_grabbed>(p.ptr));
+            break;
+        case game_event_type::flag_transferred:
+            to_json(data, *std::static_pointer_cast<game_event_flag_transferred>(p.ptr));
             break;
         case game_event_type::toggle_on:
             to_json(data, *std::static_pointer_cast<game_event_toggle_on>(p.ptr));

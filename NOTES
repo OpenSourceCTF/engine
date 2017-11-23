@@ -38,9 +38,6 @@ store player stats
 
 request player stats event
 
-neutral flag mode:
-    add flag_transferred event
-
 ---
 
 run these to look for bugs

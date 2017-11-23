@@ -27,12 +27,12 @@ enum class server_event_type
     bomb_respawn,
     bomb_explosion,
     flag_grabbed,
+    flag_transferred,
     toggle_on,
     toggle_off,
     game_finished,
     game_stats,
     vote_player,
-    // flag_transferred // neutral flag
 };
 
 std::string to_string(const server_event_type m);
