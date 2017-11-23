@@ -107,9 +107,18 @@ struct map_renderer
             polys[(i*3)+1].color = poly.c2;
             polys[(i*3)+2].color = poly.c3;
 
-            polys[(i*3)+0].texCoords = sf::Vector2f(poly.v1.x * 40., poly.v1.y * 40.);
-            polys[(i*3)+1].texCoords = sf::Vector2f(poly.v2.x * 40., poly.v2.y * 40.);
-            polys[(i*3)+2].texCoords = sf::Vector2f(poly.v3.x * 40., poly.v3.y * 40.);
+            polys[(i*3)+0].texCoords = sf::Vector2f(
+                (poly.v1.x * poly.uv1.x) * 40.,
+                (poly.v1.y * poly.uv1.y) * 40.
+            );
+            polys[(i*3)+1].texCoords = sf::Vector2f(
+                (poly.v2.x * poly.uv2.x) * 40.,
+                (poly.v2.y * poly.uv2.y) * 40.
+            );
+            polys[(i*3)+2].texCoords = sf::Vector2f(
+                (poly.v3.x * poly.uv3.x) * 40.,
+                (poly.v3.y * poly.uv3.y) * 40.
+            );
         }
 
         return polys;

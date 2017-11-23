@@ -25,9 +25,9 @@ polygon::polygon(
 , c1(c)
 , c2(c)
 , c3(c)
-, uv1(b2Vec2(0, 0))
-, uv2(b2Vec2(0, 0))
-, uv3(b2Vec2(0, 0))
+, uv1(b2Vec2(1, 1))
+, uv2(b2Vec2(1, 1))
+, uv3(b2Vec2(1, 1))
 {
     make_clockwise();
 }
@@ -46,9 +46,9 @@ polygon::polygon(
 , c1(c1)
 , c2(c2)
 , c3(c3)
-, uv1(b2Vec2(0, 0))
-, uv2(b2Vec2(0, 0))
-, uv3(b2Vec2(0, 0))
+, uv1(b2Vec2(1, 1))
+, uv2(b2Vec2(1, 1))
+, uv3(b2Vec2(1, 1))
 {
     make_clockwise();
 }
