@@ -145,7 +145,7 @@ void game::handle_server_events()
         switch(a.type) {
         case server_event_type::gamesync: {
             auto m = std::static_pointer_cast<server_event_gamesync>(a.ptr);
-
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             try_send(m->p->srv, m->p->con, websocketpp::frame::opcode::value::text, 
                 game_event(game_event_gamesync(this))
             );
@@ -173,7 +173,7 @@ void game::handle_server_events()
 
             player* p = add_player(m->p);
             p->b = add_ball(new ball(selected_team_color));
-            p->b->set_player_ptr(m->p);
+            p->b->set_player_ptr(p);
 
             p->b->add_to_world(world);
             respawn_ball(p->b);
@@ -181,32 +181,38 @@ void game::handle_server_events()
             // we send all map data here to sync user
             server_events_queue.emplace(server_event(server_event_gamesync(p)));
 
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break; // in case player leaves quickly
             try_broadcast(this, game_event(game_event_player_joined(p)));
         } break;
 
         case server_event_type::player_left: {
             auto m = std::static_pointer_cast<server_event_player_left>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             try_broadcast(this, game_event(game_event_player_left(m->p)));
         } break;
 
         case server_event_type::chat: {
             auto m = std::static_pointer_cast<server_event_chat>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             try_broadcast(this, game_event(game_event_chat(m->p, m->msg)));
         } break;
 
         case server_event_type::teamchat: {
             auto m = std::static_pointer_cast<server_event_teamchat>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             try_broadcast_team(this, m->p->b->type, game_event(game_event_teamchat(m->p, m->msg)));
         } break;
 
         case server_event_type::movement: {
             auto m = std::static_pointer_cast<server_event_movement>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             m->p->xdir = m->xdir;
             m->p->ydir = m->ydir;
         } break;
 
         case server_event_type::honk: {
             auto m = std::static_pointer_cast<server_event_honk>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
             try_broadcast(this, game_event(game_event_honk(m->p)));
         } break;
 
@@ -217,6 +223,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_respawn: {
             auto m = std::static_pointer_cast<server_event_ball_respawn>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m)) break;
             try_broadcast(this, game_event(game_event_ball_respawn(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -265,6 +272,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_popped: {
             auto m = std::static_pointer_cast<server_event_ball_popped>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m)) break;
             try_broadcast(this, game_event(game_event_ball_popped(
                 m->m->id,
                 m->m->body->GetPosition()
@@ -273,6 +281,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_boosted: {
             auto m = std::static_pointer_cast<server_event_ball_boosted>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_ball_boosted(
                 m->m_ball->id,
                 m->m_booster->id
@@ -281,6 +290,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_score: {
             auto m = std::static_pointer_cast<server_event_ball_score>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m)) break;
             try_broadcast(this, game_event(game_event_ball_score(
                 m->m->id
             )));
@@ -288,6 +298,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_portal: {
             auto m = std::static_pointer_cast<server_event_ball_portal>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_ball_portal(
                 m->m_ball->id,
                 m->m_portal->id
@@ -296,6 +307,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_powerup: {
             auto m = std::static_pointer_cast<server_event_ball_powerup>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_ball_powerup(
                 m->m_ball->id,
                 m->m_powerup->id
@@ -304,6 +316,7 @@ void game::handle_server_events()
 
         case server_event_type::ball_rb_explode: {
             auto m = std::static_pointer_cast<server_event_ball_rb_explode>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m)) break;
             try_broadcast(this, game_event(game_event_ball_rb_explode(
                 m->m->id
             )));
@@ -311,6 +324,7 @@ void game::handle_server_events()
 
         case server_event_type::flag_grabbed: {
             auto m = std::static_pointer_cast<server_event_flag_grabbed>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_flag_grabbed(
                 m->m_ball->id,
                 m->m_flag->id
@@ -319,6 +333,8 @@ void game::handle_server_events()
 
         case server_event_type::flag_transferred: {
             auto m = std::static_pointer_cast<server_event_flag_transferred>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball_send)) break;
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball_recv)) break;
             try_broadcast(this, game_event(game_event_flag_transferred(
                 m->m_ball_send->id,
                 m->m_ball_recv->id,
@@ -328,6 +344,7 @@ void game::handle_server_events()
 
         case server_event_type::toggle_on: {
             auto m = std::static_pointer_cast<server_event_toggle_on>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_toggle_on(
                 m->m_ball->id,
                 m->m_toggle->id
@@ -336,6 +353,7 @@ void game::handle_server_events()
 
         case server_event_type::toggle_off: {
             auto m = std::static_pointer_cast<server_event_toggle_off>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(this->m->balls, m->m_ball)) break;
             try_broadcast(this, game_event(game_event_toggle_off(
                 m->m_ball->id,
                 m->m_toggle->id
@@ -357,6 +375,8 @@ void game::handle_server_events()
 
         case server_event_type::vote_player: {
             auto m = std::static_pointer_cast<server_event_vote_player>(a.ptr);
+            if(! safe_ptr_from_smart_ptr_vec(players, m->p)) break;
+            if(! safe_ptr_from_smart_ptr_vec(players, m->vp)) break;
             try_broadcast(this, game_event(game_event_vote_player(
                 m->p,
                 m->vp,

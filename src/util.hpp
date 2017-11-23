@@ -100,6 +100,23 @@ std::vector<std::unique_ptr<chain>> poly2chain(
     const std::vector<polygon> & poly_set
 );
 
+
+// use this to check/grab a pointer is inside a vector of smart pointers
+template <
+    typename Container,
+    typename PtrType = typename Container::value_type::pointer
+>
+PtrType safe_ptr_from_smart_ptr_vec(const Container& cont, const PtrType cmp)
+{
+    for(auto && o : cont) {
+        if(o.get() == cmp) {
+            return o.get();
+        }
+    }
+
+    return nullptr;
+}
+
 //color codes for each chain so we can inspect which is which
 //http://godsnotwheregodsnot.blogspot.com.es/2012/09/color-distribution-methodology.html
 constexpr std::array<std::array<int, 3>, 63> DISTINCT_COLORS = {{
