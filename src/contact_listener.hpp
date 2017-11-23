@@ -42,8 +42,6 @@ class contact_listener : public b2ContactListener
     void begin_ball(ball* a, flag* b);
     void begin_ball(ball* a, portal* b);
 
-    void end_ball(ball* a, ball* b);
-    // void end_ball(ball* a, chain* b, b2WorldManifold manifold);
     void end_ball(ball* a, toggle* b);
     void end_ball(ball* a, portal* b);
     void end_ball(ball* a, gate* b);

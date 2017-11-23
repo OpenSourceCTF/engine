@@ -27,13 +27,14 @@ void contact_listener::BeginContact(b2Contact* contact)
 
         ball * a = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
-        );
+        ); if(! a->is_alive) return;
 
         if(cdata.has_both(collision_user_data_type::ball)) {
-            begin_ball(a,
-                static_cast<ball*>(cdata.get_ptr_alt(collision_user_data_type::ball)),
-                manifold
-            );
+            ball * b = static_cast<ball*>(
+                cdata.get_ptr_alt(collision_user_data_type::ball)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b, manifold);
         }
 
         if(cdata.has(collision_user_data_type::chain)) {
@@ -52,10 +53,11 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::bomb)) {
-            begin_ball(
-                a, static_cast<bomb*>(cdata.get_ptr(collision_user_data_type::bomb)),
-                manifold
-            );
+            bomb * b = static_cast<bomb*>(
+                cdata.get_ptr(collision_user_data_type::bomb)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b, manifold);
         }
 
         if(cdata.has(collision_user_data_type::toggle)) {
@@ -63,19 +65,35 @@ void contact_listener::BeginContact(b2Contact* contact)
         }
 
         if(cdata.has(collision_user_data_type::booster)) {
-            begin_ball(a, static_cast<booster*>(cdata.get_ptr(collision_user_data_type::booster)));
+            booster * b = static_cast<booster*>(
+                cdata.get_ptr(collision_user_data_type::booster)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b);
         }
 
         if(cdata.has(collision_user_data_type::powerup)) {
-            begin_ball(a, static_cast<powerup*>(cdata.get_ptr(collision_user_data_type::powerup)));
+            powerup * b = static_cast<powerup*>(
+                cdata.get_ptr(collision_user_data_type::powerup)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b);
         }
 
         if(cdata.has(collision_user_data_type::flag)) {
-            begin_ball(a, static_cast<flag*>(cdata.get_ptr(collision_user_data_type::flag)));
+            flag * b = static_cast<flag*>(
+                cdata.get_ptr(collision_user_data_type::flag)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b);
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            begin_ball(a, static_cast<portal*>(cdata.get_ptr(collision_user_data_type::portal)));
+            portal * b = static_cast<portal*>(
+                cdata.get_ptr(collision_user_data_type::portal)
+            ); if(! b->is_alive) return;
+
+            begin_ball(a, b);
         }
 
         // check tiles
@@ -126,22 +144,18 @@ void contact_listener::EndContact(b2Contact* contact)
 
         ball * a = static_cast<ball*>(
             cdata.get_ptr(collision_user_data_type::ball)
-        );
-
-        /*
-        if(cdata.has(collision_user_data_type::chain)) {
-            end_ball(a,
-                static_cast<chain*>(cdata.get_ptr(collision_user_data_type::chain)),
-                manifold
-            );
-        }*/
+        ); if(! a->is_alive) return;
 
         if(cdata.has(collision_user_data_type::toggle)) {
             end_ball(a, static_cast<toggle*>(cdata.get_ptr(collision_user_data_type::toggle)));
         }
 
         if(cdata.has(collision_user_data_type::portal)) {
-            end_ball(a, static_cast<portal*>(cdata.get_ptr(collision_user_data_type::portal)));
+            portal * b = static_cast<portal*>(
+                cdata.get_ptr(collision_user_data_type::portal)
+            ); if(! b->is_alive) return;
+
+            end_ball(a, b);
         }
 
         if(cdata.has(collision_user_data_type::gate)) {
@@ -312,16 +326,6 @@ void contact_listener::begin_ball(ball* a, portal* b)
 
     if(b) b->step_on(a);
 }
-
-/*
-void contact_listener::end_ball(ball* a, chain* b, b2WorldManifold manifold)
-{
-    if(VERBOSE_CONTACT) spdlog::get("game")->debug("contact: end ball/chain");
-
-    const b2Vec2 bpos(a->body->GetPosition());
-    const b2Vec2 cpos(manifold.points[0]);
-}
-*/
 
 void contact_listener::end_ball(ball* a, toggle* b)
 {
