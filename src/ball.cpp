@@ -71,11 +71,6 @@ void ball::set_portal_transport(portal* p)
     player_ptr->stats.portals_hit++;
 }
 
-void ball::set_position(const b2Vec2 pos)
-{
-    body->SetTransform(pos, body->GetAngle());
-}
-
 void ball::move(const int x, const int y)
 {
     const settings& config = settings::get_instance();

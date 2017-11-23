@@ -51,7 +51,6 @@ struct ball
     void set_player_ptr(player* p);
     void set_portal_transport(portal* p);
     void add_to_world(b2World * world);
-    void set_position(const b2Vec2 pos);
     void move(const int x, const int y);
     void pop();
     void get_boosted();

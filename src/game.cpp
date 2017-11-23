@@ -585,7 +585,7 @@ void game::step()
 
         if(o->portal_transport_ptr) {
             const portal* p = o->portal_transport_ptr;
-            o->set_position(b2Vec2(p->x, p->y));
+            o->body->SetTransform(b2Vec2(p->x, p->y), o->body->GetAngle());
             o->portal_transport_ptr = nullptr;
         }
 
@@ -701,10 +701,12 @@ void game::respawn_ball(ball* b)
         std::uniform_int_distribution<int>(0, potential_spawns.size()-1)(rng.eng)
     ];
     const float a = std::uniform_real_distribution<>(0.0f, TWO_PI)(rng.eng);
-    b->set_position(b2Vec2(
+    b->body->SetTransform(b2Vec2(
         s.x + (std::cos(a) * s.radius),
-        s.y + (std::sin(a) + s.radius))
-    );
+        s.y + (std::sin(a) + s.radius)
+    ), 0.0);
+    b->body->SetLinearVelocity(b2Vec2(0, 0));
+    b->body->SetAngularVelocity(0);
 }
 
 ball* game::add_ball(ball* b)
