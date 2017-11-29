@@ -20,10 +20,10 @@ lobby_server& lobby_server::get_instance()
 
 lobby_server::~lobby_server()
 {
+    spdlog::get("game")->info("tagos lobby server shutting down");
     is_alive = false;
 
     if(srv) {
-        spdlog::get("game")->info("tagos lobby server shutting down");
         srv->endpoint.stop_listening();
     }
 }
