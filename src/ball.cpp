@@ -21,6 +21,7 @@ ball::~ball()
 {
     if(body) {
         body->GetWorld()->DestroyBody(body);
+        body = reinterpret_cast<b2Body*>(0xDEADBEEF); // debug helper
     }
 }
 

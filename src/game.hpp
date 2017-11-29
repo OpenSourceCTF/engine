@@ -36,6 +36,7 @@ struct game
     bool shutting_down;
     std::vector<std::unique_ptr<player>> players;
     std::mutex game_loop_mutex;
+    std::mutex players_mutex;
     std::recursive_mutex server_events_queue_mutex;
     std::queue<server_event> server_events_queue;
 

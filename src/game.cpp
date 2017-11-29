@@ -395,16 +395,19 @@ pop_server_event:
     }
 
     // remove all players marked for removal
-    players.erase(
-        std::remove_if(
-            players.begin(),
-            players.end(),
-            [](std::unique_ptr<player> & p) {
-                return p->remove;
-            }
-        ),
-        players.end()
-    );
+    {
+        std::lock_guard<std::mutex> lock(players_mutex);
+        players.erase(
+            std::remove_if(
+                players.begin(),
+                players.end(),
+                [](std::unique_ptr<player> & p) {
+                    return p->remove;
+                }
+            ),
+            players.end()
+        );
+    }
 }
 
 bool game::load_map(const std::string map_src)
@@ -720,6 +723,7 @@ ball* game::add_ball(ball* b)
 
 player* game::add_player(player* p)
 {
+    std::lock_guard<std::mutex> lock(players_mutex);
     players.emplace_back(p);
     return players.back().get();
 }
@@ -741,6 +745,8 @@ void game::score(ball* b)
 
 player* game::get_player_from_con(websocketpp::connection_hdl con)
 {
+    std::lock_guard<std::mutex> lock(players_mutex);
+
     for(auto && o : players) {
         if(o->con.lock() == con.lock()) {
             return o.get();
