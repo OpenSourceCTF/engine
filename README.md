@@ -62,7 +62,7 @@ In the tagos console after gamerooms are created:
 
 In the renderer, you can use arrow keys to move the viewport, or 'c' to lock the viewport.
 
-To render map format: `./tagos render <MAP_FILE>
+To render map format: `./tagos render <MAP_FILE>`
 
 ## Running tests
 
