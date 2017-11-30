@@ -31,6 +31,8 @@ To build debug mode: `make debug -j`
 
 To build release mode: `make release -j`
 
+To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
+
 ## Setup testing
 
 Install NVM. As of November 30 2017, the latest version is 0.33.6.
@@ -60,7 +62,7 @@ In the tagos console after gamerooms are created:
 
 In the renderer, you can use arrow keys to move the viewport, or 'c' to lock the viewport.
 
-To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
+To render map format: `./tagos render <MAP_FILE>
 
 ## Running tests
 
@@ -79,5 +81,3 @@ To clean everything including built libs: `make clean`
 ## Miscellaneous
 
 To convert map format: `./tagos export <IN_JSON> <IN_PNG> <OUT_JSON>`
-
-To render map format: `./tagos render <MAP_FILE>
