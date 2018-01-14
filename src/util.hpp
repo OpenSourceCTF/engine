@@ -14,7 +14,9 @@
 #include <cassert>
 #include <map>
 #include <unordered_set>
+#include <thread>
 #include <spdlog/spdlog.h>
+#include <pthread.h>
 #include "polygon.hpp"
 #include "chain.hpp"
 
@@ -22,6 +24,12 @@ struct chain;
 
 constexpr float PI     = 3.141592653589793;
 constexpr float TWO_PI = 6.283185307179586;
+
+#ifndef IGNORE_SET_THREAD_NAME
+#define SET_THREAD_NAME(X, NAME) pthread_setname_np(X.native_handle(), NAME)
+#else
+#define SET_THREAD_NAME(X, NAME) "X"
+#endif
 
 float angle_from_input(const int x, const int y);
 

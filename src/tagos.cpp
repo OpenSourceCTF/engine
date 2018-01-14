@@ -219,6 +219,7 @@ int serve()
                 renderer_thread = std::thread(
                     &display_renderer, std::ref(*(lobby.games[game_id].get()->m))
                 );
+                SET_THREAD_NAME(renderer_thread, "tagos render");
                 renderer_thread.detach();
             } else {
                 std::cout << "close existing render window first" << std::endl;

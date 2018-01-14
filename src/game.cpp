@@ -51,6 +51,7 @@ bool game::spawn_srv_thread()
         &game::run_server,
         std::ref(*this)
     );
+    SET_THREAD_NAME(srv_thread, "tagos game_s");
     srv_thread.detach();
     return true;
 }
@@ -65,6 +66,7 @@ bool game::spawn_phys_thread()
     phys_thread = std::thread(
         &game::run, std::ref(*this)
     );
+    SET_THREAD_NAME(phys_thread, "tagos game_p");
     phys_thread.detach();
     return true;
 }

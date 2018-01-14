@@ -35,6 +35,7 @@ void lobby_server::start_server()
         std::ref(*this)
     );
 
+    SET_THREAD_NAME(srv_thread, "tagos lobby");
     srv_thread.detach();
 }
 
