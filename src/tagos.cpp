@@ -62,7 +62,7 @@ int export_tp_map(
     }
 
     std::ofstream out_f(out_src);
-    out_f << nlohmann::json(m).dump(4);
+    out_f << nlohmann::json(m).dump();
     out_f.close();
     std::cout << "done!" << std::endl;
 
@@ -84,7 +84,7 @@ int export_pms_map(
     }
 
     std::ofstream out_f(out_src);
-    out_f << nlohmann::json(m).dump(4);
+    out_f << nlohmann::json(m).dump();
     out_f.close();
     std::cout << "done!" << std::endl;
 
