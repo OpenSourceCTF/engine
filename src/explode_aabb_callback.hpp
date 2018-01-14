@@ -1,4 +1,5 @@
 #include <Box2D/Box2D.h>
+#include <vector>
 
 struct ExplodeAABBCallback : public b2QueryCallback
 {
