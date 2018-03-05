@@ -120,10 +120,10 @@ void websocket_lobby_server::handle_http(
 
     const lobby_server& lobby = lobby_server::get_instance();
 
-	con->set_status(websocketpp::http::status_code::ok);
-	// con->set_header("Content-Type", "application/json"); // todo - we need to add this
-	nlohmann::json j = lobby_event(lobby_event_games(lobby.get_games()));
-	con->set_body(j.dump());
+    con->set_status(websocketpp::http::status_code::ok);
+    // con->set_header("Content-Type", "application/json"); // todo - we need to add this
+    nlohmann::json j = lobby_event(lobby_event_games(lobby.get_games()));
+    con->set_body(j.dump());
 }
 
 void websocket_lobby_server::on_request_games(

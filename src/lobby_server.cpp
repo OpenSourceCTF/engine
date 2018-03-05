@@ -84,5 +84,5 @@ std::vector<lobby_event_games_game> lobby_server::get_games() const
         );
     }
 
-	return games;
+    return games;
 }

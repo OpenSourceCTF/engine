@@ -175,8 +175,8 @@ void websocket_game_server::hangle_http(
 ) {
     auto con = endpoint.get_con_from_hdl(hdl);
 
-	con->set_status(websocketpp::http::status_code::ok);
-	con->set_body("Hello World!");
+    con->set_status(websocketpp::http::status_code::ok);
+    con->set_body("Hello World!");
 }
 
 void websocket_game_server::on_chat(

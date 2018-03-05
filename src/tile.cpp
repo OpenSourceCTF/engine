@@ -14,13 +14,13 @@ tile::tile(
 
 void tile::add_to_world(b2World * world)
 {
-	// we dont need world items for these things
-	switch(type) {
-		case tile_type::normal:
-		case tile_type::background:
-			return;
-		default: break;
-	}
+    // we dont need world items for these things
+    switch(type) {
+        case tile_type::normal:
+        case tile_type::background:
+            return;
+        default: break;
+    }
 
     const b2Vec2 center = poly.get_center();
 

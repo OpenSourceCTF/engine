@@ -18,8 +18,8 @@ int pms_map_importer::import(
 
     std::ifstream mapf(src, std::ios::binary);
     pms::pms map;
-	mapf >> map;
-	mapf.close();
+    mapf >> map;
+    mapf.close();
 
 
     m.type = map_type::normal;
@@ -29,7 +29,7 @@ int pms_map_importer::import(
     m.gravity = 0;
     m.jumping_enabled = false;
 
-	for(std::size_t i = 0; i<map.polygonCount; ++i) {
+    for(std::size_t i = 0; i<map.polygonCount; ++i) {
         const auto type = map.polygon[i].polyType;
         bool is_tile = false;
         switch(type) {
@@ -60,9 +60,9 @@ int pms_map_importer::import(
             const color c3(map.polygon[i].vertex[2].color.red, map.polygon[i].vertex[2].color.green, map.polygon[i].vertex[2].color.blue, map.polygon[i].vertex[2].color.alpha);
             m.walls.emplace_back(new wall(polygon(v1, v2, v3, c1, c2, c3)));
         }
-	}
+    }
 
-	for(std::size_t i = 0; i<map.spawnpointCount; ++i) {
+    for(std::size_t i = 0; i<map.spawnpointCount; ++i) {
         const float x = map.spawnpoint[i].x * scale_size;
         const float y = map.spawnpoint[i].y * scale_size;
 
