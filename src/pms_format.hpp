@@ -11,13 +11,13 @@ namespace pms {
 template<class T> T read_bin(std::istream& is)
 {
     T tmp;
-    is.read( reinterpret_cast<char*>( &tmp ), sizeof(T));
+    is.read(reinterpret_cast<char*>( &tmp ), sizeof(T));
     return tmp;
 }
 
-std::string read_string(std::istream& is, int full_length);
+std::string read_string(std::istream& is, const std::size_t full_length);
 
-typedef enum POLYTYPE
+enum POLYTYPE
 {
     ptNORMAL = 0,
     ptONLY_BULLETS_COLLIDE,
@@ -29,16 +29,16 @@ typedef enum POLYTYPE
     ptHURTS,
     ptREGENERATES,
     ptLAVA
-} PMS_POLYTYPE;
+};
 
-typedef enum DRAWBEHIND
+enum DRAWBEHIND
 {
     dbBEHIND_ALL = 0,
     dbBEHIND_MAP,
     dbBEHIND_NONE
-} PMS_DRAWBEHIND;
+};
 
-typedef enum SPECIALACTIONS
+enum SPECIALACTIONS
 {
     saNONE = 0,
     saSTOP_AND_CAMP,
@@ -47,24 +47,24 @@ typedef enum SPECIALACTIONS
     saWAIT_10_SECONDS,
     saWAIT_15_SECONDS,
     saWAIT_20_SECONDS
-} PMS_SPECIALACTIONS;
+};
 
-typedef enum WEATHERTYPE
+enum WEATHERTYPE
 {
     wtNONE = 0,
     wtRAIN,
     wtSANDSTORM,
     wtSNOW
-} PMS_WEATHERTYPE;
+};
 
-typedef enum STEPSTYPE
+enum STEPSTYPE
 {
     stHARD_GROUND = 0,
     stSOFT_GROUND,
     stNONE
-} PMS_STEPSTYPE;
+};
 
-typedef enum SPAWNTEAM
+enum SPAWNTEAM
 {
     stGENERAL = 0,
     stALPHA,
@@ -83,50 +83,49 @@ typedef enum SPAWNTEAM
     stYELLOW_FLAG,
     stRAMBO_BOW,
     stSTAT_GUN
-} PMS_SPAWNTEAM;
+};
 
-typedef struct tagPMS_VECTOR
+struct vec3
 {
     float x;
     float y;
     float z;
-} PMS_VECTOR;
+};
 
-typedef struct tagPMS_COLOR
+struct color
 {
     std::uint8_t blue;
     std::uint8_t green;
     std::uint8_t red;
     std::uint8_t alpha;
-} PMS_COLOR;
+};
 
 // more stuff
 
-typedef struct tagPMS_VERTEX
+struct vertex
 {
     float x;
     float y;
     float z;
     float rhw;
-    PMS_COLOR color;
+    color col;
     float tu;
     float tv;
-} PMS_VERTEX;
+};
 
-typedef struct tagPMS_POLYGON
+struct polygon
 {
-    PMS_VERTEX vertex[3];
-    PMS_VECTOR perpendicular[3];
-    PMS_POLYTYPE polyType;
-} PMS_POLYGON;
+    vertex vertex[3];
+    vec3 perpendicular[3];
+    POLYTYPE polyType;
+};
 
-typedef struct tagPMS_SECTOR
+struct sector
 {
-    std::uint16_t polyCount;
     std::vector<std::uint16_t> polys;
-} PMS_SECTOR;
+};
 
-typedef struct tagPMS_PROP
+struct prop
 {
     bool active;
     std::uint8_t filler1;
@@ -140,56 +139,56 @@ typedef struct tagPMS_PROP
     float scaleY;
     std::uint8_t alpha;
     std::uint8_t filler2[3];
-    PMS_COLOR color;
-    PMS_DRAWBEHIND level;
+    color col;
+    DRAWBEHIND level;
     std::uint8_t filler3[3];
-} PMS_PROP;
+};
 
-typedef struct tagDOSTIME
+struct dostime
 {
     std::uint16_t second : 5;
     std::uint16_t minute : 6;
     std::uint16_t hour : 5;
-} DOSTIME;
+};
 
-typedef struct tagDOSDATE
+struct dosdate
 {
     std::uint16_t day : 5;
     std::uint16_t month : 4;
     std::uint16_t year : 7;
-} DOSDATE;
+};
 
-typedef struct tagPMS_TIMESTAMP
+struct timestamp
 {
-    DOSTIME time;
-    DOSDATE date;
-} PMS_TIMESTAMP;
+    dostime time;
+    dosdate date;
+};
 
-typedef struct tagPMS_SCENERY
+struct scenery
 {
     std::string name;
-    PMS_TIMESTAMP timestamp;
-} PMS_SCENERY;
+    timestamp ts;
+};
 
-typedef struct tagPMS_COLLIDER
+struct collider
 {
     bool active;
     std::uint8_t filler[3];
     float x;
     float y;
     float radius;
-} PMS_COLLIDER;
+};
 
-typedef struct tagPMS_SPAWNPOINT
+struct spawnpoint
 {
     bool active;
     std::uint8_t filler[3];
     std::int32_t x;
     std::int32_t y;
-    PMS_SPAWNTEAM team;
-} PMS_SPAWNPOINT;
+    SPAWNTEAM team;
+};
 
-typedef struct tagPMS_WAYPOINT
+struct waypoint
 {
     bool active;
     std::uint8_t filler1[3];
@@ -202,13 +201,13 @@ typedef struct tagPMS_WAYPOINT
     bool down;
     bool jet;
     std::uint8_t path;
-    PMS_SPECIALACTIONS specialAction;
+    SPECIALACTIONS specialAction;
     std::uint8_t c2;
     std::uint8_t c3;
     std::uint8_t filler2[3];
     std::int32_t numConnections;
     std::int32_t connections[20];
-} PMS_WAYPOINT;
+};
 
 // Pms structure
 
@@ -217,29 +216,15 @@ struct pms
     std::int32_t version;
     std::string name;
     std::string texture;
-    PMS_COLOR bgColorTop;
-    PMS_COLOR bgColorBottom;
     std::int32_t jetAmount;
-    std::uint8_t grenades;
-    std::uint8_t medikits;
-    PMS_WEATHERTYPE weather;
-    PMS_STEPSTYPE steps;
-    std::int32_t randID;
-    std::int32_t polygonCount;
-    std::vector<PMS_POLYGON> polygon;
-    std::int32_t sectorDivisions;
-    std::int32_t numSectors;
-    std::vector<PMS_SECTOR> sector;
-    std::int32_t propCount;
-    std::vector<PMS_PROP> prop;
-    std::int32_t sceneryCount;
-    std::vector<PMS_SCENERY> scenery;
-    std::int32_t colliderCount;
-    std::vector<PMS_COLLIDER> collider;
-    std::int32_t spawnpointCount;
-    std::vector<PMS_SPAWNPOINT> spawnpoint;
-    std::int32_t waypointCount;
-    std::vector<PMS_WAYPOINT> waypoint;
+    WEATHERTYPE weather;
+    std::vector<polygon> polygons;
+    std::vector<sector> sectors;
+    std::vector<prop> props;
+    std::vector<scenery> scenerys;
+    std::vector<collider> colliders;
+    std::vector<spawnpoint> spawnpoints;
+    std::vector<waypoint> waypoints;
     float leftoffs;
     float rightoffs;
     float topoffs;

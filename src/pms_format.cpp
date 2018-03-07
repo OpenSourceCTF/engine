@@ -2,7 +2,7 @@
 
 namespace pms {
 
-std::string read_string(std::istream& is, int full_length)
+std::string read_string(std::istream& is, const std::size_t full_length)
 {
     int length = read_bin<char>(is);
     std::vector<char> tmp(full_length);
@@ -15,50 +15,51 @@ std::istream& operator>>(std::istream& is, pms& p)
     p.version = read_bin<int>(is);
     p.name = read_string(is, 38);
     p.texture = read_string(is, 24);
-    p.bgColorTop = read_bin<PMS_COLOR>(is);
-    p.bgColorBottom = read_bin<PMS_COLOR>(is);
-    p.jetAmount = read_bin<std::int32_t>(is);
-    p.grenades = read_bin<std::uint8_t>(is);
-    p.medikits = read_bin<std::uint8_t>(is);
-    p.weather = PMS_WEATHERTYPE(read_bin<std::uint8_t>(is));
-    p.steps = PMS_STEPSTYPE(read_bin<std::uint8_t>(is));
-    p.randID = read_bin<std::int32_t>(is);
-    p.polygonCount = read_bin<std::int32_t>(is);
+    const color bgColorTop = read_bin<color>(is);
+    const color bgColorBottom = read_bin<color>(is);
+    const std::int32_t jetAmount = read_bin<std::int32_t>(is);
+    const std::uint8_t grenades = read_bin<std::uint8_t>(is);
+    const std::uint8_t medikits = read_bin<std::uint8_t>(is);
+    const WEATHERTYPE weather = static_cast<WEATHERTYPE>(read_bin<std::uint8_t>(is));
+    const STEPSTYPE steps = static_cast<STEPSTYPE>(read_bin<std::uint8_t>(is));
+    const std::int32_t randID = read_bin<std::int32_t>(is);
 
-    for (int i = 0; i<p.polygonCount; i++)
-    {
-        PMS_POLYGON temp; // cheap solution
-        temp.vertex[0] = read_bin<PMS_VERTEX>(is);
-        temp.vertex[1] = read_bin<PMS_VERTEX>(is);
-        temp.vertex[2] = read_bin<PMS_VERTEX>(is);
-        temp.perpendicular[0] = read_bin<PMS_VECTOR>(is);
-        temp.perpendicular[1] = read_bin<PMS_VECTOR>(is);
-        temp.perpendicular[2] = read_bin<PMS_VECTOR>(is);
-        temp.polyType = PMS_POLYTYPE(read_bin<std::uint8_t>(is));
-        p.polygon.push_back(temp);
+    const std::size_t polygonCount = read_bin<std::int32_t>(is);
+    for (std::size_t i=0; i<polygonCount; ++i) {
+        polygon temp; // cheap solution
+        temp.vertex[0] = read_bin<vertex>(is);
+        temp.vertex[1] = read_bin<vertex>(is);
+        temp.vertex[2] = read_bin<vertex>(is);
+        temp.perpendicular[0] = read_bin<vec3>(is);
+        temp.perpendicular[1] = read_bin<vec3>(is);
+        temp.perpendicular[2] = read_bin<vec3>(is);
+        temp.polyType = POLYTYPE(read_bin<std::uint8_t>(is));
+        p.polygons.emplace_back(temp);
     }
-    p.sectorDivisions = read_bin<std::int32_t>(is);
-    p.numSectors = read_bin<std::int32_t>(is);
 
-    p.topoffs = p.sectorDivisions * -p.numSectors;
-    p.bottomoffs = p.sectorDivisions * p.numSectors;
-    p.leftoffs = p.sectorDivisions * -p.numSectors;
-    p.rightoffs = p.sectorDivisions * p.numSectors;
-
-    for (int i = 0; i< ((p.numSectors*2)+1)*((p.numSectors*2)+1); i++)
     {
-        PMS_SECTOR temp;
-        temp.polyCount = read_bin<std::uint16_t>(is);
-        for (int m = 0; m<temp.polyCount; m++)
-        {
-            temp.polys.push_back(read_bin<std::uint16_t>(is));
+        const std::size_t sectorDivisions = read_bin<std::int32_t>(is);
+        const std::size_t numSectors = read_bin<std::int32_t>(is);
+        p.topoffs    = sectorDivisions * -numSectors;
+        p.bottomoffs = sectorDivisions *  numSectors;
+        p.leftoffs   = sectorDivisions * -numSectors;
+        p.rightoffs  = sectorDivisions *  numSectors;
+
+        for(std::size_t i=0; i<((numSectors*2)+1)*((numSectors*2)+1); ++i) {
+            sector temp;
+
+            const std::size_t polyCount = read_bin<std::uint16_t>(is);
+            for(std::size_t m = 0; m<polyCount; ++m) {
+                temp.polys.emplace_back(read_bin<std::uint16_t>(is));
+            }
+
+            p.sectors.emplace_back(temp);
         }
-        p.sector.push_back(temp);
     }
-    p.propCount = read_bin<std::int32_t>(is);
-    for (int i = 0; i < p.propCount; i++)
-    {
-        PMS_PROP temp;
+
+    const std::size_t propCount = read_bin<std::int32_t>(is);
+    for(std::size_t i=0; i<propCount; ++i) {
+        prop temp;
         temp.active = bool(read_bin<std::uint8_t>(is));
         temp.filler1 = read_bin<std::uint8_t>(is);
         temp.style = read_bin<std::uint16_t>(is);
@@ -73,26 +74,26 @@ std::istream& operator>>(std::istream& is, pms& p)
         temp.filler2[0] = read_bin<std::uint8_t>(is);
         temp.filler2[1] = read_bin<std::uint8_t>(is);
         temp.filler2[2] = read_bin<std::uint8_t>(is);
-        temp.color = read_bin<PMS_COLOR>(is);
-        temp.level = PMS_DRAWBEHIND(read_bin<std::uint8_t>(is));
+        temp.col = read_bin<color>(is);
+        temp.level = DRAWBEHIND(read_bin<std::uint8_t>(is));
         temp.filler3[0] = read_bin<std::uint8_t>(is);
         temp.filler3[1] = read_bin<std::uint8_t>(is);
         temp.filler3[2] = read_bin<std::uint8_t>(is);
-        p.prop.push_back(temp);
+        p.props.emplace_back(temp);
     }
-    p.sceneryCount = read_bin<std::int32_t>(is);
-    for (int i = 0; i < p.sceneryCount; i++)
-    {
-        PMS_SCENERY temp;
+
+    const std::size_t sceneryCount = read_bin<std::int32_t>(is);
+    for(std::size_t i=0; i<sceneryCount; ++i) {
+        scenery temp;
         //temp.nameLen = read_bin<std::uint8_t>( is );
         temp.name = read_string(is, 50);
-        temp.timestamp = read_bin<PMS_TIMESTAMP>(is);
-        p.scenery.push_back(temp);
+        temp.ts = read_bin<timestamp>(is);
+        p.scenerys.emplace_back(temp);
     }
-    p.colliderCount = read_bin<std::int32_t>(is);
-    for (int i = 0; i < p.colliderCount; i++)
-    {
-        PMS_COLLIDER temp;
+
+    const std::size_t colliderCount = read_bin<std::int32_t>(is);
+    for(std::size_t i=0; i<colliderCount; ++i) {
+        collider temp;
         temp.active = bool(read_bin<std::uint8_t>(is));
         temp.filler[0] = read_bin<std::uint8_t>(is);
         temp.filler[1] = read_bin<std::uint8_t>(is);
@@ -100,25 +101,24 @@ std::istream& operator>>(std::istream& is, pms& p)
         temp.x = read_bin<float>(is);
         temp.y = read_bin<float>(is);
         temp.radius = read_bin<float>(is);
-        p.collider.push_back(temp);
+        p.colliders.emplace_back(temp);
     }
-    p.spawnpointCount = read_bin<std::int32_t>(is);
-    for (int i = 0; i < p.spawnpointCount; i++)
-    {
-        PMS_SPAWNPOINT temp;
+
+    const std::size_t spawnpointCount = read_bin<std::int32_t>(is);
+    for(std::size_t i=0; i<spawnpointCount; ++i) {
+        spawnpoint temp;
         temp.active = bool(read_bin<std::uint8_t>(is));
         temp.filler[0] = read_bin<std::uint8_t>(is);
         temp.filler[1] = read_bin<std::uint8_t>(is);
         temp.filler[2] = read_bin<std::uint8_t>(is);
         temp.x = read_bin<std::int32_t>(is);
         temp.y = read_bin<std::int32_t>(is);
-        temp.team = PMS_SPAWNTEAM(read_bin<std::uint32_t>(is));
-        p.spawnpoint.push_back(temp);
+        temp.team = SPAWNTEAM(read_bin<std::uint32_t>(is));
+        p.spawnpoints.emplace_back(temp);
     }
-    p.waypointCount = read_bin<std::int32_t>(is);
-    for (int i = 0; i < p.waypointCount; i++)
-    {
-        PMS_WAYPOINT temp;
+    const std::size_t waypointCount = read_bin<std::int32_t>(is);
+    for(std::size_t i = 0; i < waypointCount; ++i) {
+        waypoint temp;
         temp.active = bool(read_bin<std::uint8_t>(is));
         temp.filler1[0] = read_bin<std::uint8_t>(is);
         temp.filler1[1] = read_bin<std::uint8_t>(is);
@@ -132,18 +132,17 @@ std::istream& operator>>(std::istream& is, pms& p)
         temp.down = bool(read_bin<std::uint8_t>(is));
         temp.jet = bool(read_bin<std::uint8_t>(is));
         temp.path = read_bin<std::uint8_t>(is);
-        temp.specialAction = PMS_SPECIALACTIONS(read_bin<std::uint8_t>(is));
+        temp.specialAction = SPECIALACTIONS(read_bin<std::uint8_t>(is));
         temp.c2 = read_bin<std::uint8_t>(is);
         temp.c3 = read_bin<std::uint8_t>(is);
         temp.filler2[0] = read_bin<std::uint8_t>(is);
         temp.filler2[1] = read_bin<std::uint8_t>(is);
         temp.filler2[2] = read_bin<std::uint8_t>(is);
         temp.numConnections = read_bin<std::int32_t>(is);
-        for (int c=0; c<20; c++)
-        {
+        for(std::size_t c=0; c<20; ++c) {
             temp.connections[c] = read_bin<std::int32_t>(is);
         }
-        p.waypoint.push_back(temp);
+        p.waypoints.emplace_back(temp);
     }
     return is;
 }

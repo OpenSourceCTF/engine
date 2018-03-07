@@ -29,8 +29,8 @@ int pms_map_importer::import(
     m.gravity = 0;
     m.jumping_enabled = false;
 
-    for(std::size_t i = 0; i<map.polygonCount; ++i) {
-        const auto type = map.polygon[i].polyType;
+    for(pms::polygon o : map.polygons) {
+        const auto type = o.polyType;
         bool is_tile = false;
         switch(type) {
             case pms::ptONLY_BULLETS_COLLIDE:
@@ -40,33 +40,33 @@ int pms_map_importer::import(
             default: break;
         }
         const b2Vec2 v1(
-            map.polygon[i].vertex[0].x * scale_size,
-            map.polygon[i].vertex[0].y * scale_size
+            o.vertex[0].x * scale_size,
+            o.vertex[0].y * scale_size
         );
         const b2Vec2 v2(
-            map.polygon[i].vertex[1].x * scale_size,
-            map.polygon[i].vertex[1].y * scale_size
+            o.vertex[1].x * scale_size,
+            o.vertex[1].y * scale_size
         );
         const b2Vec2 v3(
-            map.polygon[i].vertex[2].x * scale_size,
-            map.polygon[i].vertex[2].y * scale_size
+            o.vertex[2].x * scale_size,
+            o.vertex[2].y * scale_size
         );
 
         if(is_tile) {
             m.tiles.emplace_back(new tile(polygon(v1, v2, v3, config.COLOR_TILE), tile_type::normal));
         } else {
-            const color c1(map.polygon[i].vertex[0].color.red, map.polygon[i].vertex[0].color.green, map.polygon[i].vertex[0].color.blue, map.polygon[i].vertex[0].color.alpha);
-            const color c2(map.polygon[i].vertex[1].color.red, map.polygon[i].vertex[1].color.green, map.polygon[i].vertex[1].color.blue, map.polygon[i].vertex[1].color.alpha);
-            const color c3(map.polygon[i].vertex[2].color.red, map.polygon[i].vertex[2].color.green, map.polygon[i].vertex[2].color.blue, map.polygon[i].vertex[2].color.alpha);
+            const color c1(o.vertex[0].col.red, o.vertex[0].col.green, o.vertex[0].col.blue, o.vertex[0].col.alpha);
+            const color c2(o.vertex[1].col.red, o.vertex[1].col.green, o.vertex[1].col.blue, o.vertex[1].col.alpha);
+            const color c3(o.vertex[2].col.red, o.vertex[2].col.green, o.vertex[2].col.blue, o.vertex[2].col.alpha);
             m.walls.emplace_back(new wall(polygon(v1, v2, v3, c1, c2, c3)));
         }
     }
 
-    for(std::size_t i = 0; i<map.spawnpointCount; ++i) {
-        const float x = map.spawnpoint[i].x * scale_size;
-        const float y = map.spawnpoint[i].y * scale_size;
+    for(pms::spawnpoint o : map.spawnpoints) {
+        const float x = o.x * scale_size;
+        const float y = o.y * scale_size;
 
-        switch(map.spawnpoint[i].team) {
+        switch(o.team) {
             case pms::stALPHA:
                 m.spawns.emplace_back(new spawn(x, y, 1.0, 1.0, spawn_type::red));
                 break;
