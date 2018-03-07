@@ -370,11 +370,19 @@ int main(int argc, char ** argv)
             return EXIT_FAILURE;
         }
 
-        const std::string pms_src(argv[2]);
-        const double      scale_size = std::stod(argv[3]);
-        const std::string out_src(argv[4]);
+        try {
+            const std::string pms_src(argv[2]);
+            const double      scale_size = std::stod(argv[3]);
+            const std::string out_src(argv[4]);
 
-        return export_pms_map(pms_src, scale_size, out_src);
+            return export_pms_map(pms_src, scale_size, out_src);
+        } catch(const std::invalid_argument&) {
+            std::cerr << "scale_size (" << argv[3] << ") is invalid" << std::endl;
+            return EXIT_FAILURE;
+        } catch(const std::out_of_range&) {
+            std::cerr << "scale_size (" << argv[3] << ") is out of range" << std::endl;
+            return EXIT_FAILURE;
+        }
     } else if(mode == "render") {
         if(argc != 3) {
             std::cerr
