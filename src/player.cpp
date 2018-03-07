@@ -7,7 +7,7 @@ player::player(
     const std::string player_id,
     const bool is_registered,
     const std::string name,
-    const int degree
+    const std::uint32_t degree
 )
 : local(false)
 , remove(false)
@@ -30,7 +30,7 @@ player::player(
     const std::string player_id,
     const bool is_registered,
     const std::string name,
-    const int degree
+    const std::uint32_t degree
 )
 : local(true)
 , remove(false)

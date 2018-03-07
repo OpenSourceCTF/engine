@@ -22,7 +22,7 @@ struct player
     std::string player_id;
     bool is_registered;
     std::string name;
-    int degree;
+    std::uint32_t degree;
 
     int xdir;
     int ydir;
@@ -36,7 +36,7 @@ struct player
         const std::string player_id,
         const bool is_registered,
         const std::string name,
-        const int degree
+        const std::uint32_t degree
     );
 
     // for "bots"
@@ -46,7 +46,7 @@ struct player
         const std::string player_id,
         const bool is_registered,
         const std::string name,
-        const int degree
+        const std::uint32_t degree
     );
 
     ~player();
