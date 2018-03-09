@@ -1,5 +1,5 @@
 override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic -Werror=switch \
-	-Wno-inconsistent-missing-override
+	-Wno-inconsistent-missing-override -fno-omit-frame-pointer
 
 override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system \
 	-Llib/Box2D/Build/gmake/bin/Debug -lBox2D \
@@ -17,7 +17,8 @@ all: tagos
 
 release: CXXFLAGS += -O3
 release: tagos
-debug: CXXFLAGS += -DDEBUG -g
+debug: CXXFLAGS += -DDEBUG -g -fno-omit-frame-pointer
+debug: LDFLAGS += -fsanitize=undefined
 debug: tagos
 
 tagos: $(OBJECTS) lib/Box2D/Build/gmake/bin/Debug/libBox2D.a
