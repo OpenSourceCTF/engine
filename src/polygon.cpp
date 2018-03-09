@@ -83,12 +83,12 @@ void polygon::make_clockwise()
 
     // we sort vertices by idx so we know how
     // to sort colors or whatever else per vertex 
-    std::array<std::size_t, 3> v_idx = {0, 1, 2};
+    std::array<std::size_t, 3> v_idx {{0, 1, 2}};
 
     // save original data
-    std::array<b2Vec2, 3> v  = {v1, v2, v3};
-    std::array<color,  3> c  = {c1, c2, c3};
-    std::array<b2Vec2, 3> uv = {uv1, uv2, uv3};
+    std::array<b2Vec2, 3> v  {{v1, v2, v3}};
+    std::array<color,  3> c  {{c1, c2, c3}};
+    std::array<b2Vec2, 3> uv {{uv1, uv2, uv3}};
 
     // https://stackoverflow.com/a/6989383 (reversed)
     auto clock = [&](const std::size_t a_idx, const std::size_t b_idx) {
@@ -146,11 +146,11 @@ b2Vec2 polygon::get_center() const
 std::array<b2Vec2, 3> polygon::get_vertices()
 {
     const b2Vec2 center = get_center();
-    return {
+    return {{
         b2Vec2(v1.x - center.x, v1.y - center.y),
         b2Vec2(v2.x - center.x, v2.y - center.y),
         b2Vec2(v3.x - center.x, v3.y - center.y)
-    };
+    }};
 }
 
 void to_json(nlohmann::json& j, const polygon& p)
