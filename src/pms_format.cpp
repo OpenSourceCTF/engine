@@ -15,14 +15,14 @@ std::istream& operator>>(std::istream& is, pms& p)
     p.version = read_bin<int>(is);
     p.name = read_string(is, 38);
     p.texture = read_string(is, 24);
-    const color bgColorTop = read_bin<color>(is);
-    const color bgColorBottom = read_bin<color>(is);
-    const std::int32_t jetAmount = read_bin<std::int32_t>(is);
-    const std::uint8_t grenades = read_bin<std::uint8_t>(is);
-    const std::uint8_t medikits = read_bin<std::uint8_t>(is);
-    const WEATHERTYPE weather = static_cast<WEATHERTYPE>(read_bin<std::uint8_t>(is));
-    const STEPSTYPE steps = static_cast<STEPSTYPE>(read_bin<std::uint8_t>(is));
-    const std::int32_t randID = read_bin<std::int32_t>(is);
+    const color __attribute__((unused)) bgColorTop = read_bin<color>(is);
+    const color __attribute__((unused)) bgColorBottom = read_bin<color>(is);
+    const std::int32_t __attribute__((unused)) jetAmount = read_bin<std::int32_t>(is);
+    const std::uint8_t __attribute__((unused)) grenades = read_bin<std::uint8_t>(is);
+    const std::uint8_t __attribute__((unused)) medikits = read_bin<std::uint8_t>(is);
+    const WEATHERTYPE __attribute__((unused)) weather = static_cast<WEATHERTYPE>(read_bin<std::uint8_t>(is));
+    const STEPSTYPE __attribute__((unused)) steps = static_cast<STEPSTYPE>(read_bin<std::uint8_t>(is));
+    const std::int32_t __attribute__((unused)) randID = read_bin<std::int32_t>(is);
 
     const std::size_t polygonCount = read_bin<std::int32_t>(is);
     for (std::size_t i=0; i<polygonCount; ++i) {

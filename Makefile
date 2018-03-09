@@ -1,5 +1,5 @@
 override CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic -Werror=switch \
-	-Wno-inconsistent-missing-override -fno-omit-frame-pointer
+	-Wno-inconsistent-missing-override
 
 override LDFLAGS += -lsfml-graphics -lsfml-window -lsfml-system \
 	-Llib/Box2D/Build/gmake/bin/Debug -lBox2D \
