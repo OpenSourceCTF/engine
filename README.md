@@ -23,21 +23,21 @@ First get sfml and boost: `sudo apt-get install libsfml-dev libboost-all-dev`
         
 Now, build the engine using the makefile.
 
-    To build normally: `make -j`
+To build normally: `make -j`
 
-    To build debug mode: `make debug -j`
+To build debug mode: `make debug -j`
 
-    To build release mode: `make release -j`
+To build release mode: `make release -j`
 
-    To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
+To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
 
 ## Setup testing
 
 You'll need something to test the engine on. Convert some old TagPro data to new OSCTF data by running these two commands:
     
-    `./scripts/export_all_maps.sh`
+`./scripts/export_all_maps.sh`
 
-    `./scripts/export_all_textures.sh`
+`./scripts/export_all_textures.sh`
 
 Next, install nvm. As of May 10 2018, the latest version is 0.33.11.
 
