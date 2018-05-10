@@ -13,11 +13,11 @@ Successfully built on clean install of Ubuntu 16.04 (10 May 2018)
 
 NOTE: building takes a lot of memory!
 
-First get sfml and boost: `sudo apt-get install libsfml-dev libboost-all-dev`
+First get sfml and boost: `sudo apt install libsfml-dev libboost-all-dev`
 
 - If your computer doesn't have a large amount of RAM, follow these steps to use clang instead of g++:
     
-    `sudo apt-get install clang`
+    `sudo apt install clang`
     
     `export CXX=clang++` 
         
@@ -41,9 +41,11 @@ You'll need something to test the engine on. Convert some old TagPro data to new
 
 Next, install nvm. As of May 10 2018, the latest version is 0.33.11.
 
-`wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash`
+You'll need curl, so if you don't have it already, `apt install curl`.
 
-You can also visit http://nvm.sh for more detailed instructions and documentation on nvm.
+Then run `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash`
+
+(You can visit http://nvm.sh for more detailed instructions and documentation on nvm.)
 
 After installing nvm, close and reopen your terminal to gain access to the node commands.
 
