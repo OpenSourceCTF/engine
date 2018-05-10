@@ -1,7 +1,7 @@
 tagos
 ===
 
-Successfully built on clean install of Ubuntu 16.04
+Successfully built on clean install of Ubuntu 16.04 (10 May 2018)
 
 ## Dependencies
 - **sfml** 2.3
@@ -13,33 +13,39 @@ Successfully built on clean install of Ubuntu 16.04
 
 NOTE: building takes a lot of memory!
 
-`sudo apt-get install libsfml-dev libboost-all-dev`
+First get sfml and boost: `sudo apt-get install libsfml-dev libboost-all-dev`
 
-- If your computer doesn't have a large amount of RAM, follow these steps!
-    
-    `export CXX=clang++` 
+- If your computer doesn't have a large amount of RAM, follow these steps to use clang instead of g++:
     
     `sudo apt-get install clang`
+    
+    `export CXX=clang++` 
         
-`./scripts/export_all_maps.sh`
+Now, build the engine using the makefile.
 
-`./scripts/export_all_textures.sh`
+    To build normally: `make -j`
 
-To build normally: `make -j`
+    To build debug mode: `make debug -j`
 
-To build debug mode: `make debug -j`
+    To build release mode: `make release -j`
 
-To build release mode: `make release -j`
-
-To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
+    To build WITHOUT rendering enabled: `make [debug|release] -j CXXFLAGS=-DDISABLE_RENDER`
 
 ## Setup testing
 
-Install NVM. As of November 30 2017, the latest version is 0.33.6.
+You'll need something to test the engine on. Convert some old TagPro data to new OSCTF data by running these two commands:
+    
+    `./scripts/export_all_maps.sh`
 
-`wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash`
+    `./scripts/export_all_textures.sh`
 
-At this point, close and reopen your terminal to gain access to the node commands.
+Next, install nvm. As of May 10 2018, the latest version is 0.33.11.
+
+`wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash`
+
+You can also visit http://nvm.sh for more detailed instructions and documentation on nvm.
+
+After installing nvm, close and reopen your terminal to gain access to the node commands.
 
 `cd tests`
 
